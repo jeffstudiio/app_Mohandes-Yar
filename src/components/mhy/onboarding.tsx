@@ -4,7 +4,7 @@ import { useMemo, useState } from "react";
 import type { Bootstrap } from "@/lib/mhy/server";
 import { useMhy, groupDisciplines, competencyOfCode, type DisciplineGroup } from "@/lib/mhy/store";
 import { faNum, daysUntil } from "@/lib/mhy/engines";
-import { Btn, CountdownRing, DisciplineGlyph, MhyGlyph, CheckBadge, SearchField } from "./ui";
+import { Btn, CountdownRing, DisciplineGlyph, MhyGlyph, CheckBadge, SearchField, SegmentedProgress, Eyebrow, TechFrame } from "./ui";
 import {
   WifiOff,
   KeyRound,
@@ -71,9 +71,9 @@ export default function Onboarding({ bootstrap, onDone }: { bootstrap: OnbBootst
 
   return (
     <div className="flex h-full flex-col" style={{ background: "var(--background)" }}>
-      {/* progress header — step dots */}
+      {/* progress header — checkpoint segments */}
       {step > 0 && (
-        <div className="flex items-center justify-between px-4 pt-4">
+        <div className="flex items-center gap-3 px-5 pt-5">
           <button
             onClick={goBack}
             aria-label="بازگشت"
@@ -82,45 +82,44 @@ export default function Onboarding({ bootstrap, onDone }: { bootstrap: OnbBootst
           >
             <ChevronRight size={20} />
           </button>
-          <div className="flex items-center gap-1.5" aria-hidden>
-            {[1, 2, 3, 4, 5].map((i) => (
-              <div
-                key={i}
-                className="h-1.5 rounded-full transition-all duration-300"
-                style={{ width: i === step ? 22 : 7, background: i === step ? "var(--primary)" : "var(--border)" }}
-              />
-            ))}
+          <div className="flex-1">
+            <SegmentedProgress value={step} total={5} height={5} ariaLabel="پیشرفت راه‌اندازی" />
           </div>
-          <div className="h-11 w-11" />
+          <span className="num t-meta" style={{ color: "var(--muted-foreground)" }}>
+            {faNum(step)} / {faNum(5)}
+          </span>
         </div>
       )}
 
-      {/* ── 01 Welcome ── */}
+      {/* ── 01 Welcome — signature technical hero (composition surface) ── */}
       {step === 0 && (
-        <div className="flex flex-1 flex-col items-center justify-center px-8 text-center screen-in">
-          <div className="relative">
-            <MhyGlyph size={150} className="absolute -inset-7 opacity-[0.08]" style={{ color: "var(--primary)" }} />
-            <div
-              className="relative flex h-24 w-24 items-center justify-center rounded-[1.8rem]"
-              style={{ background: "var(--grad-hero)", color: "#fff", boxShadow: "var(--shadow-float)" }}
-            >
-              <MhyGlyph size={54} />
+        <div className="flex flex-1 flex-col items-center justify-center px-8 text-center">
+          <TechFrame className="tech-glow blueprint-grid relative flex w-full flex-col items-center rounded-3xl border px-6 py-9" style={{ background: "var(--surface)", borderColor: "var(--border)" }}>
+            <Eyebrow tone="accent" className="justify-center">MHY · نسخه ۲</Eyebrow>
+            <div className="relative mt-6">
+              <MhyGlyph size={150} className="absolute -inset-7 opacity-[0.08]" style={{ color: "var(--primary)" }} />
+              <div
+                className="relative flex h-24 w-24 items-center justify-center rounded-[1.8rem]"
+                style={{ background: "var(--grad-hero)", color: "#fff", boxShadow: "var(--shadow-float)" }}
+              >
+                <MhyGlyph size={54} />
+              </div>
             </div>
-          </div>
-          <h1 className="t-display mt-8" style={{ color: "var(--foreground)" }}>
-            مهندس‌یار
-          </h1>
-          <p className="mt-1.5 text-[12.5px] font-bold" style={{ color: "var(--primary)" }}>
-            کابین شخصی آمادگی آزمون نظام مهندسی
-          </p>
-          <p className="mt-4 max-w-[290px] t-body-sm leading-7" style={{ color: "var(--muted-foreground)" }}>
-            مقررات ملی، سؤالات رسمی با هویت جلسه، تحلیل عملکرد و مسیر مطالعه — همه بر پایه محتوای واقعی، در یک فضای منظم.
-          </p>
-          {bootstrap && (
-            <p className="num mt-5 rounded-full border px-3.5 py-1.5 text-[10.5px] font-bold" style={{ background: "var(--card)", borderColor: "var(--border)", color: "var(--muted-foreground)" }}>
-              {faNum(bootstrap.stats.questions)} سؤال واقعی · {faNum(bootstrap.stats.official)} رسمی · {faNum(bootstrap.stats.sessions)} جلسه
+            <h1 className="t-display mt-7" style={{ color: "var(--foreground)" }}>
+              مهندس‌یار
+            </h1>
+            <p className="mt-2 text-[13px] font-bold" style={{ color: "var(--primary)" }}>
+              دفتر فنیِ آمادگی آزمون نظام مهندسی
             </p>
-          )}
+            <p className="mt-4 max-w-[290px] t-body-sm leading-7" style={{ color: "var(--muted-foreground)" }}>
+              مقررات ملی، سؤالات رسمی با هویت جلسه، تحلیل عملکرد و مسیر مطالعه — همه بر پایه محتوای واقعی، در یک فضای منظم.
+            </p>
+            {bootstrap && (
+              <p className="num mt-5 rounded-full border px-3.5 py-1.5 text-[10.5px] font-bold" style={{ background: "var(--card)", borderColor: "var(--border)", color: "var(--muted-foreground)" }}>
+                {faNum(bootstrap.stats.questions)} سؤال واقعی · {faNum(bootstrap.stats.official)} رسمی · {faNum(bootstrap.stats.sessions)} جلسه
+              </p>
+            )}
+          </TechFrame>
         </div>
       )}
 
@@ -146,9 +145,7 @@ export default function Onboarding({ bootstrap, onDone }: { bootstrap: OnbBootst
       {/* ── 03 رشته — parent only (§9.1) ── */}
       {step === 2 && (
         <div className="phone-scroll flex-1 overflow-y-auto px-5 screen-in">
-          <p className="num pt-3 text-[10.5px] font-extrabold tracking-wide" style={{ color: "var(--primary)" }}>
-            ۰۳ — رشته
-          </p>
+          <Eyebrow tone="accent" className="pt-3">رشته</Eyebrow>
           <h1 className="t-title mt-1">رشته شما چیست؟</h1>
           <p className="mt-1 t-caption" style={{ color: "var(--muted-foreground)" }}>
             رشته اصلی را انتخاب کنید؛ صلاحیت‌ها در گام بعد می‌آیند.
@@ -207,9 +204,7 @@ export default function Onboarding({ bootstrap, onDone }: { bootstrap: OnbBootst
       {/* ── 04 صلاحیت‌ها — REAL MULTI SELECT (§9.3) ── */}
       {step === 3 && group && (
         <div className="phone-scroll flex-1 overflow-y-auto px-5 screen-in">
-          <p className="num pt-3 text-[10.5px] font-extrabold tracking-wide" style={{ color: "var(--primary)" }}>
-            ۰۴ — صلاحیت‌ها
-          </p>
+          <Eyebrow tone="accent" className="pt-3">صلاحیت‌ها</Eyebrow>
           <h1 className="t-title mt-1">کدام صلاحیت‌ها را هدف می‌گیرید؟</h1>
           <p className="mt-1 t-caption" style={{ color: "var(--muted-foreground)" }}>
             رشته {group.title} — می‌توانید همزمان چند صلاحیت را انتخاب کنید؛ پیشرفت هرکدام جدا نگه‌داری می‌شود.
@@ -256,9 +251,7 @@ export default function Onboarding({ bootstrap, onDone }: { bootstrap: OnbBootst
       {/* ── 05 آزمون هدف — real sessions + date + live preview (§10) ── */}
       {step === 4 && (
         <div className="phone-scroll flex-1 overflow-y-auto px-5 screen-in">
-          <p className="num pt-3 text-[10.5px] font-extrabold tracking-wide" style={{ color: "var(--primary)" }}>
-            ۰۵ — آزمون هدف
-          </p>
+          <Eyebrow tone="accent" className="pt-3">آزمون هدف</Eyebrow>
           <h1 className="t-title mt-1">هدف را ثبت کنید</h1>
           <p className="mt-1 t-caption" style={{ color: "var(--muted-foreground)" }}>
             جلسه رسمی و تاریخ آزمون — شمارش معکوس و برنامه امروز روی همین اساس ساخته می‌شود. (اختیاری)
@@ -328,9 +321,7 @@ export default function Onboarding({ bootstrap, onDone }: { bootstrap: OnbBootst
       {/* ── 06 Activation ── */}
       {step === 5 && (
         <div className="phone-scroll flex-1 overflow-y-auto px-6 screen-in">
-          <p className="num pt-3 text-[10.5px] font-extrabold tracking-wide" style={{ color: "var(--primary)" }}>
-            ۰۶ — فعال‌سازی
-          </p>
+          <Eyebrow tone="accent" className="pt-3">فعال‌سازی</Eyebrow>
           <h1 className="t-title mt-1">توکن فعال‌سازی</h1>
           <div className="mt-4 space-y-2.5 rounded-2xl border p-4" style={{ background: "var(--surface)", borderColor: "var(--border)" }}>
             {[
