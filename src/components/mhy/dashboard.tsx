@@ -21,6 +21,7 @@ import {
   Eyebrow,
   DisciplineGlyph,
   Skeleton,
+  MabhasCover,
 } from "./ui";
 import type { PoolItem } from "./shell";
 import {
@@ -308,57 +309,57 @@ export default function Dashboard({
           </div>
         </section>
 
-        {/* ── L5 · continue studying — the hero action ── */}
-        <SectionHeader title="ادامه مسیر" />
+        {/* ── L5 · continue studying — the reading object itself (§21/§26) ── */}
         {lastStudy ? (
-          <button
+          <MabhasCover
+            mabhas={lastStudy.mabhas}
+            variant="hero"
+            className="mt-1"
             onClick={nav.resumeStudy}
-            aria-label="ادامه مطالعه از آخرین موقعیت"
-            className="press relative w-full overflow-hidden rounded-3xl p-4 text-right"
-            style={{ background: "var(--grad-hero)", boxShadow: "var(--shadow-card)" }}
-          >
-            <div className="flex items-center gap-3">
-              <span className="flex h-12 w-12 shrink-0 items-center justify-center rounded-2xl" style={{ background: "rgba(255,255,255,0.16)", color: "#fff" }}>
-                <Play size={21} fill="currentColor" />
+            ariaLabel={`ادامه مطالعه مبحث ${faNum(lastStudy.mabhas)} — ${mabhasTitle(lastStudy.mabhas)}`}
+            badge={
+              <span
+                className="inline-flex items-center gap-1.5 rounded-full px-2.5 py-1 text-[9.5px] font-extrabold"
+                style={{ background: "var(--primary)", color: "var(--primary-foreground)" }}
+              >
+                <Play size={11} />
+                ادامه مطالعه
               </span>
-              <div className="min-w-0 flex-1">
-                <p className="text-[14.5px] font-extrabold text-white">ادامه مطالعه</p>
-                <p className="mt-0.5 truncate text-[11px] text-white/75">
-                  {lastStudy.kind === "lesson" ? "درسنامه" : "مقررات"} — مبحث {faNum(lastStudy.mabhas)} · {mabhasTitle(lastStudy.mabhas)}
-                </p>
-              </div>
-              <ChevronLeft size={18} className="shrink-0 text-white/80" />
-            </div>
-            <div className="mt-3 flex items-center gap-2.5">
-              <div className="h-1.5 flex-1 overflow-hidden rounded-full" style={{ background: "rgba(255,255,255,0.22)" }}>
-                <div className="h-full rounded-full bg-white/90" style={{ width: `${Math.min(100, (lastStudy.mabhas / REGULATION_MABHAS_TOTAL) * 100)}%` }} />
-              </div>
-              <span className="num text-[10px] font-bold text-white/85">
-                مبحث {faNum(lastStudy.mabhas)} از {faNum(REGULATION_MABHAS_TOTAL)}
-              </span>
-            </div>
-          </button>
+            }
+            title={mabhasTitle(lastStudy.mabhas)}
+            meta={
+              <>
+                {lastStudy.kind === "lesson" ? "درسنامه جامع" : "متن بندها"}
+                {" · مبحث "}
+                {faNum(lastStudy.mabhas)}
+                {mastery[lastStudy.mabhas] ? ` · ٪${faNum(mastery[lastStudy.mabhas].mastery)} تسلط` : ""}
+              </>
+            }
+            progress={mastery[lastStudy.mabhas]?.mastery ?? null}
+          />
         ) : (
-          <button
+          <MabhasCover
+            mabhas={1}
+            variant="hero"
+            className="mt-1"
             onClick={() => nav.startMabhasStudy(1)}
-            aria-label="شروع مطالعه مقررات"
-            className="press relative w-full overflow-hidden rounded-3xl p-4 text-right"
-            style={{ background: "var(--grad-hero)", boxShadow: "var(--shadow-card)" }}
-          >
-            <div className="flex items-center gap-3">
-              <span className="flex h-12 w-12 shrink-0 items-center justify-center rounded-2xl" style={{ background: "rgba(255,255,255,0.16)", color: "#fff" }}>
-                <Play size={21} fill="currentColor" />
+            ariaLabel="شروع مطالعه مقررات از مبحث ۱"
+            badge={
+              <span
+                className="inline-flex items-center gap-1.5 rounded-full px-2.5 py-1 text-[9.5px] font-extrabold"
+                style={{ background: "rgba(255,255,255,0.9)", color: "#10141b" }}
+              >
+                <Play size={11} />
+                شروع مطالعه
               </span>
-              <div className="flex-1">
-                <p className="text-[14.5px] font-extrabold text-white">شروع مطالعه مقررات</p>
-                <p className="mt-0.5 text-[11px] text-white/75">از مبحث ۱ — کلیات و تعاریف</p>
-              </div>
-              <ChevronLeft size={18} className="shrink-0 text-white/80" />
-            </div>
-            <div className="mt-3">
-              <SegmentedProgress value={0} total={REGULATION_MABHAS_TOTAL} color="rgba(255,255,255,0.9)" height={4} ariaLabel="پیشرفت مباحث مقررات" />
-            </div>
-          </button>
+            }
+            title={mabhasTitle(1)}
+            meta={
+              <>
+                متن بندها · {faNum(bootstrap?.mabhasIndex.find((x) => x.mabhas === 1)?.questions ?? 0)} سؤال واقعی
+              </>
+            }
+          />
         )}
 
         {/* ── L6 · today — dense rows, no card ── */}
