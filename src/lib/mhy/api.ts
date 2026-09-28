@@ -99,7 +99,11 @@ export const api = {
         }
       }
     }
-    return { total: results.reduce((s, r) => s + (r.total ?? 0), 0), items };
+    // limit applies to the merged pool, not per-major — otherwise runs sized N
+    // silently grow to N × majors (real bug found by QA)
+    const lim = Number(params.limit ?? 0);
+    const merged = lim > 0 ? items.slice(0, lim) : items;
+    return { total: results.reduce((s, r) => s + (r.total ?? 0), 0), items: merged };
   },
 
   async question(id: number): Promise<{ question: MhyQuestion; related: RelatedItem[] }> {

@@ -5,7 +5,7 @@ import type { Bootstrap, MhyQuestion } from "@/lib/mhy/server";
 import { api } from "@/lib/mhy/api";
 import { useMhy, mabhasTitle } from "@/lib/mhy/store";
 import { faNum, type QLite } from "@/lib/mhy/engines";
-import { Card, SectionHeader, EmptyState, Btn, BottomSheet, Chip, LoadingBlock, SegmentedControl } from "./ui";
+import { SectionHeader, EmptyState, Btn, BottomSheet, Chip, LoadingBlock, SegmentedControl, DenseRow, DenseList, Eyebrow } from "./ui";
 import { QuestionRunner } from "./question-runner";
 import {
   ShieldCheck,
@@ -26,6 +26,7 @@ type Filter = {
   session: string | null;
   unsolvedOnly: boolean;
   ids?: number[];
+  limit?: number; // quick practice size — real, not cosmetic
 };
 
 const DEFAULT_FILTER: Filter = { mabhas: null, sourceType: "ALL", difficulty: [], session: null, unsolvedOnly: false };
@@ -86,8 +87,8 @@ export default function Practice({
 
   const entries = [
     { icon: ShieldCheck, title: "سؤالات رسمی", desc: `${faNum(countFor("OFFICIAL_EXAM"))} سؤال با هویت جلسه و شماره`, tint: "var(--primary)", onClick: () => setView({ kind: "filter", preset: { ...DEFAULT_FILTER, sourceType: "OFFICIAL_EXAM" }, title: "سؤالات رسمی" }) },
-    { icon: PenLine, title: "سؤالات تألیفی", desc: `${faNum(countFor("AUTHORED"))} سؤال تألیفی کتابخانه`, tint: "var(--warning)", onClick: () => setView({ kind: "filter", preset: { ...DEFAULT_FILTER, sourceType: "AUTHORED" }, title: "سؤالات تألیفی" }) },
-    { icon: BookOpen, title: "تمرین مبحثی", desc: "انتخاب مبحث و تمرین اختصاصی", tint: "var(--success)", onClick: () => setView({ kind: "filter", preset: DEFAULT_FILTER, title: "تمرین مبحثی" }) },
+    { icon: PenLine, title: "سؤالات تألیفی", desc: `${faNum(countFor("AUTHORED"))} سؤال تألیفی کتابخانه`, tint: "var(--muted-foreground)", onClick: () => setView({ kind: "filter", preset: { ...DEFAULT_FILTER, sourceType: "AUTHORED" }, title: "سؤالات تألیفی" }) },
+    { icon: BookOpen, title: "تمرین مبحثی", desc: "انتخاب مبحث و تمرین اختصاصی", tint: "var(--muted-foreground)", onClick: () => setView({ kind: "filter", preset: DEFAULT_FILTER, title: "تمرین مبحثی" }) },
     {
       icon: XCircle,
       title: "اشتباهات من",
@@ -99,52 +100,50 @@ export default function Practice({
       icon: Bookmark,
       title: "ذخیره‌شده‌ها",
       desc: bookmarks.length ? `${faNum(bookmarks.length)} سؤال نشان‌گذاری‌شده` : "هنوز سؤالی نشان نکرده‌اید",
-      tint: "var(--primary)",
+      tint: "var(--muted-foreground)",
       onClick: () => setView({ kind: "run", preset: { ...DEFAULT_FILTER, ids: openBookmarks }, title: "ذخیره‌شده‌ها" }),
     },
   ];
 
   return (
     <div className="phone-scroll flex-1 overflow-y-auto px-4 pb-6 screen-in">
-      <h1 className="t-title pt-4">تمرین</h1>
-      <p className="t-caption mt-0.5" style={{ color: "var(--muted-foreground)" }}>
-        با هویت شفاف منبع هر سؤال — رسمی یا تألیفی
-      </p>
+      <header className="pt-4">
+        <Eyebrow tone="accent">تمرین</Eyebrow>
+        <h1 className="t-title mt-1">با هویت شفاف منبع هر سؤال</h1>
+        <p className="t-caption mt-0.5" style={{ color: "var(--muted-foreground)" }}>
+          رسمی با جلسه و شماره، یا تألیفی کتابخانه — انتخاب با شما
+        </p>
+      </header>
 
-      <div className="mt-4 space-y-2.5">
-        {entries.map((e) => (
-          <Card key={e.title} onClick={e.onClick} ariaLabel={e.title}>
-            <div className="flex items-center gap-3">
-              <div
-                className="flex h-11 w-11 shrink-0 items-center justify-center rounded-xl"
-                style={{ background: `color-mix(in srgb, ${e.tint} 12%, transparent)`, color: e.tint }}
-              >
-                <e.icon size={20} strokeWidth={1.9} />
-              </div>
-              <div className="min-w-0 flex-1">
-                <p className="text-[13.5px] font-bold" style={{ color: "var(--foreground)" }}>
-                  {e.title}
-                </p>
-                <p className="num mt-0.5 t-caption" style={{ color: "var(--muted-foreground)" }}>
-                  {e.desc}
-                </p>
-              </div>
-              <span className="flex h-8 w-8 items-center justify-center rounded-full" style={{ background: "var(--muted)" }}>
-                <Play size={13} style={{ color: "var(--muted-foreground)" }} />
-              </span>
-            </div>
-          </Card>
-        ))}
+      {/* dense rows — the library entries, no card stack */}
+      <div className="mt-4 rounded-2xl border px-4" style={{ background: "var(--card)", borderColor: "var(--border)" }}>
+        <DenseList>
+          {entries.map((e) => (
+            <DenseRow
+              key={e.title}
+              icon={e.icon}
+              tone={e.tint}
+              title={e.title}
+              desc={e.desc}
+              onClick={e.onClick}
+              right={
+                <span className="flex h-8 w-8 items-center justify-center rounded-full" style={{ background: "var(--muted)" }}>
+                  <Play size={12} style={{ color: "var(--muted-foreground)" }} />
+                </span>
+              }
+            />
+          ))}
+        </DenseList>
       </div>
 
       <SectionHeader title="تمرین سریع" />
-      <div className="grid grid-cols-3 gap-2.5">
+      <div className="grid grid-cols-3 gap-2">
         {[5, 10, 20].map((n) => (
           <button
             key={n}
-            onClick={() => setView({ kind: "run", preset: { ...DEFAULT_FILTER }, title: `تمرین سریع ${faNum(n)} سؤالی` })}
+            onClick={() => setView({ kind: "run", preset: { ...DEFAULT_FILTER, limit: n }, title: `تمرین سریع ${faNum(n)} سؤالی` })}
             className="press flex min-h-[68px] flex-col items-center justify-center gap-1 rounded-2xl border"
-            style={{ background: "var(--card)", borderColor: "var(--border)" }}
+            style={{ background: "var(--surface)", borderColor: "var(--border)" }}
           >
             <Zap size={17} style={{ color: "var(--primary)" }} />
             <span className="num text-[11.5px] font-extrabold" style={{ color: "var(--foreground)" }}>
@@ -157,7 +156,7 @@ export default function Practice({
   );
 }
 
-/* ═══ Filter sheet — bottom sheet with live result count (§17) ═══ */
+/* ═══ Filter sheet — real bottom sheet with live result count (§17) ═══ */
 function FilterSheet({
   initial,
   title,
@@ -189,7 +188,7 @@ function FilterSheet({
         if (f.sourceType !== "ALL") params.sourceType = f.sourceType;
         if (f.difficulty.length) params.difficulty = f.difficulty.join(",");
         const j = await api.questionsForMajors(majors, params);
-        if (!cancelled) setLiveTotal(f.unsolvedOnly ? j.total : j.total);
+        if (!cancelled) setLiveTotal(j.total);
       } catch {
         if (!cancelled) setLiveTotal(null);
       }
@@ -201,68 +200,70 @@ function FilterSheet({
   }, [f.mabhas, f.sourceType, f.difficulty, majors]);
 
   return (
-    <div className="flex flex-1 flex-col overflow-hidden screen-in">
-      <div className="flex items-center gap-2 px-4 pt-4">
-        <button onClick={onCancel} aria-label="بازگشت" className="press flex h-11 w-11 items-center justify-center rounded-xl" style={{ color: "var(--muted-foreground)" }}>
-          <SlidersHorizontal size={18} style={{ color: "var(--primary)" }} />
-        </button>
-        <h1 className="flex-1 text-[16px] font-extrabold" style={{ color: "var(--foreground)" }}>
-          {title}
-        </h1>
-      </div>
-
-      <div className="phone-scroll flex-1 overflow-y-auto px-4 pb-4">
-        <SectionHeader title="مبحث" />
-        <div className="flex flex-wrap gap-2">
+    <BottomSheet open onClose={onCancel} title={title} ariaLabel={title}
+      footer={
+        <div>
+          <div className="mb-2.5 flex items-center justify-between">
+            <span className="t-caption" style={{ color: "var(--muted-foreground)" }}>
+              نتیجه فیلتر
+            </span>
+            <span className="num text-[15px] font-extrabold" style={{ color: "var(--primary)" }}>
+              {liveTotal === null ? "…" : `${faNum(liveTotal)} سؤال آماده تمرین`}
+            </span>
+          </div>
+          <Btn full size="lg" onClick={() => onApply(f)}>
+            <Play size={17} />
+            شروع تمرین
+          </Btn>
+        </div>
+      }
+    >
+      <div className="pb-2">
+        <Eyebrow>مبحث</Eyebrow>
+        <div className="mt-2 flex flex-wrap gap-2">
           <Chip on={f.mabhas === null} label="همه مباحث" onClick={() => setF((s) => ({ ...s, mabhas: null }))} />
           {mabhasList.map((m) => (
             <Chip key={m} on={f.mabhas === m} label={`مبحث ${faNum(m)}`} onClick={() => setF((s) => ({ ...s, mabhas: m }))} />
           ))}
         </div>
 
-        <SectionHeader title="نوع منبع" />
-        <SegmentedControl
-          ariaLabel="نوع منبع"
-          value={f.sourceType}
-          onChange={(v) => setF((s) => ({ ...s, sourceType: v }))}
-          options={[
-            { value: "ALL" as const, label: "همه" },
-            { value: "OFFICIAL_EXAM" as const, label: "رسمی" },
-            { value: "AUTHORED" as const, label: "تألیفی" },
-          ]}
-        />
-
-        <SectionHeader title="سطح دشواری (چندگزینه‌ای)" />
-        <div className="flex flex-wrap gap-2">
-          {(["easy", "medium", "hard"] as const).map((d) => (
-            <Chip key={d} on={f.difficulty.includes(d)} label={d === "easy" ? "آسان" : d === "medium" ? "متوسط" : "سخت"} onClick={() => toggleDiff(d)} />
-          ))}
+        <div className="mt-5">
+          <Eyebrow>نوع منبع</Eyebrow>
+          <div className="mt-2">
+            <SegmentedControl
+              ariaLabel="نوع منبع"
+              value={f.sourceType}
+              onChange={(v) => setF((s) => ({ ...s, sourceType: v }))}
+              options={[
+                { value: "ALL" as const, label: "همه" },
+                { value: "OFFICIAL_EXAM" as const, label: "رسمی" },
+                { value: "AUTHORED" as const, label: "تألیفی" },
+              ]}
+            />
+          </div>
         </div>
 
-        <SectionHeader title="وضعیت" />
-        <Chip on={f.unsolvedOnly} label="فقط حل‌نشده" onClick={() => setF((s) => ({ ...s, unsolvedOnly: !s.unsolvedOnly }))} />
-      </div>
-
-      {/* sticky result + CTA (§17) */}
-      <div className="border-t px-4 py-3 pb-[max(0.85rem,env(safe-area-inset-bottom))]" style={{ borderColor: "var(--border)", background: "var(--card)" }}>
-        <div className="mb-2.5 flex items-center justify-between">
-          <span className="t-caption" style={{ color: "var(--muted-foreground)" }}>
-            نتیجه فیلتر
-          </span>
-          <span className="num text-[15px] font-extrabold" style={{ color: "var(--primary)" }}>
-            {liveTotal === null ? "…" : `${faNum(liveTotal)} سؤال`}
-          </span>
+        <div className="mt-5">
+          <Eyebrow>سطح دشواری (چندگزینه‌ای)</Eyebrow>
+          <div className="mt-2 flex flex-wrap gap-2">
+            {(["easy", "medium", "hard"] as const).map((d) => (
+              <Chip key={d} on={f.difficulty.includes(d)} label={d === "easy" ? "آسان" : d === "medium" ? "متوسط" : "سخت"} onClick={() => toggleDiff(d)} />
+            ))}
+          </div>
         </div>
-        <Btn full size="lg" onClick={() => onApply(f)}>
-          <Play size={17} />
-          شروع تمرین
-        </Btn>
+
+        <div className="mt-5">
+          <Eyebrow>وضعیت</Eyebrow>
+          <div className="mt-2">
+            <Chip on={f.unsolvedOnly} label="فقط حل‌نشده" onClick={() => setF((s) => ({ ...s, unsolvedOnly: !s.unsolvedOnly }))} />
+          </div>
+        </div>
       </div>
-    </div>
+    </BottomSheet>
   );
 }
 
-/* ═══ Practice runner — ids-driven for mistakes/bookmarks (real fix) ═══ */
+/* ═══ Practice runner — ids-driven for mistakes/bookmarks; limit now honored ═══ */
 function PracticeRunner({
   filter,
   title,
@@ -292,7 +293,7 @@ function PracticeRunner({
           mabhas: filter.mabhas ?? undefined,
           sourceType: filter.sourceType !== "ALL" ? filter.sourceType : undefined,
           difficulty: filter.difficulty.length ? filter.difficulty : undefined,
-          limit: 20,
+          limit: filter.limit ?? 20,
         });
         if (!cancelled) setItems(applyLocal(j.items ?? [], filter, answers));
       } catch {

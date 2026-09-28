@@ -5,7 +5,7 @@ import type { Bootstrap, MhyQuestion } from "@/lib/mhy/server";
 import { api } from "@/lib/mhy/api";
 import { useMhy, mabhasTitle } from "@/lib/mhy/store";
 import { faNum, scoreAttempt, generateComprehensive, remainingSec, type ExamAttempt, type AttemptItem, type QLite } from "@/lib/mhy/engines";
-import { Card, SectionHeader, EmptyState, Btn, StatTile, SourceBadge, ReviewFlagBadge, MabhasChip, ProgressBar, SearchField, LoadingBlock, MeterRows, ProgressRing, ListItem, SegmentedControl, TechFrame, Eyebrow, CompareCard } from "./ui";
+import { Card, SectionHeader, EmptyState, Btn, SourceBadge, ReviewFlagBadge, MabhasChip, SearchField, LoadingBlock, MeterRows, ProgressRing, SegmentedControl, TechFrame, Eyebrow, CompareCard, DenseRow, DenseList } from "./ui";
 import { QuestionRunner } from "./question-runner";
 import {
   ShieldCheck,
@@ -176,6 +176,7 @@ function OfficialSessions({
   const [questions, setQuestions] = useState<MhyQuestion[] | null>(null);
   const [q, setQ] = useState("");
   const sessions = bootstrap?.sessions ?? [];
+  const { profile, officialSessionsSeen: sessionsSeen } = useMhy();
   const filtered = q.trim() ? sessions.filter((s) => s.session.includes(q.trim())) : sessions;
 
   const pick = async (s: string) => {
@@ -209,10 +210,24 @@ function OfficialSessions({
             آزمون {sel}
           </h1>
         </div>
-        <Card className="mt-3" elevated>
-          <div className="grid grid-cols-2 gap-2.5">
-            <StatTile value={faNum(questions.length)} label="سؤال (همان مجموعه واقعی)" />
-            <StatTile value={faNum(duration) + " دقیقه"} label="مدت آزمون" icon={Timer} />
+        {/* pre-exam brief — composition with hairline KPIs */}
+        <div className="tech-glow-copper blueprint-grid mt-3 rounded-3xl border px-4 pb-4 pt-4" style={{ background: "var(--surface)", borderColor: "var(--border)" }}>
+          <Eyebrow tone="copper">راهنمای جلسه</Eyebrow>
+          <div className="mt-3 flex items-stretch rounded-2xl border" style={{ background: "var(--card)", borderColor: "var(--border)" }}>
+            {[
+              { v: faNum(questions.length), l: "سؤال واقعی" },
+              { v: faNum(duration), l: "دقیقه" },
+              { v: faNum(questions.filter((x) => x.sourceType === "OFFICIAL_EXAM").length), l: "با هویت جلسه" },
+            ].map((x, i) => (
+              <div key={x.l} className={`flex-1 py-3 text-center ${i > 0 ? "border-r" : ""}`} style={{ borderColor: "var(--border)" }}>
+                <p className="t-kpi num" style={{ fontSize: 17 }}>
+                  {x.v}
+                </p>
+                <p className="t-meta mt-0.5" style={{ color: "var(--muted-foreground)" }}>
+                  {x.l}
+                </p>
+              </div>
+            ))}
           </div>
           <div className="mt-3 flex flex-wrap gap-1.5">
             {questions.slice(0, 3).map((q2) => (
@@ -228,7 +243,7 @@ function OfficialSessions({
               </p>
             </div>
           )}
-        </Card>
+        </div>
         <div className="mt-4">
           <Btn full size="lg" onClick={() => startRun(questions.map((q2) => q2.id), `آزمون رسمی ${sel}`, duration)} disabled={questions.length === 0}>
             شروع آزمون رسمی
@@ -245,39 +260,60 @@ function OfficialSessions({
           <ChevronLeft size={20} style={{ transform: "rotate(180deg)" }} />
         </button>
         <h1 className="flex-1 text-[16px] font-extrabold" style={{ color: "var(--foreground)" }}>
-          جلسات رسمی
+          آرشیو جلسات رسمی
         </h1>
       </div>
       <p className="t-caption mt-1 px-1" style={{ color: "var(--muted-foreground)" }}>
-        جلسه را انتخاب کنید — سؤالات با شماره و ترتیب واقعی آزمون ارائه می‌شوند.
+        همان سؤالات، همان ترتیب، همان مدت — با شماره جلسه واقعی.
       </p>
       <div className="mt-3">
         <SearchField value={q} onChange={setQ} placeholder="جستجوی جلسه…" ariaLabel="جستجوی جلسه" />
       </div>
-      <div className="mt-3 space-y-2">
-        {filtered.map((s) => (
-          <Card key={s.session} onClick={() => pick(s.session)} ariaLabel={`آزمون ${s.session}`}>
-            <div className="flex items-center gap-3">
-              <div className="num flex h-10 w-10 shrink-0 items-center justify-center rounded-xl text-[10px] font-extrabold" style={{ background: "var(--primary-soft)", color: "var(--primary)" }}>
-                <ClipboardList size={18} />
-              </div>
-              <div className="flex-1">
-                <p className="text-[13px] font-bold" style={{ color: "var(--foreground)" }}>
-                  {s.session}
-                </p>
-                <p className="num mt-0.5 t-caption" style={{ color: "var(--muted-foreground)" }}>
-                  {faNum(s.count)} سؤال رسمی · {faNum(s.majors)} رشته
-                </p>
-              </div>
-              <ChevronLeft size={16} style={{ color: "var(--muted-foreground)" }} />
-            </div>
-          </Card>
-        ))}
-        {!filtered.length && (
-          <p className="py-8 text-center t-body-sm" style={{ color: "var(--muted-foreground)" }}>
-            جلسه‌ای با این عبارت پیدا نشد.
-          </p>
-        )}
+      <div className="mt-3 rounded-2xl border px-4" style={{ background: "var(--card)", borderColor: "var(--border)" }}>
+        <DenseList>
+          {filtered.map((s) => {
+            const isTarget = profile?.targetExam && s.session.includes(profile.targetExam);
+            const done = sessionsSeen.includes(s.session);
+            return (
+              <DenseRow
+                key={s.session}
+                glyph={
+                  <span className="num flex h-10 w-10 items-center justify-center" style={{ color: isTarget ? "var(--copper)" : "var(--muted-foreground)", borderRight: "1px solid var(--border)", paddingLeft: 8 }}>
+                    <ClipboardList size={18} />
+                  </span>
+                }
+                title={
+                  <span style={{ color: isTarget ? "var(--copper)" : "var(--foreground)" }}>
+                    {s.session}
+                    {isTarget ? " · هدف شما" : ""}
+                  </span>
+                }
+                desc={
+                  <span className="num">
+                    {faNum(s.count)} سؤال رسمی · {faNum(s.majors)} رشته
+                  </span>
+                }
+                right={
+                  <span className="flex shrink-0 items-center gap-1.5">
+                    {done && (
+                      <span className="num inline-flex items-center gap-1 rounded-full px-2 py-0.5 text-[9.5px] font-bold" style={{ background: "var(--success-soft)", color: "var(--success)" }}>
+                        <Check size={10} strokeWidth={3} />
+                        انجام‌شده
+                      </span>
+                    )}
+                    <ChevronLeft size={16} style={{ color: "var(--muted-foreground)" }} />
+                  </span>
+                }
+                onClick={() => pick(s.session)}
+              />
+            );
+          })}
+          {!filtered.length && (
+            <p className="py-8 text-center t-body-sm" style={{ color: "var(--muted-foreground)" }}>
+              جلسه‌ای با این عبارت پیدا نشد.
+            </p>
+          )}
+        </DenseList>
       </div>
     </div>
   );
