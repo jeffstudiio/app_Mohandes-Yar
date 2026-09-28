@@ -106,3 +106,22 @@ Stage Summary:
 - Pushed: isomorphic data layer + static pipeline (server mode verified: bootstrap 2191q/15 disciplines, questions OK)
 - Local: .github/workflows/deploy-pages.yml ready; deployment URL will be https://jeffstudiio.github.io/app_Mohandes-Yar/
 - BLOCKED on: token permission "Workflows: Read and write" (one-time user action) → then push workflow → Pages auto-enables & deploys
+
+---
+Task ID: 5-c
+Agent: main
+Task: Pages 部署排障（repo 转公开后仍失败）
+
+Work Log:
+- 用户将仓库转为 public（"پابلیک شد"）；API 确认 visibility: public
+- 检查 Actions：两个 run 均失败于 configure-pages "Create Pages site failed: Resource not accessible by integration"
+- 重新 dispatch run 36389660034（repo 已公开）→ 仍同错误失败于同一步
+- 用 PAT 直接 POST /pages → 403 "Resource not accessible by personal access token"
+- 结论：POST /pages（创建站点）在 fine-grained 权限矩阵中需要 Administration write；
+  GITHUB_TOKEN 无 administration 可授权，PAT 无 administration → 只有仓库 Settings UI 可创建
+- 等待用户在 Settings → Pages → Source 选 "GitHub Actions" 后再 dispatch
+
+Stage Summary:
+- 代码/pipeline 全部就绪且已推送（ac955949）
+- 唯一阻塞：Pages 站点创建需 UI 手动启用（2 clicks）
+- 站点启用后现有 workflow 无需改动即可完整部署
