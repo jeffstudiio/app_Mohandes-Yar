@@ -87,3 +87,22 @@ Stage Summary:
 - Repo live: https://github.com/jeffstudiio/app_Mohandes-Yar (main = 5c47e2c7) — clean V2 codebase, no APK/decompiled artifacts, no secrets
 - Preview: dev server :3000 verified serving V2 reference implementation
 - Development baseline for all future V2 phases = this repo
+
+---
+Task ID: 5
+Agent: Main Agent (Super Z)
+Task: Fix live preview — GitHub Pages static demo deployment from repo
+
+Work Log:
+- Platform preview URL not exposed (constructed link 404s) → chosen path: GitHub Pages static demo, auto-deployed from repo
+- Isomorphic refactor (targeted, no rewrite): content-core.ts = pure query core over real DB content (all types + bootstrap/questions/question/related/regulations/lesson/lessons/search + parseQuestionFilter mirroring route parsing); server.ts = thin fs wrapper with identical exported signatures (7 API routes untouched); api.ts = client data layer, dual mode (NEXT_PUBLIC_DATA_MODE=static → in-browser queries over /data/*.json; else proxies /api/mhy/* — zero dev behavior change)
+- Swapped 11 fetch call sites in 7 components (shell, exam×5, practice, study×2, question-runner, search-overlay)
+- next.config.ts: conditional static export (output=export, basePath, trailingSlash, images unoptimized, distDir=.next-static so dev .next is never clobbered); layout icon basePath-aware; build:static script added
+- Local static build verified end-to-end: export compiles clean, /app_Mohandes-Yar/ serves 200 (index + content.json 3.8MB + regulations.json), agent-browser QA: onboarding renders, all 15 real disciplines with per-field question counts hydrate from static JSON, competency step loads, console clean
+- Workflow .github/workflows/deploy-pages.yml: bun install → configure-pages@v5 (enablement:true, base_path output) → stage db JSONs to public/data → stash src/app/api (export is serverless) → build → upload-pages-artifact(.next-static) → deploy-pages; restore API routes with if:always
+- PAT limitation discovered: fine-grained token has Contents only — push of workflow files rejected (needs Workflows scope); Pages/Actions APIs 403. Code pushed (d6954469, 14 files) WITHOUT workflow file; workflow kept locally, ready to push after token gets Workflows (+Actions read, +Pages rw) permission
+
+Stage Summary:
+- Pushed: isomorphic data layer + static pipeline (server mode verified: bootstrap 2191q/15 disciplines, questions OK)
+- Local: .github/workflows/deploy-pages.yml ready; deployment URL will be https://jeffstudiio.github.io/app_Mohandes-Yar/
+- BLOCKED on: token permission "Workflows: Read and write" (one-time user action) → then push workflow → Pages auto-enables & deploys
