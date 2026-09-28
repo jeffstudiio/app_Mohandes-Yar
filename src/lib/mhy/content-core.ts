@@ -68,6 +68,8 @@ export type MhyBand = {
   text: string | null;
 };
 
+export type DisciplineStat = { total: number; official: number; authored: number };
+
 export type Bootstrap = {
   stats: {
     questions: number;
@@ -80,6 +82,8 @@ export type Bootstrap = {
     lessons: number;
   };
   disciplines: MhyDiscipline[];
+  /** real per-major question counts, aggregated from the questions themselves (§9.2 — no hard-coded numbers) */
+  disciplineStats: Record<string, DisciplineStat>;
   sessions: MhySession[];
   mabhasWithRegulation: number[];
   mabhasIndex: { mabhas: number; questions: number; official: number; topics: string[] }[];
@@ -103,7 +107,13 @@ export function createStore(content: ContentData, regulations: Record<string, Mh
 
 export function getBootstrap(s: ContentStore): Bootstrap {
   const mabhasIndex = new Map<number, { questions: number; official: number; topics: Set<string> }>();
+  const discStats: Record<string, DisciplineStat> = {};
   for (const q of s.questions) {
+    // per-discipline aggregate — derived from the real rows (§9.2)
+    const ds = (discStats[q.major] ??= { total: 0, official: 0, authored: 0 });
+    ds.total++;
+    if (q.sourceType === "OFFICIAL_EXAM") ds.official++;
+    else ds.authored++;
     if (q.mabhas == null) continue;
     const e = mabhasIndex.get(q.mabhas) ?? { questions: 0, official: 0, topics: new Set<string>() };
     e.questions++;
@@ -114,6 +124,7 @@ export function getBootstrap(s: ContentStore): Bootstrap {
   return {
     stats: s.stats,
     disciplines: s.disciplines,
+    disciplineStats: discStats,
     sessions: s.sessions,
     mabhasWithRegulation: Object.keys(s.regulations)
       .map(Number)

@@ -9,6 +9,8 @@ export type QLite = {
   sourceType: "OFFICIAL_EXAM" | "AUTHORED";
   topic: string;
   status: "PUBLISHED" | "REVIEW_REQUIRED";
+  flags?: string[];
+  examSession?: string | null;
 };
 
 export type AnswerState = {
@@ -161,7 +163,7 @@ export function generateComprehensive(
   let s = seed >>> 0;
   const rnd = () => { s |= 0; s = (s + 0x6d2b79f5) | 0; let t = Math.imul(s ^ (s >>> 15), 1 | s); t = (t + Math.imul(t ^ (t >>> 7), 61 | t)) ^ t; return ((t ^ (t >>> 14)) >>> 0) / 4294967296; };
 
-  const published = pool.filter((q) => q.status === "PUBLISHED" || q.flags.length === 0);
+  const published = pool.filter((q) => q.status === "PUBLISHED" || (q.flags?.length ?? 0) === 0);
   const byMabhas = new Map<number, QLite[]>();
   for (const q of published) {
     const m = q.mabhas ?? 0;

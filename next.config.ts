@@ -15,6 +15,8 @@ const nextConfig: NextConfig = {
         distDir: ".next-static", // never clobber the dev server's .next
       }
     : { output: "standalone" as const }),
+  // optional override so a production build can be verified without touching dev's .next
+  distDir: process.env.NEXT_DIST_DIR || undefined,
   typescript: {
     ignoreBuildErrors: true,
   },

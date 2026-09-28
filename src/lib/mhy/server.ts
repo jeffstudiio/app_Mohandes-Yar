@@ -16,6 +16,7 @@ import {
   type QuestionFilter,
   type Bootstrap,
   type MhyQuestion,
+  type MhyBand,
 } from "./content-core";
 
 // ─── Server-side content layer — reads the REAL exported DB content ───

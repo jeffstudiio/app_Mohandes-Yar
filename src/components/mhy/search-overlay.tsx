@@ -5,8 +5,9 @@ import type { SearchHit } from "@/lib/mhy/server";
 import { api } from "@/lib/mhy/api";
 import { faNum } from "@/lib/mhy/engines";
 import { ShieldCheck, PenLine, BookOpen, GraduationCap, X, Search } from "lucide-react";
+import { SearchField, OrbitSpinner } from "./ui";
 
-// ─── Global search overlay (§34/§96) — regulations first, then questions, lessons ───
+// ─── Global search overlay (§25/§34) — regulations first, then questions, lessons ───
 export default function SearchOverlay({
   open,
   onClose,
@@ -62,48 +63,40 @@ export default function SearchOverlay({
 
   return (
     <div className="absolute inset-0 z-50 flex flex-col" style={{ background: "var(--background)" }} role="dialog" aria-label="جستجوی سراسری">
-      <div className="flex items-center gap-2 border-b px-4 py-3" style={{ borderColor: "var(--border)" }}>
+      <div className="flex items-center gap-2 border-b px-3 py-3" style={{ borderColor: "var(--border)" }}>
         <div className="relative flex-1">
-          <Search size={16} className="absolute right-3.5 top-1/2 -translate-y-1/2" style={{ color: "var(--muted-foreground)" }} />
-          <input
-            ref={inputRef}
-            value={q}
-            onChange={(e) => setQ(e.target.value)}
-            placeholder="جستجو: پارکینگ، راه پله، حریق، آسانسور…"
-            aria-label="عبارت جستجو"
-            className="h-12 w-full rounded-2xl border pr-10 pl-3 text-[13px] outline-none focus:ring-2"
-            style={{ background: "var(--card)", borderColor: "var(--border)", color: "var(--foreground)" }}
-          />
+          <SearchField value={q} onChange={setQ} placeholder="جستجو در سؤال‌ها، مقررات و منابع…" ariaLabel="عبارت جستجو" autoFocus />
         </div>
-        <button onClick={onClose} aria-label="بستن جستجو" className="flex h-11 w-11 items-center justify-center rounded-xl" style={{ color: "var(--muted-foreground)" }}>
+        <button onClick={onClose} aria-label="بستن جستجو" className="press flex h-11 w-11 items-center justify-center rounded-xl" style={{ color: "var(--muted-foreground)" }}>
           <X size={20} />
         </button>
       </div>
 
       <div className="phone-scroll flex-1 overflow-y-auto px-4 py-3.5">
         {q.trim().length < 2 && (
-          <div className="py-8 text-center">
-            <Search size={30} style={{ color: "var(--muted-foreground)" }} className="mx-auto" />
-            <p className="mt-3 text-[12px]" style={{ color: "var(--muted-foreground)" }}>
+          <div className="py-10 text-center">
+            <div className="mx-auto flex h-14 w-14 items-center justify-center rounded-2xl" style={{ background: "var(--muted)", color: "var(--muted-foreground)" }}>
+              <Search size={26} strokeWidth={1.6} />
+            </div>
+            <p className="t-body-sm mt-3" style={{ color: "var(--muted-foreground)" }}>
               در مقررات، سؤالات و درسنامه‌ها جستجو کنید — مثلاً «پارکینگ» یا «حریق».
             </p>
           </div>
         )}
-        {busy && (
-          <p className="py-6 text-center text-[12px]" style={{ color: "var(--muted-foreground)" }}>
-            در حال جستجو…
-          </p>
+        {busy && hits === null && (
+          <div className="flex justify-center py-8">
+            <OrbitSpinner />
+          </div>
         )}
         {!busy && hits !== null && hits.length === 0 && (
-          <p className="py-8 text-center text-[12.5px]" style={{ color: "var(--muted-foreground)" }}>
+          <p className="py-10 text-center t-body-sm" style={{ color: "var(--muted-foreground)" }}>
             نتیجه‌ای برای «{q}» پیدا نشد — عبارت کوتاه‌تری امتحان کنید.
           </p>
         )}
+
         {regs.length > 0 && (
           <>
-            <p className="mb-2 mt-1 text-[12px] font-bold" style={{ color: "var(--foreground)" }}>
-              مقررات ({faNum(regs.length)})
-            </p>
+            <ResultHeader label="مقررات" count={regs.length} />
             <div className="space-y-2">
               {regs.map((h, i) => {
                 if (h.kind !== "regulation") return null;
@@ -111,19 +104,20 @@ export default function SearchOverlay({
                   <button
                     key={`r${i}`}
                     onClick={() => onOpenRegulation(h.mabhas)}
-                    className="w-full rounded-2xl border p-3.5 text-right"
+                    className="press w-full rounded-2xl border p-3.5 text-right"
                     style={{ background: "var(--card)", borderColor: "var(--border)" }}
                   >
-                    <p className="flex items-center gap-1.5 text-[12px] font-bold" style={{ color: "var(--primary)" }}>
+                    <p className="num flex items-center gap-1.5 text-[11.5px] font-bold" style={{ color: "var(--primary)" }}>
                       <BookOpen size={13} />
                       مبحث {faNum(h.mabhas)} · بند {h.band}
+                      {h.page ? ` · ص ${faNum(h.page)}` : ""}
                     </p>
                     {h.title && (
-                      <p className="mt-1 truncate text-[12px] font-bold" style={{ color: "var(--foreground)" }}>
+                      <p className="mt-1 truncate text-[12.5px] font-bold" style={{ color: "var(--foreground)" }}>
                         {h.title}
                       </p>
                     )}
-                    <p className="mt-1 line-clamp-2 text-[11px] leading-5" style={{ color: "var(--muted-foreground)" }}>
+                    <p className="t-caption mt-1 line-clamp-2 leading-5" style={{ color: "var(--muted-foreground)" }}>
                       …{h.snippet}…
                     </p>
                   </button>
@@ -132,11 +126,10 @@ export default function SearchOverlay({
             </div>
           </>
         )}
+
         {qs.length > 0 && (
           <>
-            <p className="mb-2 mt-5 text-[12px] font-bold" style={{ color: "var(--foreground)" }}>
-              سؤالات ({faNum(qs.length)})
-            </p>
+            <ResultHeader label="سؤالات" count={qs.length} />
             <div className="space-y-2">
               {qs.map((h, i) => {
                 if (h.kind !== "question") return null;
@@ -144,14 +137,14 @@ export default function SearchOverlay({
                   <button
                     key={`q${i}`}
                     onClick={onOpenQuestionPractice}
-                    className="w-full rounded-2xl border p-3.5 text-right"
+                    className="press w-full rounded-2xl border p-3.5 text-right"
                     style={{ background: "var(--card)", borderColor: "var(--border)" }}
                   >
-                    <p className="flex items-center gap-1.5 text-[10.5px] font-bold" style={{ color: h.sourceType === "OFFICIAL_EXAM" ? "var(--primary)" : "var(--warning)" }}>
+                    <p className="num flex items-center gap-1.5 text-[10.5px] font-bold" style={{ color: h.sourceType === "OFFICIAL_EXAM" ? "var(--primary)" : "var(--warning)" }}>
                       {h.sourceType === "OFFICIAL_EXAM" ? <ShieldCheck size={12} /> : <PenLine size={12} />}
                       {h.sourceType === "OFFICIAL_EXAM" ? `رسمی${h.session ? ` · ${h.session}` : ""}` : "تألیفی"} · {h.topic}
                     </p>
-                    <p className="mt-1 line-clamp-2 text-[11.5px] leading-5" style={{ color: "var(--foreground)" }}>
+                    <p className="t-body-sm mt-1 line-clamp-2 leading-5" style={{ color: "var(--foreground)" }}>
                       {h.text}
                     </p>
                   </button>
@@ -160,11 +153,10 @@ export default function SearchOverlay({
             </div>
           </>
         )}
+
         {ls.length > 0 && (
           <>
-            <p className="mb-2 mt-5 text-[12px] font-bold" style={{ color: "var(--foreground)" }}>
-              درسنامه‌ها ({faNum(ls.length)})
-            </p>
+            <ResultHeader label="درسنامه‌ها" count={ls.length} />
             <div className="space-y-2">
               {ls.map((h, i) => {
                 if (h.kind !== "lesson") return null;
@@ -172,11 +164,11 @@ export default function SearchOverlay({
                   <button
                     key={`l${i}`}
                     onClick={() => onOpenRegulation(h.mabhas)}
-                    className="flex w-full items-center gap-2.5 rounded-2xl border p-3.5 text-right"
+                    className="press flex w-full items-center gap-2.5 rounded-2xl border p-3.5 text-right"
                     style={{ background: "var(--card)", borderColor: "var(--border)" }}
                   >
                     <GraduationCap size={16} style={{ color: "var(--success)" }} />
-                    <span className="flex-1 text-[12px] font-bold" style={{ color: "var(--foreground)" }}>
+                    <span className="flex-1 text-[12.5px] font-bold" style={{ color: "var(--foreground)" }}>
                       {h.title}
                     </span>
                   </button>
@@ -186,6 +178,20 @@ export default function SearchOverlay({
           </>
         )}
       </div>
+    </div>
+  );
+}
+
+function ResultHeader({ label, count }: { label: string; count: number }) {
+  return (
+    <div className="mb-2 mt-4 flex items-center gap-2 first:mt-1">
+      <p className="text-[12px] font-extrabold" style={{ color: "var(--foreground)" }}>
+        {label}
+      </p>
+      <span className="num rounded-full px-2 py-0.5 text-[10px] font-bold" style={{ background: "var(--muted)", color: "var(--muted-foreground)" }}>
+        {faNum(count)}
+      </span>
+      <div className="h-px flex-1" style={{ background: "var(--border)" }} />
     </div>
   );
 }

@@ -75,6 +75,33 @@ export const api = {
     return fetchJson(`${BASE}/api/mhy/questions${qs ? `?${qs}` : ""}`) as Promise<{ total: number; items: MhyQuestion[] }>;
   },
 
+  /** Multi-competency pool (§9.4): fetch per real major code in parallel and merge —
+   *  works identically in server and static modes without touching API semantics. */
+  async questionsForMajors(
+    majors: string[],
+    params: Partial<QuestionFilter> = {}
+  ): Promise<{ total: number; items: MhyQuestion[] }> {
+    const list = majors.filter(Boolean);
+    if (list.length <= 1) {
+      const p = { ...params } as Record<string, unknown>;
+      if (list.length) p.major = list[0];
+      return this.questions(p as QParams);
+    }
+    const results = await Promise.all(list.map((m) => this.questions({ ...params, major: m })));
+    // merge: dedupe by id (rows belong to exactly one major, but stay safe), sum totals
+    const seen = new Set<number>();
+    const items: MhyQuestion[] = [];
+    for (const r of results) {
+      for (const q of r.items ?? []) {
+        if (!seen.has(q.id)) {
+          seen.add(q.id);
+          items.push(q);
+        }
+      }
+    }
+    return { total: results.reduce((s, r) => s + (r.total ?? 0), 0), items };
+  },
+
   async question(id: number): Promise<{ question: MhyQuestion; related: RelatedItem[] }> {
     if (STATIC) {
       const s = await store();
