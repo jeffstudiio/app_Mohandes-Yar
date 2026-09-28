@@ -12,11 +12,11 @@ const nextConfig: NextConfig = {
         basePath,
         trailingSlash: true,
         images: { unoptimized: true },
-        distDir: ".next-static", // never clobber the dev server's .next
       }
     : { output: "standalone" as const }),
-  // optional override so a production build can be verified without touching dev's .next
-  distDir: process.env.NEXT_DIST_DIR || undefined,
+  // static export goes to .next-static (never clobbers dev's .next);
+  // optional NEXT_DIST_DIR override lets a production build be verified without touching dev's .next
+  distDir: process.env.NEXT_DIST_DIR || (isStatic ? ".next-static" : undefined),
   typescript: {
     ignoreBuildErrors: true,
   },
