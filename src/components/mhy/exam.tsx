@@ -581,7 +581,10 @@ function ExamRunner({
         })}
       </div>
 
-      <div className="flex-1 overflow-hidden">
+      {/* runner host — MUST be a flex-col with min-h-0: a plain flex-1 block makes
+          QuestionRunner's inner flex-1 height unconstrained → phone-scroll collapses
+          (clientHeight == scrollHeight) and overflow-hidden clips the options. */}
+      <div className="flex min-h-0 flex-1 flex-col">
         <QuestionRunner
           question={q}
           index={idx}
