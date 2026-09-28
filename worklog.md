@@ -181,3 +181,19 @@ Work Log:
 Stage Summary:
 - تمام معیارهای §42 محقق؛ هیچ داده ساختگی اضافه نشده؛ منطق/engines حفظ شده
 - جدی‌ترین limitation: تایپ‌چک examples/skills خارج از scope خطا دارد (پیش‌موجود، بی‌ربط)؛ URBAN-PLAN در داده اصلی عنوان نقشه‌برداری-کاردانی دارد و زیر URBAN گروه می‌شود (داده‌وفادار)
+
+---
+Task ID: 8
+Agent: main
+Task: تحلیل پک مرجع طراحی کاربر (۷ تصویر Google Drive) به‌عنوان ورودی Premium UI
+
+Work Log:
+- دانلود موازی ۷ فایل از Google Drive → design-refs/ (6×WebP + 1×AVIF→PNG)
+- بازبینی بصری تک‌تک ref1..ref7 (habit tracker، fitness/stats، language learning، analytics kit)
+- استخراج DNA مشترک ۱۲ الگو + ضدالگوها (rainbow chart، glow، عکس استوک)
+- مپ الگوها به اسکرین‌های مهندس‌یار پس از Task 7 + ایده‌های Reference Pass
+- سند کامل: design-refs/ANALYSIS.md
+
+Stage Summary:
+- ref4 (زبان‌آموزی) نزدیک‌ترین مرجع به «Premium Academic Productivity»؛ ref5 فقط منبع ایده نمودار (اجرایش ممنوع)
+- پالت پیشنهادی: dark tinted neutral + تک‌اکسنت آکادمیک + کِرِم برای callout
