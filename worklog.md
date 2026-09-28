@@ -68,3 +68,22 @@ Work Log:
 
 Stage Summary:
 - Reference implementation of full V2 IA running on real APK content; RN-source-dependent items (build/AAB, manifest cleanup, 192.168.1.9 trace, TalkBack device QA) explicitly BLOCKED w/ remediation mapping; no fabricated content anywhere
+
+---
+Task ID: 4
+Agent: Main Agent (Super Z)
+Task: Upload final V2 to GitHub repo jeffstudiio/app_Mohandes-Yar + provide live preview
+
+Work Log:
+- Verified repo via API: private, empty (no commits), PAT has admin+push
+- Prepared clean package: .gitignore extended (apk_analysis/ 317MB decompiled artifacts, tool-results/, upload/, download/, QA PNGs excluded); untracked .env; added .env.example
+- Added docs/: V2-EXECUTION-REPORT.md, V2-MIGRATION-PLAN.sql, Mohandesyar-UIUX-Report.pdf; wrote Persian README.md (stack, real content stats 2191q/15 sessions/1733 bands, IA, run instructions, V2 principles)
+- Git identity set (jeffstudiio); orphan branch v2-release → clean initial commit 5c47e2c7 (124 files, 14764 insertions) → pushed to GitHub main
+- Fixed worktree race (reflog showed checkout reverted disk to old scaffold): git reset --hard 5c47e2c7 → worktree clean & synced with origin/main; .env confirmed NOT in pushed history
+- Verified app post-reset: GET / 200, Persian V2 UI (مهندس‌یار/داشبورد/آزمون) served; GitHub contents API confirms full tree + commit 5c47e2c7
+- Remote origin configured (token in local .git/config only, never committed)
+
+Stage Summary:
+- Repo live: https://github.com/jeffstudiio/app_Mohandes-Yar (main = 5c47e2c7) — clean V2 codebase, no APK/decompiled artifacts, no secrets
+- Preview: dev server :3000 verified serving V2 reference implementation
+- Development baseline for all future V2 phases = this repo
