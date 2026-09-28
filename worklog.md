@@ -125,3 +125,22 @@ Stage Summary:
 - 代码/pipeline 全部就绪且已推送（ac955949）
 - 唯一阻塞：Pages 站点创建需 UI 手动启用（2 clicks）
 - 站点启用后现有 workflow 无需改动即可完整部署
+
+---
+Task ID: 5-d
+Agent: main
+Task: GitHub Pages 部署完成与最终验证
+
+Work Log:
+- 用户在 Settings → Pages 启用 Source: GitHub Actions（"انجام شد"）
+- GET /pages 返回 200（站点已存在）→ dispatch run 36389998264 → build+deploy 全部 success
+- 发现线上 HTML 中 /app-icon.webp 未带 basePath（shell.tsx:128 硬编码，React 19 还自动生成 preload）
+- 修复 shell.tsx：BASE 常量 + img src 前缀化 → commit be5df778 → push 自动触发 run 36390261221 → success
+- 最终验证：index/icon/content.json/regulations.json 全 200；HTML 无未前缀引用；
+  10/10 JS/CSS chunks 200；数据完整性 2191 题/15 学科/15 场次
+
+Stage Summary:
+- ✅ Task 5 完成：预览上线 https://jeffstudiio.github.io/app_Mohandes-Yar/
+- 部署链全自动：push main（src/public/db 等路径）→ 静态构建 → deploy-pages
+- regulations.json 为 {法典号: [条款...]} 结构，应用端解析正常（非缺陷）
+- 后续开发在 github.com/jeffstudiio/app_Mohandes-Yar 推进
