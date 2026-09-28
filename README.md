@@ -12,6 +12,14 @@
 
 > استقرار با GitHub Actions (`.github/workflows/deploy-pages.yml`) انجام می‌شود: خروجی استاتیک Next.js + لایه داده ایزومورف (`src/lib/mhy/content-core.ts`) که همان کوئری‌های سرور را در مرورگر اجرا می‌کند.
 
+## 📦 نسخه اصلی V1 (آرشیو)
+
+APK اصلی و دست‌نخورده v1.0.0 (منبع استخراج محتوای واقعی) در این ریپو نگه‌داری می‌شود:
+
+- درون ریپو: [`releases/v1/mohandesyar-v1.0.0.apk`](releases/v1/mohandesyar-v1.0.0.apk) + [README مستندات](releases/v1/README.md)
+- دانلود مستقیم: [Release `v1.0.0-original`](https://github.com/jeffstudiio/app_Mohandes-Yar/releases/download/v1.0.0-original/mohandesyar-v1.0.0.apk)
+- SHA-256: `fea17a191f4e251d451941806dd6613872808ccf6176844f14b84a9dad7031c4`
+
 ---
 
 ## محتوای واقعی (بدون داده ساختگی)

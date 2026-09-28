@@ -144,3 +144,21 @@ Stage Summary:
 - 部署链全自动：push main（src/public/db 等路径）→ 静态构建 → deploy-pages
 - regulations.json 为 {法典号: [条款...]} 结构，应用端解析正常（非缺陷）
 - 后续开发在 github.com/jeffstudiio/app_Mohandes-Yar 推进
+
+---
+Task ID: 6
+Agent: main
+Task: V1 原始 APK 归档入库（Google Drive → GitHub）
+
+Work Log:
+- 从 Google Drive 下载用户提供文件（1UsucjNrJMIVx1x8Ry4rbwAu8G-TQFitC）→ 35MB Android APK
+- SHA256 验证：与 apk_analysis/app.apk 完全一致（fea17a191f4e251d...）= 已分析的 V1 原始包（React Native，res/SN.db 为内容源）
+- 归档到 releases/v1/mohandesyar-v1.0.0.apk + 波斯语 README（技术规格、V2 关联、SHA256）→ commit b1ae72d7 推送
+- 创建 GitHub Release v1.0.0-original（id 398028906）+ 上传 asset（201 uploaded）
+- 双路径验证：release 下载 200 + raw 路径 200，SHA256 一致
+- 主 README 增加 "📦 نسخه اصلی V1 (آرشیو)" 章节；worklog 提交
+- releases/** 不在 workflow paths 过滤内 → 未触发多余 Pages 部署
+
+Stage Summary:
+- V1 原始包永久归档于仓库 + Release 双通道，含文档与哈希指纹
+- 本地 download/v1-source-download 为临时副本（不推送）
