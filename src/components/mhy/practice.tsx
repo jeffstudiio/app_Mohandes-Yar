@@ -136,15 +136,19 @@ export default function Practice({
         </DenseList>
       </div>
 
-      {/* mabhas rail — one tap from cover to practice (§21/§39) */}
+      {/* mabhas rail — one tap from cover to practice (§21/§39) — bidirectional arrows
+          + «همه» endcap (same pattern as study rails); all real mabhas, swipe both ways */}
       {(bootstrap?.mabhasIndex ?? []).length > 0 && (
         <section className="mt-6" aria-label="تمرین مبحثی سریع">
-          <SectionHeader title="تمرین مبحثی" />
-          <SnapRail ariaLabel="انتخاب مبحث برای تمرین">
+          <SectionHeader
+            title="تمرین مبحثی"
+            action="همه"
+            onAction={() => setView({ kind: "filter", preset: DEFAULT_FILTER, title: "تمرین مبحثی" })}
+          />
+          <SnapRail ariaLabel="انتخاب مبحث برای تمرین — اسکرول دوطرفه" arrows>
             {(bootstrap?.mabhasIndex ?? [])
               .slice()
               .sort((a, b) => b.questions - a.questions)
-              .slice(0, 12)
               .map((mi) => (
                 <div className="rail-item" key={mi.mabhas}>
                   <MabhasCover
@@ -156,6 +160,20 @@ export default function Practice({
                   />
                 </div>
               ))}
+            {/* end-cap — open the full filter sheet (all mabhas chips) */}
+            <div className="rail-item flex items-center">
+              <button
+                onClick={() => setView({ kind: "filter", preset: DEFAULT_FILTER, title: "تمرین مبحثی" })}
+                className="press flex h-[104px] w-[78px] flex-col items-center justify-center gap-1.5 rounded-2xl border"
+                style={{ background: "var(--surface)", borderColor: "var(--border)" }}
+                aria-label="انتخاب مبحث از فهرست کامل"
+              >
+                <SlidersHorizontal size={18} style={{ color: "var(--primary)" }} />
+                <span className="text-[11px] font-bold" style={{ color: "var(--muted-foreground)" }}>
+                  همه
+                </span>
+              </button>
+            </div>
           </SnapRail>
         </section>
       )}
