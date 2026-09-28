@@ -274,3 +274,17 @@ Stage Summary:
 - 5 commits: imagery system / study+library / dashboard / runner+result / practice+search
 - «Content itself is now the visual identity»: هر مبحث هویت تصویری خودش را دارد؛ covers appear in study root, library, lessons, readers, dashboard, practice, runner source, result analysis, search
 - all functionality/data/business logic preserved; zero fabricated statistics
+
+---
+Task ID: 11-b
+Agent: main
+Task: Deploy verification of imagery-driven premium pass
+
+Work Log:
+- push 133d9f15 (6 commits incl. worklog) → Pages run completed success
+- live checks: / 200 · mabhas-covers/mabhas-01.webp 200 (28KB) · mabhas-23.webp 200 (29KB) · cover code present in deployed chunk 83908cf246fc2145.js
+- agent-browser QA on https://jeffstudiio.github.io/app_Mohandes-Yar/: study library rails + hero + REAL amber review badge (مبحث ۱: ۳۲) + dark mode cohesive; screenshots scripts/qa-live-*.png
+
+Stage Summary:
+- imagery-driven identity is LIVE: هر مبحث هویت تصویری خودش را دارد؛ covers across study/library/dashboard/runner/result/practice/search/readers
+- no deploy trigger for worklog-only commits (path filter respected)
