@@ -5,7 +5,7 @@ import type { Bootstrap, MhyQuestion } from "@/lib/mhy/server";
 import { api } from "@/lib/mhy/api";
 import { useMhy, mabhasTitle } from "@/lib/mhy/store";
 import { faNum, scoreAttempt, generateComprehensive, remainingSec, type ExamAttempt, type AttemptItem, type QLite } from "@/lib/mhy/engines";
-import { Card, SectionHeader, EmptyState, Btn, StatTile, SourceBadge, ReviewFlagBadge, MabhasChip, ProgressBar, SearchField, LoadingBlock, MeterRows, ProgressRing, ListItem, SegmentedControl } from "./ui";
+import { Card, SectionHeader, EmptyState, Btn, StatTile, SourceBadge, ReviewFlagBadge, MabhasChip, ProgressBar, SearchField, LoadingBlock, MeterRows, ProgressRing, ListItem, SegmentedControl, TechFrame, Eyebrow, CompareCard } from "./ui";
 import { QuestionRunner } from "./question-runner";
 import {
   ShieldCheck,
@@ -579,9 +579,14 @@ function ExamRunner({
   );
 }
 
-/* ═══ Result — second WOW screen (§20) ═══ */
+/* ═══ Result — WOW#3: score reveals itself (ring draw + count-up via animated pct) ═══ */
 function ExamResult({ attempt, onHome, onReview }: { attempt: ExamAttempt; onHome: () => void; onReview: () => void }) {
   const { attempts } = useMhy();
+  const [revealed, setRevealed] = useState(false);
+  useEffect(() => {
+    const t = setTimeout(() => setRevealed(true), 350);
+    return () => clearTimeout(t);
+  }, []);
   const s = useMemo(() => scoreAttempt(attempt), [attempt]);
 
   // comparison vs previous attempt of the same kind (real history, no fake deltas)
@@ -592,6 +597,7 @@ function ExamResult({ attempt, onHome, onReview }: { attempt: ExamAttempt; onHom
   const delta = prev ? s.accuracyPct - prev.accuracyPct : null;
 
   const pass = s.accuracyPct >= 60;
+  const durMin = Math.max(1, Math.round(attempt.durationSec / 60));
 
   const perMabhasRows = useMemo(
     () =>
@@ -607,82 +613,119 @@ function ExamResult({ attempt, onHome, onReview }: { attempt: ExamAttempt; onHom
   const weakAreas = perMabhasRows.filter((r) => r.pct < 60 && r.correct + r.wrong > 0).slice(0, 3);
 
   return (
-    <div className="phone-scroll flex-1 overflow-y-auto px-4 pb-6 screen-in">
-      {/* score hero */}
-      <div className="flex flex-col items-center pt-6 text-center">
-        <div className="pop-in">
-          <ProgressRing
-            pct={s.accuracyPct}
-            size={158}
-            strokeWidth={13}
-            label="دقت پاسخ‌های داده‌شده"
-            color={pass ? "var(--success)" : "var(--danger)"}
-          />
+    <div className="phone-scroll flex-1 overflow-y-auto pb-6 screen-in">
+      {/* score reveal — composition surface, not a card stack */}
+      <TechFrame
+        className="tech-glow blueprint-grid mx-4 mt-4 overflow-hidden rounded-3xl border"
+        style={{ background: "var(--surface)", borderColor: "var(--border)" }}
+      >
+        <div className="flex flex-col items-center px-4 pb-5 pt-5 text-center">
+          <Eyebrow tone={pass ? "accent" : "muted"}>کارنامه آزمون</Eyebrow>
+          <div className="pop-in mt-3">
+            <ProgressRing
+              pct={revealed ? s.accuracyPct : 0}
+              size={150}
+              strokeWidth={12}
+              label="دقت پاسخ‌ها"
+              color={pass ? "var(--primary)" : "var(--danger)"}
+            />
+          </div>
+          <h1 className="t-title mt-3">{pass ? "آفرین! عملکرد حرفه‌ای بود" : "پایه‌ها را محکم‌تر کنید"}</h1>
+          <p className="num t-caption mt-1" style={{ color: "var(--muted-foreground)" }}>
+            {attempt.title} · {faNum(durMin)} دقیقه · {new Date(attempt.finishedAt).toLocaleDateString("fa-IR")}
+          </p>
+          {delta !== null && (
+            <span
+              className="num mt-2.5 inline-flex items-center gap-1 rounded-full px-3 py-1 text-[11px] font-extrabold"
+              style={{
+                background: delta >= 0 ? "var(--success-soft)" : "var(--danger-soft)",
+                color: delta >= 0 ? "var(--success)" : "var(--danger)",
+              }}
+            >
+              {delta >= 0 ? <ArrowUpRight size={13} /> : <ArrowDownRight size={13} />}
+              {delta >= 0 ? "+" : "−"}
+              {faNum(Math.abs(delta))}٪ نسبت به آزمون قبلی
+            </span>
+          )}
         </div>
-        <h1 className="t-title mt-3">{pass ? "آفرین! عملکرد خوبی داشتید" : "پایه‌ها را محکم‌تر کنید"}</h1>
-        <p className="num t-caption mt-1" style={{ color: "var(--muted-foreground)" }}>
-          {attempt.title} · {faNum(Math.round(attempt.durationSec / 60))} دقیقه
-        </p>
-        {delta !== null && (
-          <span
-            className="num mt-2 inline-flex items-center gap-1 rounded-full px-3 py-1 text-[11px] font-extrabold"
-            style={{
-              background: delta >= 0 ? "var(--success-soft)" : "var(--danger-soft)",
-              color: delta >= 0 ? "var(--success)" : "var(--danger)",
-            }}
-          >
-            {delta >= 0 ? <ArrowUpRight size={13} /> : <ArrowDownRight size={13} />}
-            {delta >= 0 ? "+" : "−"}
-            {faNum(Math.abs(delta))}٪ نسبت به آزمون قبلی
-          </span>
-        )}
-      </div>
+      </TechFrame>
 
-      {/* KPI row */}
-      <div className="mt-5 grid grid-cols-4 gap-2">
-        <StatTile value={faNum(s.correct)} label="درست" color="var(--success)" />
-        <StatTile value={faNum(s.wrong)} label="نادرست" color="var(--danger)" />
-        <StatTile value={faNum(s.unanswered)} label="بی‌پاسخ" color="var(--warning)" />
-        <StatTile value={faNum(s.total)} label="کل" />
-      </div>
-
-      {/* per-mabhas analysis */}
-      <SectionHeader title="تحلیل بر اساس مبحث" />
-      <Card>
-        <MeterRows
-          items={perMabhasRows.map((r) => ({
-            label: r.m === 0 ? "عمومی" : mabhasTitle(r.m),
-            pct: r.pct,
-            color: r.pct >= 60 ? "var(--success)" : "var(--danger)",
-            meta: `${faNum(r.correct)} درست · ${faNum(r.wrong)} نادرست${r.unanswered ? ` · ${faNum(r.unanswered)} بی‌پاسخ` : ""}`,
-          }))}
-        />
-      </Card>
-
-      {/* weak areas → action */}
-      {weakAreas.length > 0 && (
-        <>
-          <SectionHeader title="نیاز به مرور" />
-          <Card>
-            <div className="flex flex-wrap gap-2">
-              {weakAreas.map((r) => (
-                <span
-                  key={r.m}
-                  className="num rounded-full px-3 py-1.5 text-[11.5px] font-bold"
-                  style={{ background: "var(--danger-soft)", color: "var(--danger)" }}
-                >
-                  {mabhasTitle(r.m)} — ٪{faNum(r.pct)}
-                </span>
-              ))}
-            </div>
-            <p className="t-caption mt-2.5" style={{ color: "var(--muted-foreground)" }}>
-              مرور اشتباهات همین آزمون، سریع‌ترین راه ترمیم این مباحث است.
+      {/* four KPIs — one strong surface, hairline-divided columns */}
+      <div className="mx-4 mt-3 flex items-stretch rounded-2xl border" style={{ background: "var(--card)", borderColor: "var(--border)" }} role="group" aria-label="خلاصه نتیجه">
+        {[
+          { v: faNum(s.correct), l: "درست", c: "var(--primary)" },
+          { v: faNum(s.wrong), l: "نادرست", c: "var(--danger)" },
+          { v: faNum(s.unanswered), l: "بی‌پاسخ", c: "var(--warning)" },
+          { v: faNum(s.total), l: "کل", c: "var(--foreground)" },
+        ].map((x, i) => (
+          <div key={x.l} className={`flex-1 py-3 text-center ${i > 0 ? "border-r" : ""}`} style={{ borderColor: "var(--border)" }}>
+            <p className="t-kpi num" style={{ fontSize: 18, color: x.c }}>
+              {x.v}
             </p>
-          </Card>
-        </>
+            <p className="t-meta mt-0.5" style={{ color: "var(--muted-foreground)" }}>
+              {x.l}
+            </p>
+          </div>
+        ))}
+      </div>
+
+      {/* comparison vs previous attempt — slanted divider, winner emphasis */}
+      {prev && (
+        <section className="mx-4 mt-5" aria-label="مقایسه با آزمون قبلی">
+          <Eyebrow>روند عملکرد</Eyebrow>
+          <CompareCard
+            ariaLabel="مقایسه دقت این آزمون با آزمون قبلی"
+            items={[
+              { label: "آزمون قبلی", value: `٪${faNum(prev.accuracyPct)}` },
+              { label: "این آزمون", value: `٪${faNum(s.accuracyPct)}`, winner: s.accuracyPct >= prev.accuracyPct, hint: delta !== null ? (delta >= 0 ? `${faNum(delta)}٪ رشد` : `${faNum(Math.abs(delta))}٪ افت`) : undefined },
+            ]}
+          />
+        </section>
       )}
 
-      <div className="mt-6 space-y-2.5">
+      {/* per-mabhas analysis — dense bars, no card */}
+      <section className="mx-4 mt-5" aria-label="تحلیل بر اساس مبحث">
+        <Eyebrow>تحلیل بر اساس مبحث</Eyebrow>
+        <div className="mt-3">
+          <MeterRows
+            items={perMabhasRows.map((r) => ({
+              label: r.m === 0 ? "عمومی" : mabhasTitle(r.m),
+              pct: r.pct,
+              color: r.pct >= 60 ? "var(--primary)" : "var(--danger)",
+              meta: `${faNum(r.correct)} درست · ${faNum(r.wrong)} نادرست${r.unanswered ? ` · ${faNum(r.unanswered)} بی‌پاسخ` : ""}`,
+            }))}
+          />
+        </div>
+      </section>
+
+      {/* weak areas → targeted action */}
+      {weakAreas.length > 0 && (
+        <section className="mx-4 mt-6" aria-label="نیاز به مرور">
+          <Eyebrow tone="copper">نیاز به مرور</Eyebrow>
+          <div className="mt-2 divide-y" style={{ borderColor: "var(--border)" }}>
+            {weakAreas.map((r) => (
+              <div key={r.m} className="flex items-center gap-2.5 py-2.5">
+                <span className="num flex h-9 w-9 shrink-0 items-center justify-center rounded-xl text-[10.5px] font-extrabold" style={{ background: "var(--warning-soft)", color: "var(--warning)" }}>
+                  ٪{faNum(r.pct)}
+                </span>
+                <div className="min-w-0 flex-1">
+                  <p className="truncate text-[12.5px] font-bold" style={{ color: "var(--foreground)" }}>
+                    {mabhasTitle(r.m)}
+                  </p>
+                  <p className="t-meta" style={{ color: "var(--muted-foreground)" }}>
+                    {faNum(r.correct)} درست از {faNum(r.correct + r.wrong)} پاسخ
+                  </p>
+                </div>
+              </div>
+            ))}
+          </div>
+          <p className="t-caption mt-2" style={{ color: "var(--muted-foreground)" }}>
+            مرور اشتباهات همین آزمون، سریع‌ترین راه ترمیم این مباحث است.
+          </p>
+        </section>
+      )}
+
+      <div className="mx-4 mt-6 space-y-2.5">
         <Btn full size="lg" onClick={onReview}>
           <RotateCcw size={16} />
           مرور اشتباهات
@@ -707,11 +750,11 @@ function AttemptHistory() {
     );
   }
   return (
-    <div className="space-y-2">
+    <div className="divide-y" style={{ borderColor: "var(--border)" }}>
       {attempts.slice(0, 5).map((a) => {
         const s = scoreAttempt(a);
         return (
-          <div key={a.id} className="flex items-center gap-3 rounded-2xl border p-3.5" style={{ background: "var(--card)", borderColor: "var(--border)" }}>
+          <div key={a.id} className="flex items-center gap-3 py-3">
             <div
               className="num flex h-10 w-10 shrink-0 items-center justify-center rounded-xl text-[11px] font-extrabold"
               style={{
@@ -721,7 +764,7 @@ function AttemptHistory() {
             >
               ٪{faNum(s.accuracyPct)}
             </div>
-            <div className="flex-1">
+            <div className="min-w-0 flex-1">
               <p className="truncate text-[12.5px] font-bold" style={{ color: "var(--foreground)" }}>
                 {a.title}
               </p>
@@ -729,6 +772,7 @@ function AttemptHistory() {
                 {faNum(s.correct)} درست از {faNum(s.total)} · {new Date(a.finishedAt).toLocaleDateString("fa-IR")}
               </p>
             </div>
+            <ChevronLeft size={16} style={{ color: "var(--muted-foreground)" }} />
           </div>
         );
       })}
