@@ -86,7 +86,7 @@ export type Bootstrap = {
   disciplineStats: Record<string, DisciplineStat>;
   sessions: MhySession[];
   mabhasWithRegulation: number[];
-  mabhasIndex: { mabhas: number; questions: number; official: number; topics: string[] }[];
+  mabhasIndex: { mabhas: number; questions: number; official: number; bands: number; topics: string[] }[];
 };
 
 export type ContentData = {
@@ -131,7 +131,14 @@ export function getBootstrap(s: ContentStore): Bootstrap {
       .sort((a, b) => a - b),
     mabhasIndex: [...mabhasIndex.entries()]
       .sort((a, b) => a[0] - b[0])
-      .map(([mabhas, v]) => ({ mabhas, questions: v.questions, official: v.official, topics: [...v.topics].slice(0, 40) })),
+      .map(([mabhas, v]) => ({
+        mabhas,
+        questions: v.questions,
+        official: v.official,
+        // real band-text count for this مبحث from the regulations corpus (0 → no full text yet)
+        bands: s.regulations[String(mabhas)]?.length ?? 0,
+        topics: [...v.topics].slice(0, 40),
+      })),
   };
 }
 

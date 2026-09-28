@@ -488,10 +488,9 @@ export default function Dashboard({
         <SectionHeader title="اقدامات سریع" />
         <div className="grid grid-cols-3 gap-2">
           {[
-            { label: "مباحث مقررات", icon: BookMarked, fn: () => nav.startMabhasStudy(1) },
+            { label: "کتابخانه فنی", icon: BookMarked, fn: () => nav.startMabhasStudy(1) },
             { label: "سؤال سریع", icon: Zap, fn: () => nav.startQuickExam(10) },
             { label: "آزمون‌های رسمی", icon: ClipboardList, fn: nav.openOfficialExams },
-            { label: "نقشه راه", icon: Route, fn: nav.openRoadmap },
             { label: "آزمون جامع", icon: Layers, fn: nav.openComprehensive },
             { label: "جستجو", icon: Search, fn: nav.openSearch },
           ].map(({ label, icon: Icon, fn }) => (

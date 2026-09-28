@@ -36,10 +36,8 @@ const TABS: { id: Tab; label: string; icon: React.ElementType }[] = [
 
 type StudyView =
   | { kind: "root" }
-  | { kind: "roadmap" }
   | { kind: "regulations" }
   | { kind: "regulation-reader"; mabhas: number }
-  | { kind: "lessons" }
   | { kind: "lesson-reader"; mabhas: number };
 
 export type PoolItem = QLite & { major: string };
@@ -117,7 +115,7 @@ export default function MhyShell() {
         setTab("exam");
       },
       openRoadmap: () => {
-        setStudyView({ kind: "roadmap" });
+        setStudyView({ kind: "root" });
         setTab("study");
       },
       resumeStudy: () => {
@@ -225,7 +223,7 @@ export default function MhyShell() {
       </aside>
 
       {/* phone — full-bleed on real mobile, framed on desktop */}
-      <div className={dark ? "dark" : ""}>
+      <div className={`${dark ? "dark " : ""}w-full max-w-full lg:w-auto`}>
         <div
           className="relative h-screen w-full overflow-hidden max-lg:rounded-none max-lg:border-0 lg:h-[min(88vh,780px)] lg:w-[400px] lg:max-w-full lg:rounded-[2.4rem] lg:border-[10px]"
           style={{ borderColor: "#0a0d12", background: "var(--background)", boxShadow: "var(--shadow-float)" }}

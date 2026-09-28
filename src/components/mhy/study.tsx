@@ -4,10 +4,9 @@ import { useEffect, useMemo, useState } from "react";
 import type { Bootstrap, MhyBand, LessonJson } from "@/lib/mhy/server";
 import { api } from "@/lib/mhy/api";
 import { useMhy, mabhasTitle, mabhasEdition } from "@/lib/mhy/store";
-import { faNum, buildRoadmap, mabhasMastery, type QLite } from "@/lib/mhy/engines";
-import { SectionHeader, ProgressBar, EmptyState, Btn, SearchField, LoadingBlock, ProgressRing, DenseRow, DenseList, Eyebrow, SegmentedProgress, CheckBadge, MabhasCover, SnapRail } from "./ui";
+import { faNum, type QLite } from "@/lib/mhy/engines";
+import { SectionHeader, ProgressBar, EmptyState, Btn, SearchField, LoadingBlock, ProgressRing, Eyebrow, CheckBadge, MabhasCover, SnapRail } from "./ui";
 import {
-  Route,
   BookOpen,
   BookMarked,
   GraduationCap,
@@ -15,25 +14,20 @@ import {
   CheckCheck,
   X,
   CheckCircle2,
-  Bookmark,
   ChevronLeft,
-  AlertTriangle,
+  LibraryBig,
 } from "lucide-react";
 
 type StudyView =
   | { kind: "root" }
-  | { kind: "roadmap" }
   | { kind: "regulations" }
   | { kind: "regulation-reader"; mabhas: number }
-  | { kind: "lessons" }
   | { kind: "lesson-reader"; mabhas: number };
 
 export default function Study({
   bootstrap,
-  pool,
   initialView,
   onViewConsumed,
-  nav,
 }: {
   bootstrap: Bootstrap | null;
   pool: QLite[];
@@ -41,7 +35,7 @@ export default function Study({
   onViewConsumed: () => void;
   nav: { startMabhasPractice: (m: number) => void; go: (t: "dashboard" | "study" | "practice" | "exam" | "settings") => void };
 }) {
-  const { lastStudy, studiedBands, officialSessionsSeen, mistakes, answers } = useMhy();
+  const { lastStudy, studiedBands } = useMhy();
   const [view, setView] = useState<StudyView>(initialView ?? { kind: "root" });
 
   useEffect(() => {
@@ -55,44 +49,27 @@ export default function Study({
 
   const mabhasRegs = bootstrap?.mabhasWithRegulation ?? [];
   const mabhasIndex = bootstrap?.mabhasIndex ?? [];
-  const mastery = useMemo(
-    () => mabhasMastery(answers, (qid) => pool.find((q) => q.id === qid)?.mabhas ?? null),
-    [answers, pool]
-  );
   const [lessons, setLessons] = useState<{ mabhas: number; title: string; topics: number }[]>([]);
   useEffect(() => {
     api.lessons().then((j) => setLessons(j.lessons)).catch(() => setLessons([]));
   }, []);
-  // data-driven state per mabhas (directive §53) — REVIEW_REQUIRED questions from the real pool
-  const reviewByMabhas = useMemo(() => {
-    const map = new Map<number, number>();
-    for (const q of pool) {
-      if (q.status === "REVIEW_REQUIRED" && q.mabhas != null)
-        map.set(q.mabhas, (map.get(q.mabhas) ?? 0) + 1);
-    }
-    return map;
-  }, [pool]);
-  const reviewBadge = (m: number) =>
-    reviewByMabhas.get(m) ? (
-      <span
-        className="inline-flex items-center gap-1 rounded-full px-2 py-0.5 text-[9px] font-bold"
-        style={{ background: "rgba(227,178,94,0.92)", color: "#241a05" }}
-        aria-label={`${faNum(reviewByMabhas.get(m) ?? 0)} محتوای نیازمند بازبینی`}
-      >
-        <AlertTriangle size={10} />
-        {faNum(reviewByMabhas.get(m) ?? 0)}
-      </span>
-    ) : undefined;
-  const lessonShortTitle = (t: string) => (t.includes("–") ? (t.split("–").pop() ?? t).trim() : t);
+  const lessonSet = useMemo(() => new Set(lessons.map((l) => l.mabhas)), [lessons]);
 
   if (view.kind === "regulation-reader") {
-    return <RegulationReader mabhas={view.mabhas} onBack={() => setView({ kind: "regulations" })} nav={nav} />;
+    return (
+      <RegulationReader
+        mabhas={view.mabhas}
+        onBack={() => setView({ kind: "root" })}
+        hasLesson={lessonSet.has(view.mabhas)}
+        onOpenLesson={() => setView({ kind: "lesson-reader", mabhas: view.mabhas })}
+      />
+    );
   }
   if (view.kind === "lesson-reader") {
-    return <LessonReader mabhas={view.mabhas} onBack={() => setView({ kind: "lessons" })} nav={nav} />;
+    return <LessonReader mabhas={view.mabhas} onBack={() => setView({ kind: "regulation-reader", mabhas: view.mabhas })} />;
   }
 
-  /* ── regulations — Premium Technical Library (§15/§19–§21) ── */
+  /* ── regulations — «همه»: full wall of original-size covers, vertical scroll (user spec) ── */
   if (view.kind === "regulations") {
     return (
       <div className="phone-scroll flex-1 overflow-y-auto pb-8 screen-in">
@@ -107,82 +84,21 @@ export default function Study({
           </p>
         </div>
 
-        {/* readable-first rail — مباحثی که متن کامل بندها را دارند */}
-        {mabhasRegs.length > 0 && (
-          <section className="mt-5" aria-label="مباحث با متن کامل">
-            <div className="px-5">
-              <Eyebrow>متن کامل بندها</Eyebrow>
-            </div>
-            <div className="mt-3">
-              <SnapRail ariaLabel="مباحث دارای متن کامل — مرور افقی" fade={false}>
-                {mabhasRegs.map((m) => {
-                  const mi = mabhasIndex.find((x) => x.mabhas === m);
-                  const mk = mastery[m];
-                  return (
-                    <div className="rail-item" key={m}>
-                      <MabhasCover
-                        mabhas={m}
-                        variant="rail"
-                        onClick={() => setView({ kind: "regulation-reader", mabhas: m })}
-                        badge={reviewBadge(m)}
-                        title={mabhasTitle(m)}
-                        meta={mi ? `${faNum(mi.questions)} سؤال · قابل مطالعه` : "قابل مطالعه"}
-                        progress={mk?.mastery ?? null}
-                      />
-                    </div>
-                  );
-                })}
-              </SnapRail>
-            </div>
-          </section>
-        )}
-
-        {/* full catalog — visual rows, one per mabhas (§20) */}
-        <section className="mt-6 px-4" aria-label="فهرست کامل مباحث">
-          <div className="construction mb-2" />
-          <div className="divide-y" style={{ borderColor: "var(--border)" }}>
+        {/* wall — same original size as the home rail, scrolls up/down (user spec) */}
+        <section className="mt-5 px-4" aria-label="فهرست کامل مباحث">
+          <div className="grid grid-cols-2 gap-x-3 gap-y-5">
             {mabhasIndex.map((mi) => {
               const hasText = mabhasRegs.includes(mi.mabhas);
-              const m = mastery[mi.mabhas];
-              const rv = reviewByMabhas.get(mi.mabhas);
               return (
-                <button
+                <MabhasCover
                   key={mi.mabhas}
-                  onClick={() => (hasText ? setView({ kind: "regulation-reader", mabhas: mi.mabhas }) : nav.startMabhasPractice(mi.mabhas))}
-                  className="press flex min-h-[76px] w-full items-center gap-3 py-3 text-right"
-                  aria-label={`مبحث ${faNum(mi.mabhas)} — ${mabhasTitle(mi.mabhas)}`}
-                >
-                  <MabhasCover mabhas={mi.mabhas} variant="thumb" />
-                  <div className="min-w-0 flex-1">
-                    <div className="flex items-center gap-1.5">
-                      <p className="truncate text-[13px] font-bold" style={{ color: "var(--foreground)" }}>
-                        {mabhasTitle(mi.mabhas)}
-                      </p>
-                      {hasText && <BookMarked size={13} style={{ color: "var(--primary)", flexShrink: 0 }} aria-label="متن بندها موجود" />}
-                    </div>
-                    <p className="num t-caption mt-0.5" style={{ color: "var(--muted-foreground)" }}>
-                      {mabhasEdition(mi.mabhas) && <span style={{ color: "var(--primary)", opacity: 0.85 }}>{mabhasEdition(mi.mabhas)} · </span>}
-                      {hasText ? "متن بندها · " : ""}
-                      {faNum(mi.questions)} سؤال ({faNum(mi.official)} رسمی)
-                      {m ? ` · ٪${faNum(m.mastery)} تسلط` : ""}
-                    </p>
-                    {rv ? (
-                      <span
-                        className="mt-1 inline-flex items-center gap-1 rounded-full px-1.5 py-0.5 text-[9px] font-bold"
-                        style={{ background: "var(--warning-soft)", color: "var(--warning)" }}
-                      >
-                        <AlertTriangle size={9} />
-                        {faNum(rv)} نیازمند بازبینی
-                      </span>
-                    ) : null}
-                  </div>
-                  {m && (
-                    <span className="w-14 shrink-0">
-                      <ProgressBar pct={m.mastery} height={4} />
-                    </span>
-                  )}
-                  <ChevronLeft size={16} style={{ color: "var(--muted-foreground)", flexShrink: 0 }} />
-                </button>
+                  mabhas={mi.mabhas}
+                  variant="rail"
+                  onClick={() => setView({ kind: "regulation-reader", mabhas: mi.mabhas })}
+                  title={mabhasTitle(mi.mabhas)}
+                  meta={hasText ? `متن کامل · ${faNum(mi.bands)} بند` : "در انتظار متن کامل"}
+                  className="mx-auto"
+                />
               );
             })}
           </div>
@@ -191,115 +107,10 @@ export default function Study({
     );
   }
 
-  /* ── lessons list — chapters of a premium technical book (§23) ── */
-  if (view.kind === "lessons") {
-    return (
-      <div className="phone-scroll flex-1 overflow-y-auto pb-8 screen-in">
-        <SubHeader title="درسنامه‌ها" onBack={() => setView({ kind: "root" })} />
-        <div className="px-5 pt-2">
-          <Eyebrow tone="accent">درسنامه‌های جامع</Eyebrow>
-          <p className="num t-caption mt-1 leading-6" style={{ color: "var(--muted-foreground)" }}>
-            {faNum(lessons.length || (bootstrap?.stats.lessons ?? 0))} درسنامه مبحث‌محور · {faNum(lessons.reduce((s, l) => s + l.topics, 0))} موضوع آموزشی
-          </p>
-        </div>
-        <section className="mt-4 px-4" aria-label="فهرست درسنامه‌ها">
-          <div className="divide-y" style={{ borderColor: "var(--border)" }}>
-            {(lessons.length
-              ? lessons
-              : [...new Set((bootstrap?.mabhasIndex ?? []).map((m) => m.mabhas))].filter((m) => m <= 22).map((m) => ({ mabhas: m, title: `درسنامه جامع مبحث ${faNum(m)}`, topics: 0 }))
-            ).map((l) => (
-              <button
-                key={l.mabhas}
-                onClick={() => setView({ kind: "lesson-reader", mabhas: l.mabhas })}
-                className="press flex min-h-[76px] w-full items-center gap-3 py-3 text-right"
-                aria-label={`درسنامه مبحث ${faNum(l.mabhas)}`}
-              >
-                <MabhasCover mabhas={l.mabhas} variant="thumb" />
-                <div className="min-w-0 flex-1">
-                  <p className="truncate text-[13px] font-bold" style={{ color: "var(--foreground)" }}>
-                    {lessonShortTitle(l.title)}
-                  </p>
-                  <p className="num t-caption mt-0.5" style={{ color: "var(--muted-foreground)" }}>
-                    درسنامه جامع مبحث {faNum(l.mabhas)}
-                    {l.topics ? ` · ${faNum(l.topics)} موضوع` : ""}
-                  </p>
-                </div>
-                <ChevronLeft size={16} style={{ color: "var(--muted-foreground)", flexShrink: 0 }} />
-              </button>
-            ))}
-          </div>
-        </section>
-      </div>
-    );
-  }
-
-  /* ── roadmap — checkpoint/timeline language (§7) ── */
-  if (view.kind === "roadmap") {
-    const steps = buildRoadmap(mabhasIndex.map((m) => m.mabhas), mistakes.length > 0, officialSessionsSeen.length);
-    const doneCount = steps.filter((s) => s.done).length;
-    return (
-      <div className="phone-scroll flex-1 overflow-y-auto px-4 pb-6 screen-in">
-        <SubHeader title="نقشه راه آمادگی" onBack={() => setView({ kind: "root" })} />
-        <p className="t-caption mt-1 px-1 leading-6" style={{ color: "var(--muted-foreground)" }}>
-          مسیر پیشنهادی بر اساس رشته، صلاحیت و عملکرد شما — با پیشرفت شما به‌روز می‌شود.
-        </p>
-        <div className="mt-4 px-1">
-          <div className="mb-1.5 flex items-center justify-between">
-            <Eyebrow tone="accent">مسیر شما</Eyebrow>
-            <span className="num t-caption" style={{ color: "var(--muted-foreground)" }}>
-              {faNum(doneCount)} از {faNum(steps.length)} مرحله
-            </span>
-          </div>
-          <SegmentedProgress value={doneCount} total={steps.length} ariaLabel="پیشرفت نقشه راه" />
-        </div>
-        <div className="mt-4">
-          {steps.map((s, i) => (
-            <div key={s.id} className="relative flex gap-3 pb-5">
-              {i < steps.length - 1 && <div className="absolute right-[17px] top-10 h-full w-px" style={{ background: "var(--border-strong)" }} />}
-              <div
-                className="num z-10 flex h-9 w-9 shrink-0 items-center justify-center rounded-full text-[12px] font-extrabold"
-                style={{
-                  background: s.done ? "var(--primary)" : "var(--surface)",
-                  border: s.done ? "none" : "2px solid var(--border-strong)",
-                  color: s.done ? "var(--primary-foreground)" : "var(--muted-foreground)",
-                }}
-              >
-                {s.done ? <Check size={16} strokeWidth={2.6} /> : faNum(s.phase)}
-              </div>
-              <div className="min-w-0 flex-1 pt-1">
-                <p className="text-[13.5px] font-bold" style={{ color: s.done ? "var(--muted-foreground)" : "var(--foreground)" }}>
-                  {s.title}
-                </p>
-                <p className="t-caption mt-1 leading-5" style={{ color: "var(--muted-foreground)" }}>
-                  {s.desc}
-                </p>
-                <button
-                  className="press mt-2 inline-flex min-h-[36px] items-center gap-1 text-[12px] font-bold"
-                  style={{ color: "var(--primary)" }}
-                  onClick={() => {
-                    if (s.action.kind === "study-mabhas" && s.action.mabhas) setView({ kind: "regulation-reader", mabhas: s.action.mabhas });
-                    else if (s.action.kind === "official-exams") nav.go("exam");
-                    else if (s.action.kind === "comprehensive") nav.go("exam");
-                    else nav.go("practice");
-                  }}
-                >
-                  {s.done ? "مرور دوباره" : "شروع مرحله"}
-                  <ChevronLeft size={14} />
-                </button>
-              </div>
-            </div>
-          ))}
-        </div>
-      </div>
-    );
-  }
-
-  /* ── root — Premium Digital Technical Library (§16/§22/§58-1) ── */
+  /* ── root — the technical library: books only, zero question noise (user spec) ── */
   const readPct = bootstrap && mabhasRegs.length ? Math.round((new Set(studiedBands).size / (bootstrap.stats.regulationBandTexts || 1)) * 100) : 0;
   const heroM = lastStudy ?? { mabhas: mabhasRegs[0] ?? mabhasIndex[0]?.mabhas ?? 1, kind: "regulation" as const, bandId: null, at: 0 };
-  const heroMastery = mastery[heroM.mabhas];
   const heroIsLast = Boolean(lastStudy);
-  const lessonsRail = lessons.slice(0, 14);
 
   return (
     <div className="phone-scroll flex-1 overflow-y-auto pb-8 screen-in">
@@ -313,7 +124,7 @@ export default function Study({
           کتابخانه فنی
         </h1>
         <p className="t-caption mt-0.5" style={{ color: "var(--muted-foreground)" }}>
-          مقررات ملی با متن واقعی بندها + درسنامه‌های مبحث‌محور
+          مقررات ملی ساختمان مثل کتاب — فهرست، فصل‌ها و بندها
         </p>
       </header>
 
@@ -343,126 +154,79 @@ export default function Study({
               {heroM.kind === "lesson" ? "درسنامه جامع" : "متن بندها"}
               {" · مبحث "}
               {faNum(heroM.mabhas)}
-              {heroMastery ? ` · ٪${faNum(heroMastery.mastery)} تسلط` : ""}
             </>
           }
-          progress={heroMastery?.mastery ?? null}
         />
       </div>
 
-      {/* RAIL 1 — مباحث مقررات (featured regulations with real band text) */}
+      {/* RAIL 1 — مباحث مقررات ملی: compact bookshelf, 4 cards per view, bidirectional (user spec) */}
       <SectionHeader
         title="مباحث مقررات ملی"
         action="همه"
         onAction={() => setView({ kind: "regulations" })}
       />
-      <SnapRail ariaLabel="مباحث مقررات ملی — مرور افقی">
-        {mabhasIndex.map((mi) => {
-          const m = mastery[mi.mabhas];
-          const hasText = mabhasRegs.includes(mi.mabhas);
-          return (
-            <div className="rail-item" key={mi.mabhas}>
-              <MabhasCover
-                mabhas={mi.mabhas}
-                variant="rail"
-                onClick={() =>
-                  hasText
-                    ? setView({ kind: "regulation-reader", mabhas: mi.mabhas })
-                    : nav.startMabhasPractice(mi.mabhas)
-                }
-                badge={reviewBadge(mi.mabhas)}
-                title={mabhasTitle(mi.mabhas)}
-                meta={
-                  hasText
-                    ? `متن بندها · ${faNum(mi.questions)} سؤال`
-                    : `${faNum(mi.questions)} سؤال`
-                }
-                progress={m?.mastery ?? null}
-              />
-            </div>
-          );
-        })}
+      <SnapRail ariaLabel="مباحث مقررات ملی — مرور افقی دوطرفه" arrows>
+        {mabhasIndex.map((mi) => (
+          <div className="rail-item" key={mi.mabhas}>
+            <MabhasCover
+              mabhas={mi.mabhas}
+              variant="mini"
+              onClick={() => setView({ kind: "regulation-reader", mabhas: mi.mabhas })}
+              ariaLabel={`مبحث ${faNum(mi.mabhas)} — ${mabhasTitle(mi.mabhas)}`}
+            />
+            <p
+              className="mt-1.5 w-[78px] truncate text-[10px] font-bold leading-4"
+              style={{ color: "var(--foreground)" }}
+              title={mabhasTitle(mi.mabhas)}
+            >
+              {mabhasTitle(mi.mabhas)}
+            </p>
+          </div>
+        ))}
         {/* end-cap — keep browsing */}
         <div className="rail-item flex items-center">
           <button
             onClick={() => setView({ kind: "regulations" })}
-            className="press flex h-[224px] w-[112px] flex-col items-center justify-center gap-2 rounded-[1.25rem] border"
+            className="press flex h-[104px] w-[78px] flex-col items-center justify-center gap-1.5 rounded-2xl border"
             style={{ background: "var(--surface)", borderColor: "var(--border)" }}
             aria-label="مشاهده همه مباحث"
           >
-            <BookMarked size={20} style={{ color: "var(--primary)" }} />
-            <span className="num text-[10.5px] font-bold" style={{ color: "var(--muted-foreground)" }}>
-              همه {faNum(mabhasIndex.length)} مبحث
+            <BookMarked size={17} style={{ color: "var(--primary)" }} />
+            <span className="num text-[9.5px] font-bold" style={{ color: "var(--muted-foreground)" }}>
+              همه
             </span>
           </button>
         </div>
       </SnapRail>
 
-      {/* RAIL 2 — درسنامه‌ها (chapters of a technical book, §23) */}
-      <SectionHeader
-        title="درسنامه‌ها"
-        action="همه"
-        onAction={() => setView({ kind: "lessons" })}
-      />
-      <SnapRail ariaLabel="درسنامه‌ها — مرور افقی">
-        {lessonsRail.map((l) => (
-          <div className="rail-item" key={l.mabhas}>
-            <MabhasCover
-              mabhas={l.mabhas}
-              variant="rail"
-              onClick={() => setView({ kind: "lesson-reader", mabhas: l.mabhas })}
-              badge={
-                <span
-                  className="inline-flex items-center gap-1 rounded-full px-2 py-0.5 text-[9px] font-bold"
-                  style={{ background: "rgba(255,255,255,0.16)", color: "rgba(255,255,255,0.92)", backdropFilter: "blur(4px)" }}
-                >
-                  <GraduationCap size={10} />
-                  درسنامه
-                </span>
-              }
-              title={lessonShortTitle(l.title)}
-              meta={`${faNum(l.topics)} موضوع آموزشی`}
-            />
-          </div>
-        ))}
-        {lessonsRail.length === 0 && (
-          <div className="rail-item flex items-center">
-            <div className="skeleton h-[224px] w-[168px]" aria-hidden />
-          </div>
-        )}
-        {lessons.length > lessonsRail.length && (
-          <div className="rail-item flex items-center">
-            <button
-              onClick={() => setView({ kind: "lessons" })}
-              className="press flex h-[224px] w-[112px] flex-col items-center justify-center gap-2 rounded-[1.25rem] border"
-              style={{ background: "var(--surface)", borderColor: "var(--border)" }}
-              aria-label="مشاهده همه درسنامه‌ها"
-            >
-              <GraduationCap size={20} style={{ color: "var(--primary)" }} />
-              <span className="num text-[10.5px] font-bold" style={{ color: "var(--muted-foreground)" }}>
-                همه {faNum(lessons.length)}
-              </span>
-            </button>
-          </div>
-        )}
-      </SnapRail>
-
-      {/* roadmap — the one navigation row that remains (§28 keep functionality) */}
-      <div className="mt-6 px-4">
-        <div className="rounded-2xl border px-4" style={{ background: "var(--card)", borderColor: "var(--border)" }}>
-          <DenseList>
-            <DenseRow
-              icon={Route}
-              title="نقشه راه آمادگی"
-              desc="مسیر پیشنهادی بر اساس رشته، صلاحیت و عملکرد شما"
-              onClick={() => setView({ kind: "roadmap" })}
-            />
-          </DenseList>
-        </div>
+      {/* RAIL 2 — کتاب‌های تخصصی: shelf reserved, real titles arrive next (user spec) */}
+      <SectionHeader title="کتاب‌های تخصصی" />
+      <div className="px-5">
+        <button
+          disabled
+          className="flex w-full items-center gap-3.5 rounded-2xl border border-dashed px-4 py-5 text-right"
+          style={{ borderColor: "var(--border-strong)", background: "var(--surface)", opacity: 0.75 }}
+          aria-label="قفسه کتاب‌های تخصصی — به‌زودی"
+        >
+          <span
+            className="flex h-12 w-12 shrink-0 items-center justify-center rounded-xl"
+            style={{ background: "var(--primary-soft)", color: "var(--primary)" }}
+          >
+            <LibraryBig size={22} />
+          </span>
+          <span className="min-w-0 flex-1">
+            <span className="block text-[13px] font-bold" style={{ color: "var(--foreground)" }}>
+              قفسه کتاب‌های تخصصی
+            </span>
+            <span className="num t-caption mt-0.5 block leading-5" style={{ color: "var(--muted-foreground)" }}>
+              فهرست کتاب‌های فنی به‌زودی اینجا تکمیل می‌شود — مثل مباحث، با کاور و فصل‌بندی.
+            </span>
+          </span>
+        </button>
       </div>
 
       {/* progress — editorial visualization (§16) */}
-      <section className="mt-6 px-4" aria-label="پیشرفت مطالعه">
+      <section className="mt-7 px-4" aria-label="پیشرفت مطالعه">
         <div className="construction mb-4" />
         <Eyebrow>پیشرفت کتابخانه</Eyebrow>
         <div className="mt-3 flex items-center gap-4">
@@ -494,8 +258,49 @@ function SubHeader({ title, onBack }: { title: string; onBack: () => void }) {
   );
 }
 
-/* ═══ Regulation Reader — chapter navigation + clean reading surface (§14.2/§15) ═══ */
-function RegulationReader({ mabhas, onBack, nav }: { mabhas: number; onBack: () => void; nav: { startMabhasPractice: (m: number) => void } }) {
+/* ═══ Book Reader — هر مبحث مثل یک کتاب: فهرست، کلیات، فصل‌ها، بندها (user spec) ═══ */
+
+type BookChapter = { key: string; num: string; title: string | null; bands: MhyBand[] };
+
+/** real chapter structure from the regulations' own band numbering: "3-4-2" → chapter "3-4" */
+function buildChapters(bands: MhyBand[]): BookChapter[] {
+  const out: BookChapter[] = [];
+  const byKey = new Map<string, BookChapter>();
+  for (const b of bands) {
+    const parts = (b.band || "").split("-");
+    if (parts.length < 2) continue;
+    const key = `${parts[0]}-${parts[1]}`;
+    let ch = byKey.get(key);
+    if (!ch) {
+      ch = { key, num: parts[1], title: null, bands: [] };
+      byKey.set(key, ch);
+      out.push(ch);
+    }
+    if (ch.title == null && b.title) ch.title = b.title;
+    ch.bands.push(b);
+  }
+  // the printed book numbers chapters sequentially — present them in book order, not scan order
+  out.sort((a, b) => (parseInt(a.num, 10) || 999) - (parseInt(b.num, 10) || 999));
+  return out;
+}
+
+const cleanChapterTitle = (t: string | null) => {
+  if (!t) return null;
+  const cut = t.replace(/^مبحث\s+[^:：]+[:：]?\s*/, "").trim();
+  return (cut.length > 64 ? cut.slice(0, 62).trim() + "…" : cut) || null;
+};
+
+function RegulationReader({
+  mabhas,
+  onBack,
+  hasLesson,
+  onOpenLesson,
+}: {
+  mabhas: number;
+  onBack: () => void;
+  hasLesson: boolean;
+  onOpenLesson: () => void;
+}) {
   const [data, setData] = useState<{ mabhas: number; bands: MhyBand[] } | null>(null);
   const [error, setError] = useState<string | null>(null);
   const [query, setQuery] = useState("");
@@ -506,9 +311,11 @@ function RegulationReader({ mabhas, onBack, nav }: { mabhas: number; onBack: () 
   useEffect(() => {
     api.regulations(mabhas)
       .then(setData)
-      .catch(() => setError("متن مقررات این مبحث در کتابخانه دستگاه موجود نیست."));
+      .catch(() => setError("متن کامل این مبحث در کتابخانه فعلی موجود نیست."));
     setLastStudy({ mabhas, bandId: null, kind: "regulation", at: Date.now() });
   }, [mabhas, setLastStudy]);
+
+  const chapters = useMemo(() => buildChapters(data?.bands ?? []), [data]);
 
   const bands = useMemo(
     () =>
@@ -518,16 +325,22 @@ function RegulationReader({ mabhas, onBack, nav }: { mabhas: number; onBack: () 
     [data, query]
   );
 
+  // continuous reading follows the book's chapter order (data order inside each chapter)
+  const orderedBands = useMemo(() => {
+    if (query.trim()) return bands;
+    return chapters.flatMap((c) => c.bands);
+  }, [chapters, bands, query]);
+
   const studiedInMabhas = useMemo(() => {
     const ids = new Set((data?.bands ?? []).map((b) => b.id));
     return studiedBands.filter((id) => ids.has(id)).length;
   }, [data, studiedBands]);
   const mabhasPct = data?.bands.length ? Math.round((studiedInMabhas / data.bands.length) * 100) : 0;
 
-  const jumpTo = (bandId: number) => {
+  const jumpTo = (id: string) => {
     setChapterNav(false);
     const t = setTimeout(() => {
-      document.getElementById(`band-${bandId}`)?.scrollIntoView({ behavior: "smooth", block: "start" });
+      document.getElementById(id)?.scrollIntoView({ behavior: "smooth", block: "start" });
       clearTimeout(t);
     }, 60);
   };
@@ -536,16 +349,19 @@ function RegulationReader({ mabhas, onBack, nav }: { mabhas: number; onBack: () 
     return (
       <div className="flex flex-1 flex-col screen-in">
         <SubHeader title={`مبحث ${faNum(mabhas)}`} onBack={onBack} />
+        <div className="mx-auto w-full max-w-[420px]">
+          <MabhasCover mabhas={mabhas} variant="hero" className="mx-5 mt-2" title={mabhasTitle(mabhas)} meta={mabhasEdition(mabhas) ?? undefined} />
+        </div>
         <EmptyState
           icon={BookOpen}
-          title="متن مقررات موجود نیست"
-          desc={error}
-          action={{ label: "تمرین سؤالات این مبحث", onClick: () => nav.startMabhasPractice(mabhas) }}
+          title="متن کامل این مبحث هنوز موجود نیست"
+          desc="کلید فصل‌ها و بندهای این مبحث به‌محض افزودن متن رسمی، همین‌جا مثل یک کتاب نمایش داده می‌شود."
+          action={hasLesson ? { label: "مطالعه درسنامه آموزشی این مبحث", onClick: onOpenLesson } : undefined}
         />
       </div>
     );
   }
-  if (!data) return <LoadingBlock label="بارگذاری متن مقررات…" />;
+  if (!data) return <LoadingBlock label="بارگذاری کتاب…" />;
 
   return (
     <div className="flex flex-1 flex-col screen-in">
@@ -559,12 +375,12 @@ function RegulationReader({ mabhas, onBack, nav }: { mabhas: number; onBack: () 
             {mabhasTitle(mabhas)}
           </h1>
           <p className="num t-meta" style={{ color: "var(--muted-foreground)" }}>
-            مبحث {faNum(mabhas)} · {faNum(data.bands.length)} بند · ٪{faNum(mabhasPct)} مطالعه‌شده
+            مبحث {faNum(mabhas)} · {faNum(chapters.length)} فصل · {faNum(data.bands.length)} بند · ٪{faNum(mabhasPct)} مطالعه‌شده
           </p>
         </div>
         <button
           onClick={() => setChapterNav(true)}
-          aria-label="فهرست بندها"
+          aria-label="فهرست کتاب"
           className="press flex h-10 w-10 items-center justify-center rounded-xl"
           style={{ color: "var(--primary)", background: "var(--primary-soft)" }}
         >
@@ -577,8 +393,7 @@ function RegulationReader({ mabhas, onBack, nav }: { mabhas: number; onBack: () 
           className="press flex h-10 w-10 items-center justify-center rounded-xl"
           style={{ color: "var(--muted-foreground)" }}
         >
-          {searchOpen ? <X size={18} /> : <Bookmark size={0} className="hidden" />}
-          {!searchOpen && <SearchIcon />}
+          {searchOpen ? <X size={18} /> : <SearchIcon />}
         </button>
       </div>
 
@@ -593,28 +408,110 @@ function RegulationReader({ mabhas, onBack, nav }: { mabhas: number; onBack: () 
         </div>
       )}
 
-      {/* reading surface — focus by subtraction: typographic bands, no boxes (§14.2) */}
+      {/* reading surface — the book itself: cover, فهرست, فصل‌ها, بندها */}
       <div className="phone-scroll flex-1 overflow-y-auto px-5 py-4">
         <div className="mx-auto max-w-[560px]">
           {/* chapter opener — the content object itself (§21/§24) */}
           <MabhasCover
             mabhas={mabhas}
             variant="banner"
-            className="mb-5"
+            className="mb-4"
             title={mabhasTitle(mabhas)}
-            meta={`${faNum(data.bands.length)} بند · ٪${faNum(mabhasPct)} مطالعه‌شده`}
+            meta={`${faNum(chapters.length)} فصل · ${faNum(data.bands.length)} بند · ٪${faNum(mabhasPct)} مطالعه‌شده`}
             progress={mabhasPct}
           />
-          {bands.map((b, bi) => {
+
+          {/* فهرست کتاب — every entry jumps to its place in the flow (user spec) */}
+          {!query.trim() && (
+            <section aria-label="فهرست کتاب" className="mb-6">
+              <div className="construction mb-3" />
+              <div className="mb-2 flex items-baseline justify-between">
+                <Eyebrow tone="accent">فهرست کتاب</Eyebrow>
+                <span className="t-meta" style={{ color: "var(--muted-foreground)" }}>
+                  مطالعه پیوسته: از پایین ادامه دهید
+                </span>
+              </div>
+              <div className="divide-y rounded-2xl border" style={{ borderColor: "var(--border)", background: "var(--card)" }}>
+                {chapters.map((ch, ci) => {
+                  const chStudied = ch.bands.filter((b) => studiedBands.includes(b.id)).length;
+                  return (
+                    <button
+                      key={ch.key}
+                      onClick={() => jumpTo(`chapter-${ch.key}`)}
+                      className="press flex min-h-[52px] w-full items-center gap-3 px-3.5 py-2.5 text-right"
+                      aria-label={`پرش به فصل ${faNum(ch.num)}`}
+                    >
+                      <span
+                        className="num flex h-8 w-8 shrink-0 items-center justify-center rounded-lg text-[11px] font-extrabold"
+                        style={{ background: "var(--primary-soft)", color: "var(--primary)" }}
+                      >
+                        {faNum(ch.num)}
+                      </span>
+                      <span className="min-w-0 flex-1">
+                        <span className="block truncate text-[12.5px] font-bold" style={{ color: "var(--foreground)" }}>
+                          فصل {faNum(ch.num)}{cleanChapterTitle(ch.title) ? ` — ${cleanChapterTitle(ch.title)}` : ""}
+                        </span>
+                        <span className="num t-meta" style={{ color: "var(--muted-foreground)" }}>
+                          {faNum(ch.bands.length)} بند{chStudied ? ` · ${faNum(chStudied)} مطالعه‌شده` : ""}
+                        </span>
+                      </span>
+                      <ChevronLeft size={15} style={{ color: "var(--muted-foreground)", flexShrink: 0 }} />
+                    </button>
+                  );
+                })}
+                {hasLesson && (
+                  <button
+                    onClick={onOpenLesson}
+                    className="press flex min-h-[52px] w-full items-center gap-3 px-3.5 py-2.5 text-right"
+                    aria-label="درسنامه آموزشی این مبحث"
+                  >
+                    <span
+                      className="flex h-8 w-8 shrink-0 items-center justify-center rounded-lg"
+                      style={{ background: "var(--success-soft)", color: "var(--success)" }}
+                    >
+                      <GraduationCap size={16} />
+                    </span>
+                    <span className="min-w-0 flex-1">
+                      <span className="block text-[12.5px] font-bold" style={{ color: "var(--foreground)" }}>
+                        درسنامه آموزشی مبحث {faNum(mabhas)}
+                      </span>
+                      <span className="t-meta" style={{ color: "var(--muted-foreground)" }}>
+                        جمع‌بندی آموزشی — پیوست کتاب
+                      </span>
+                    </span>
+                    <ChevronLeft size={15} style={{ color: "var(--muted-foreground)", flexShrink: 0 }} />
+                  </button>
+                )}
+              </div>
+            </section>
+          )}
+
+          {/* continuous flow — bands of the whole book with real chapter markers */}
+          {orderedBands.map((b) => {
             const studied = studiedBands.includes(b.id);
+            const parts = (b.band || "").split("-");
+            const chKey = parts.length >= 2 ? `${parts[0]}-${parts[1]}` : null;
+            const isFirstOfChapter = chKey ? chapters.find((c) => c.key === chKey)?.bands[0]?.id === b.id : false;
+            const chapter = chKey ? chapters.find((c) => c.key === chKey) : null;
             return (
-              <section
-                key={b.id}
-                id={`band-${b.id}`}
-                aria-label={`بند ${b.band}`}
-                style={{ transition: "opacity 0.25s ease" }}
-              >
-                {bi > 0 && <div className="construction my-5" />}
+              <section key={b.id} id={`band-${b.id}`} aria-label={`بند ${b.band}`} style={{ transition: "opacity 0.25s ease" }}>
+                {isFirstOfChapter && chapter && !query.trim() ? (
+                  <div id={`chapter-${chapter.key}`} className="mb-4 mt-7 scroll-mt-4 first:mt-0">
+                    <div className="construction mb-3" />
+                    <div className="flex items-baseline gap-2">
+                      <span className="num text-[11px] font-extrabold tracking-[0.1em]" style={{ color: "var(--primary)" }}>
+                        فصل {faNum(chapter.num)}
+                      </span>
+                      {cleanChapterTitle(chapter.title) && (
+                        <h2 className="min-w-0 flex-1 truncate text-[13px] font-bold" style={{ color: "var(--foreground)" }}>
+                          {cleanChapterTitle(chapter.title)}
+                        </h2>
+                      )}
+                    </div>
+                  </div>
+                ) : (
+                  <div className="construction my-5" />
+                )}
                 <div className="flex items-start justify-between gap-2">
                   <div className="flex items-center gap-2">
                     <span className="num inline-flex items-center rounded-md px-2 py-0.5 text-[10.5px] font-extrabold" style={{ background: studied ? "var(--success-soft)" : "var(--primary-soft)", color: studied ? "var(--success)" : "var(--primary)" }}>
@@ -627,7 +524,10 @@ function RegulationReader({ mabhas, onBack, nav }: { mabhas: number; onBack: () 
                     ) : null}
                   </div>
                   <button
-                    onClick={() => toggleStudiedBand(b.id)}
+                    onClick={() => {
+                      toggleStudiedBand(b.id);
+                      if (!studied) setLastStudy({ mabhas, bandId: b.id, kind: "regulation", at: Date.now() });
+                    }}
                     aria-pressed={studied}
                     aria-label={studied ? "حذف از مطالعه‌شده" : "علامت‌گذاری مطالعه‌شده"}
                     className="press flex h-9 w-9 shrink-0 items-center justify-center rounded-lg"
@@ -640,25 +540,15 @@ function RegulationReader({ mabhas, onBack, nav }: { mabhas: number; onBack: () 
                   </button>
                 </div>
                 {b.title && (
-                  <h2 className="mt-2.5 text-[14.5px] font-bold leading-7" style={{ color: "var(--foreground)" }}>
+                  <h3 className="mt-2.5 text-[14.5px] font-bold leading-7" style={{ color: "var(--foreground)" }}>
                     {b.title}
-                  </h2>
+                  </h3>
                 )}
                 {b.text && (
                   <p className="reader-body mt-2" style={{ color: "var(--foreground)", opacity: studied ? 0.62 : 1 }}>
                     {b.text}
                   </p>
                 )}
-                <button
-                  onClick={() => {
-                    setLastStudy({ mabhas, bandId: b.id, kind: "regulation", at: Date.now() });
-                    nav.startMabhasPractice(mabhas);
-                  }}
-                  className="press mt-3 text-[11px] font-bold"
-                  style={{ color: "var(--primary)" }}
-                >
-                  سؤالات مرتبط با این مبحث ←
-                </button>
               </section>
             );
           })}
@@ -670,41 +560,75 @@ function RegulationReader({ mabhas, onBack, nav }: { mabhas: number; onBack: () 
         </div>
       </div>
 
-      {/* chapter navigation sheet (§15) */}
+      {/* فهرست sheet — grouped by real chapters (user spec) */}
       {chapterNav && (
-        <div className="absolute inset-0 z-40 flex flex-col justify-end" role="dialog" aria-modal="true" aria-label="فهرست بندها">
+        <div className="absolute inset-0 z-40 flex flex-col justify-end" role="dialog" aria-modal="true" aria-label="فهرست کتاب">
           <div className="fade-in absolute inset-0" style={{ background: "var(--scrim)" }} onClick={() => setChapterNav(false)} aria-hidden />
           <div className="sheet-up relative flex max-h-[75%] flex-col rounded-t-3xl border-t" style={{ background: "var(--card)", borderColor: "var(--border)" }}>
             <div className="flex items-center justify-between px-5 pb-2 pt-4">
-              <h2 className="t-section">فهرست بندها</h2>
+              <h2 className="t-section">فهرست کتاب</h2>
               <button onClick={() => setChapterNav(false)} aria-label="بستن" className="press flex h-9 w-9 items-center justify-center rounded-xl" style={{ color: "var(--muted-foreground)" }}>
                 <X size={18} />
               </button>
             </div>
             <p className="num px-5 t-caption" style={{ color: "var(--muted-foreground)" }}>
-              {faNum(studiedInMabhas)} از {faNum(data.bands.length)} بند مطالعه‌شده
+              {faNum(studiedInMabhas)} از {faNum(data.bands.length)} بند مطالعه‌شده · {faNum(chapters.length)} فصل
             </p>
             <div className="phone-scroll flex-1 overflow-y-auto px-4 py-3">
-              <div className="divide-y" style={{ borderColor: "var(--border)" }}>
-                {data.bands.map((b) => {
-                  const studied = studiedBands.includes(b.id);
-                  return (
-                    <button
-                      key={b.id}
-                      onClick={() => jumpTo(b.id)}
-                      className="press flex min-h-[46px] w-full items-center gap-3 py-2 text-right"
-                    >
-                      <CheckBadge on={studied} />
-                      <span className="num text-[12px] font-bold" style={{ color: "var(--foreground)" }}>
-                        بند {b.band}
-                      </span>
-                      <span className="t-caption min-w-0 flex-1 truncate" style={{ color: "var(--muted-foreground)" }}>
-                        {b.title ?? b.text?.slice(0, 44) ?? ""}
-                      </span>
-                    </button>
-                  );
-                })}
-              </div>
+              {chapters.map((ch) => (
+                <div key={ch.key} className="mb-2">
+                  <button
+                    onClick={() => jumpTo(`chapter-${ch.key}`)}
+                    className="press flex min-h-[42px] w-full items-center gap-2.5 rounded-xl px-2.5 py-2 text-right"
+                    style={{ background: "var(--surface)" }}
+                    aria-label={`پرش به فصل ${faNum(ch.num)}`}
+                  >
+                    <span className="num text-[11px] font-extrabold" style={{ color: "var(--primary)" }}>
+                      فصل {faNum(ch.num)}
+                    </span>
+                    <span className="t-caption min-w-0 flex-1 truncate" style={{ color: "var(--muted-foreground)" }}>
+                      {cleanChapterTitle(ch.title) ?? `${faNum(ch.bands.length)} بند`}
+                    </span>
+                    <ChevronLeft size={14} style={{ color: "var(--muted-foreground)", flexShrink: 0 }} />
+                  </button>
+                  <div className="mt-1 divide-y" style={{ borderColor: "var(--border)" }}>
+                    {ch.bands.map((b) => {
+                      const studied = studiedBands.includes(b.id);
+                      return (
+                        <button
+                          key={b.id}
+                          onClick={() => jumpTo(`band-${b.id}`)}
+                          className="press flex min-h-[44px] w-full items-center gap-3 py-2 pl-2 pr-4 text-right"
+                        >
+                          <CheckBadge on={studied} />
+                          <span className="num text-[12px] font-bold" style={{ color: "var(--foreground)" }}>
+                            بند {b.band}
+                          </span>
+                          <span className="t-caption min-w-0 flex-1 truncate" style={{ color: "var(--muted-foreground)" }}>
+                            {b.title ?? b.text?.slice(0, 44) ?? ""}
+                          </span>
+                        </button>
+                      );
+                    })}
+                  </div>
+                </div>
+              ))}
+              {hasLesson && (
+                <button
+                  onClick={() => {
+                    setChapterNav(false);
+                    onOpenLesson();
+                  }}
+                  className="press mt-2 flex min-h-[48px] w-full items-center gap-2.5 rounded-xl px-3 py-2 text-right"
+                  style={{ background: "var(--success-soft)" }}
+                  aria-label="درسنامه آموزشی این مبحث"
+                >
+                  <GraduationCap size={16} style={{ color: "var(--success)" }} />
+                  <span className="text-[12.5px] font-bold" style={{ color: "var(--success)" }}>
+                    درسنامه آموزشی مبحث {faNum(mabhas)}
+                  </span>
+                </button>
+              )}
             </div>
           </div>
         </div>
@@ -723,7 +647,7 @@ function SearchIcon() {
 }
 
 /* ═══ Lesson Reader — real structured lesson JSON (§9) ═══ */
-function LessonReader({ mabhas, onBack, nav }: { mabhas: number; onBack: () => void; nav: { startMabhasPractice: (m: number) => void } }) {
+function LessonReader({ mabhas, onBack }: { mabhas: number; onBack: () => void }) {
   const [lesson, setLesson] = useState<{ mabhas: number; title: string; json: LessonJson | null } | null>(null);
   const [openTopic, setOpenTopic] = useState<string | null>(null);
   const { setLastStudy } = useMhy();
@@ -758,9 +682,6 @@ function LessonReader({ mabhas, onBack, nav }: { mabhas: number; onBack: () => v
             {faNum(topics.length)} موضوع آموزشی
           </p>
         </div>
-        <button onClick={() => nav.startMabhasPractice(mabhas)} className="press min-h-[38px] rounded-xl px-3 text-[11.5px] font-bold" style={{ background: "var(--primary)", color: "var(--primary-foreground)" }}>
-          سؤالات
-        </button>
       </div>
       <div className="phone-scroll flex-1 overflow-y-auto px-4 py-3.5">
         <div className="mx-auto max-w-[560px]">

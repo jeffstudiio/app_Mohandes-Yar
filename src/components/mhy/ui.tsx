@@ -1256,7 +1256,7 @@ export function MabhasCover({
   progress?: number | null;
   /** absolute overlay node (status chip etc.) */
   badge?: React.ReactNode;
-  variant?: "rail" | "hero" | "thumb" | "banner";
+  variant?: "rail" | "hero" | "thumb" | "banner" | "mini";
   onClick?: () => void;
   ariaLabel?: string;
   className?: string;
@@ -1267,9 +1267,11 @@ export function MabhasCover({
     hero: { width: "100%", height: 196 },
     thumb: { width: 56, height: 72 },
     banner: { width: "100%", height: 92 },
+    mini: { width: 78, height: 104 },
   };
-  const numSize = variant === "hero" ? 44 : variant === "rail" ? 30 : variant === "thumb" ? 16 : 24;
-  const showText = variant !== "thumb";
+  const numSize = variant === "hero" ? 44 : variant === "rail" ? 30 : variant === "thumb" ? 16 : variant === "mini" ? 15 : 24;
+  const showText = variant !== "thumb" && variant !== "mini";
+  const showMicroLabel = variant !== "thumb" && variant !== "mini";
 
   const body = (
     <>
@@ -1282,10 +1284,12 @@ export function MabhasCover({
       <span aria-hidden className="cover-grid" />
       <span aria-hidden className="cover-grain" />
       {/* oversized number — top inline-start (§19) */}
-      <span className="absolute right-3.5 top-3 z-10 flex flex-col items-start gap-0.5">
+      <span className="absolute right-3.5 top-3 z-10 flex flex-col items-start gap-0.5" style={variant === "mini" ? { right: 8, top: 7 } : undefined}>
+        {showMicroLabel && (
         <span className="text-[8.5px] font-bold tracking-[0.14em]" style={{ color: "rgba(255,255,255,0.55)" }}>
           مبحث
         </span>
+        )}
         <span className="cover-num num" style={{ fontSize: numSize }}>
           {mabhas == null ? "—" : faNum(mabhas)}
         </span>
@@ -1355,20 +1359,23 @@ export function MabhasCover({
 }
 
 /**
- * SnapRail — horizontal snap carousel (§17): touch swipe, snap, partial next card,
- * RTL-native (inherits dir), momentum, optional pagination dots driven by real scroll position.
+ * SnapRail — horizontal snap carousel (§17): touch swipe in BOTH directions,
+ * snap, partial next card, RTL-native (inherits dir), momentum, optional
+ * pagination dots driven by real scroll position + optional edge arrows.
  */
 export function SnapRail({
   children,
   ariaLabel,
   dots = false,
   fade = true,
+  arrows = false,
   className = "",
 }: {
   children: React.ReactNode;
   ariaLabel: string;
   dots?: boolean;
   fade?: boolean;
+  arrows?: boolean;
   className?: string;
 }) {
   const ref = useRef<HTMLDivElement>(null);
@@ -1393,8 +1400,16 @@ export function SnapRail({
     return () => el.removeEventListener("scroll", onScroll);
   }, [count]);
 
+  const railBy = (dir: 1 | -1) => {
+    const el = ref.current;
+    if (!el) return;
+    // RTL scroll spec: forward (next items) = scrollLeft goes negative → dir -1 = next
+    const step = Math.max(240, el.clientWidth * 0.78);
+    el.scrollBy({ left: dir * step, behavior: "smooth" });
+  };
+
   return (
-    <div className={className}>
+    <div className={`relative ${className}`}>
       <div
         ref={ref}
         role="group"
@@ -1403,6 +1418,30 @@ export function SnapRail({
       >
         {children}
       </div>
+      {arrows && count > 4 && (
+        <>
+          <button
+            onClick={() => railBy(1)}
+            aria-label="قبلی"
+            className="press absolute right-1.5 top-[calc(50%-18px)] z-20 flex h-9 w-9 items-center justify-center rounded-full"
+            style={{ background: "var(--card)", border: "1px solid var(--border-strong)", color: "var(--foreground)", boxShadow: "0 2px 10px rgba(0,0,0,0.22)" }}
+          >
+            <svg viewBox="0 0 24 24" width={16} height={16} fill="none" aria-hidden>
+              <path d="M9 5l7 7-7 7" stroke="currentColor" strokeWidth="2.1" strokeLinecap="round" strokeLinejoin="round" />
+            </svg>
+          </button>
+          <button
+            onClick={() => railBy(-1)}
+            aria-label="بعدی"
+            className="press absolute left-1.5 top-[calc(50%-18px)] z-20 flex h-9 w-9 items-center justify-center rounded-full"
+            style={{ background: "var(--card)", border: "1px solid var(--border-strong)", color: "var(--foreground)", boxShadow: "0 2px 10px rgba(0,0,0,0.22)" }}
+          >
+            <svg viewBox="0 0 24 24" width={16} height={16} fill="none" aria-hidden>
+              <path d="M15 5l-7 7 7 7" stroke="currentColor" strokeWidth="2.1" strokeLinecap="round" strokeLinejoin="round" />
+            </svg>
+          </button>
+        </>
+      )}
       {dots && count > 2 && (
         <div className="mt-3 flex items-center justify-center gap-1.5" aria-hidden>
           {Array.from({ length: count }).map((_, i) => (
