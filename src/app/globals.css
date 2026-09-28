@@ -237,6 +237,90 @@
   display: none;
 }
 
+/* ─── Imagery system — cover treatment (directive §9–§14/§52) ───
+   The image surface is theme-independent: text sits on a dark ink veil, so the same
+   cover reads correctly in light and dark mode. UI text stays in HTML, never in the image. */
+.cover-frame {
+  position: relative;
+  overflow: hidden;
+  background: #10141b;
+  border: 1px solid rgba(255, 255, 255, 0.07);
+  border-radius: 1.25rem;
+  box-shadow: inset 0 0 0 1px rgba(255, 255, 255, 0.02), 0 10px 30px -18px rgba(0, 0, 0, 0.55);
+}
+.cover-img {
+  position: absolute;
+  inset: 0;
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+  /* controlled contrast + restrained grade (§13) — unified tonal family */
+  filter: saturate(0.88) contrast(1.05) brightness(0.92);
+  transition: transform 0.5s cubic-bezier(0.2, 0.8, 0.2, 1), opacity 0.4s ease;
+}
+button:hover .cover-img, button:focus-visible .cover-img { transform: scale(1.035); }
+/* ink veil — top for the number block, bottom for title/meta (§19) */
+.cover-veil {
+  position: absolute;
+  inset: 0;
+  background: linear-gradient(
+    180deg,
+    rgba(7, 10, 14, 0.62) 0%,
+    rgba(7, 10, 14, 0.18) 30%,
+    rgba(7, 10, 14, 0.14) 46%,
+    rgba(7, 10, 14, 0.74) 74%,
+    rgba(7, 10, 14, 0.93) 100%
+  );
+}
+/* subtle technical grid over image — keeps covers inside the graphic language (§41) */
+.cover-grid {
+  position: absolute;
+  inset: 0;
+  background-image:
+    linear-gradient(rgba(255, 255, 255, 0.045) 1px, transparent 1px),
+    linear-gradient(90deg, rgba(255, 255, 255, 0.045) 1px, transparent 1px);
+  background-size: 26px 26px;
+  mask-image: radial-gradient(120% 90% at 50% 10%, black 0%, transparent 68%);
+  -webkit-mask-image: radial-gradient(120% 90% at 50% 10%, black 0%, transparent 68%);
+}
+/* fine film grain (§13) — inline SVG noise, opacity very low */
+.cover-grain {
+  position: absolute;
+  inset: 0;
+  opacity: 0.05;
+  background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='120' height='120'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.9' numOctaves='2'/%3E%3C/filter%3E%3Crect width='120' height='120' filter='url(%23n)' opacity='0.6'/%3E%3C/svg%3E");
+}
+/* oversized mabhas number on cover */
+.cover-num {
+  font-weight: 800;
+  font-feature-settings: "tnum";
+  letter-spacing: 0;
+  color: rgba(255, 255, 255, 0.95);
+  text-shadow: 0 1px 12px rgba(0, 0, 0, 0.45);
+  line-height: 1;
+}
+
+/* ─── Horizontal snap rail — library browsing (directive §17–§18) ─── */
+.rail-scroll {
+  display: flex;
+  gap: 12px;
+  overflow-x: auto;
+  scroll-snap-type: x mandatory;
+  scroll-padding-inline-start: 20px;
+  -webkit-overflow-scrolling: touch;
+  overscroll-behavior-x: contain;
+}
+.rail-item { scroll-snap-align: start; flex-shrink: 0; }
+/* near-invisible edge bleed — signals continuation without a hard cut */
+.rail-fade {
+  mask-image: linear-gradient(90deg, transparent 0, #000 14px, #000 calc(100% - 14px), transparent 100%);
+  -webkit-mask-image: linear-gradient(90deg, transparent 0, #000 14px, #000 calc(100% - 14px), transparent 100%);
+}
+@media (prefers-reduced-motion: reduce) {
+  .cover-img { transition: none; }
+  button:hover .cover-img { transform: none; }
+}
+
 /* ─── Motion system — micro 80-160ms · standard 200-320ms · hero 450-700ms ─── */
 @keyframes screen-in {
   from { opacity: 0; transform: translateY(8px); }
@@ -309,3 +393,5 @@
   .press, .press:active { transition: none; transform: none; }
   * { scroll-behavior: auto !important; }
 }
+
+/* trigger recompile — imagery system */

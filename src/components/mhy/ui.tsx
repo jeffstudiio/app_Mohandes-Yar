@@ -3,6 +3,7 @@
 import { useEffect, useRef, useState } from "react";
 import { faNum } from "@/lib/mhy/engines";
 import { mabhasTitle } from "@/lib/mhy/store";
+import { mabhasCoverSrc } from "@/lib/mhy/covers";
 import {
   ShieldCheck,
   PenLine,
@@ -1225,6 +1226,190 @@ export function CompareCard({
           )}
         </div>
       ))}
+    </div>
+  );
+}
+
+/* ═══════════ Imagery system — MabhasCover + SnapRail (directive §9–§22) ═══════════ */
+
+/**
+ * MabhasCover — the visual object of مباحث مقررات ملی ساختمان (§19).
+ * Real generated asset + ink veil + oversized number in HTML (§14: text never baked in image).
+ * Variants: rail (browse card) · hero (continue-reading) · thumb (dense row) · banner (reader head)
+ */
+export function MabhasCover({
+  mabhas,
+  title,
+  meta,
+  progress,
+  badge,
+  variant = "rail",
+  onClick,
+  ariaLabel,
+  className = "",
+}: {
+  mabhas: number | null;
+  title?: string;
+  /** bottom meta line (question counts / status) */
+  meta?: React.ReactNode;
+  /** 0–100 → micro progress bar on the lower edge */
+  progress?: number | null;
+  /** absolute overlay node (status chip etc.) */
+  badge?: React.ReactNode;
+  variant?: "rail" | "hero" | "thumb" | "banner";
+  onClick?: () => void;
+  ariaLabel?: string;
+  className?: string;
+}) {
+  const src = mabhasCoverSrc(mabhas);
+  const dims: Record<string, React.CSSProperties> = {
+    rail: { width: 168, height: 224 },
+    hero: { width: "100%", height: 196 },
+    thumb: { width: 56, height: 72 },
+    banner: { width: "100%", height: 92 },
+  };
+  const numSize = variant === "hero" ? 44 : variant === "rail" ? 30 : variant === "thumb" ? 16 : 24;
+  const showText = variant !== "thumb";
+
+  const body = (
+    <>
+      {src ? (
+        <img src={src} alt="" loading="lazy" decoding="async" className="cover-img" draggable={false} />
+      ) : (
+        <span className="absolute inset-0 blueprint-grid-sm" aria-hidden style={{ background: "var(--surface)" }} />
+      )}
+      <span aria-hidden className="cover-veil" />
+      <span aria-hidden className="cover-grid" />
+      <span aria-hidden className="cover-grain" />
+      {/* oversized number — top inline-start (§19) */}
+      <span className="absolute right-3.5 top-3 z-10 flex flex-col items-start gap-0.5">
+        <span className="text-[8.5px] font-bold tracking-[0.14em]" style={{ color: "rgba(255,255,255,0.55)" }}>
+          مبحث
+        </span>
+        <span className="cover-num num" style={{ fontSize: numSize }}>
+          {mabhas == null ? "—" : faNum(mabhas)}
+        </span>
+      </span>
+      {badge && (
+        <span className="absolute left-3 top-3 z-10">{badge}</span>
+      )}
+      {showText && (
+        <span className="absolute inset-x-0 bottom-0 z-10 flex flex-col gap-1.5 p-3.5">
+          {title && (
+            <span
+              className="line-clamp-2 text-[12.5px] font-extrabold leading-5"
+              style={{ color: "#f2f5f4", textShadow: "0 1px 8px rgba(0,0,0,0.5)" }}
+            >
+              {title}
+            </span>
+          )}
+          {meta && (
+            <span className="num text-[9.5px] font-bold" style={{ color: "rgba(255,255,255,0.62)" }}>
+              {meta}
+            </span>
+          )}
+          {progress != null && (
+            <span className="mt-0.5 block h-[3px] w-full overflow-hidden rounded-full" style={{ background: "rgba(255,255,255,0.18)" }} aria-hidden>
+              <span
+                className="block h-full rounded-full"
+                style={{ width: `${Math.min(100, Math.max(0, progress))}%`, background: "var(--primary)", transition: "width 0.5s cubic-bezier(0.2,0.8,0.2,1)" }}
+              />
+            </span>
+          )}
+        </span>
+      )}
+    </>
+  );
+
+  const style: React.CSSProperties = { ...dims[variant], ...(variant === "hero" || variant === "banner" ? { borderRadius: "1.4rem" } : {}) };
+
+  if (onClick) {
+    return (
+      <button
+        onClick={onClick}
+        aria-label={ariaLabel ?? (mabhas == null ? undefined : `مبحث ${faNum(mabhas)} — ${mabhasTitle(mabhas)}`)}
+        className={`cover-frame press block text-right ${className}`}
+        style={style}
+      >
+        {body}
+      </button>
+    );
+  }
+  return (
+    <div
+      aria-label={ariaLabel ?? (mabhas == null ? undefined : `مبحث ${faNum(mabhas)} — ${mabhasTitle(mabhas)}`)}
+      className={`cover-frame ${className}`}
+      style={style}
+    >
+      {body}
+    </div>
+  );
+}
+
+/**
+ * SnapRail — horizontal snap carousel (§17): touch swipe, snap, partial next card,
+ * RTL-native (inherits dir), momentum, optional pagination dots driven by real scroll position.
+ */
+export function SnapRail({
+  children,
+  ariaLabel,
+  dots = false,
+  fade = true,
+  className = "",
+}: {
+  children: React.ReactNode;
+  ariaLabel: string;
+  dots?: boolean;
+  fade?: boolean;
+  className?: string;
+}) {
+  const ref = useRef<HTMLDivElement>(null);
+  const [idx, setIdx] = useState(0);
+  const [count, setCount] = useState(0);
+
+  useEffect(() => {
+    const el = ref.current;
+    if (!el) return;
+    const items = Array.from(el.children) as HTMLElement[];
+    setCount(items.length);
+    if (!items.length) return;
+    const onScroll = () => {
+      const gap = parseFloat(getComputedStyle(el).columnGap || "0") || 0;
+      const step = (items[0]?.offsetWidth ?? 1) + gap;
+      // RTL-compliant: scrollLeft is 0 at the inline start and negative while scrolling (modern spec)
+      const raw = Math.abs(el.scrollLeft) / step;
+      setIdx(Math.min(items.length - 1, Math.round(raw)));
+    };
+    el.addEventListener("scroll", onScroll, { passive: true });
+    onScroll();
+    return () => el.removeEventListener("scroll", onScroll);
+  }, [count]);
+
+  return (
+    <div className={className}>
+      <div
+        ref={ref}
+        role="group"
+        aria-label={ariaLabel}
+        className={`rail-scroll no-scrollbar px-5 ${fade ? "rail-fade" : ""}`}
+      >
+        {children}
+      </div>
+      {dots && count > 2 && (
+        <div className="mt-3 flex items-center justify-center gap-1.5" aria-hidden>
+          {Array.from({ length: count }).map((_, i) => (
+            <span
+              key={i}
+              className="h-1 rounded-full transition-all"
+              style={{
+                width: i === idx ? 14 : 4,
+                background: i === idx ? "var(--primary)" : "var(--border-strong)",
+                transitionDuration: "0.25s",
+              }}
+            />
+          ))}
+        </div>
+      )}
     </div>
   );
 }
