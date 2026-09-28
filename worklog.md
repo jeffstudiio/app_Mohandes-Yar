@@ -250,3 +250,27 @@ Work Log:
 
 Stage Summary:
 - «دفتر فنی مهندس» identity is LIVE on https://jeffstudiio.github.io/app_Mohandes-Yar/
+
+---
+Task ID: 11
+Agent: main
+Task: FINAL DRIBBBLE-DRIVEN PREMIUM UI/UX REDESIGN — imagery-driven pass (Mabhas cover system + carousels + premium library)
+
+Work Log:
+- PHASE 1: generated 23 real-subject covers (scripts/gen-covers.mjs, z-ai SDK + sharp) from REAL data grounding — question topics (8=بنایی, 9=بتن, 10=فولاد, 12=ایمنی کارگاه, 21=شهرسازی, 23=نقشه‌برداری), regulation bands, lesson titles; one shared dark-premium family (ink base, rim light, teal-green grade, grain, top negative space); text never baked into image → public/mabhas-covers/mabhas-01..23.webp (~30–115KB each, ~1.3MB total)
+- primitives: src/lib/mhy/covers.ts (BASE-aware mapping) + MabhasCover (rail/hero/thumb/banner: oversized number, ink veil, technical grid, grain, micro progress, badge slot) + SnapRail (CSS scroll-snap, RTL-native, partial next, scroll-driven dots) + cover grading CSS
+- PHASE 2: study root = premium technical library — masthead, hero continue-reading cover object, مباحث rail + end-cap, درسنامه rail + skeleton, roadmap row, editorial progress (commit 4cbf28e2 merged with phase 3)
+- PHASE 3: regulations library — real-stats masthead, readable-first rail, 23-row visual catalog with real counts/mastery/REVIEW amber badges (§53 behavior from real pool)
+- PHASE 4: dashboard L5 → cover hero (real mastery progress replaces positional mabhas/22 pseudo-progress)
+- PHASE 5/6: runner source panel + result weak-areas get mabhas cover thumbs
+- PHASE 7: onboarding untouched (already built to spec: parent disciplines, multi-competency real counts, TechFrame welcome)
+- PHASE 8: reader/lesson chapter-opener banners + lessons list as chapter rows
+- PHASE 9/10: practice مبحثی snap rail (sorted by real volume, one tap to run) + search regulation cover thumbs; settings intentionally quiet (§40)
+- fixes: TSC ||/?? mixing; unused Card import; dev-server stale-CSS watcher (append-trigger recompile)
+- QA (agent-browser 390×844): onboarding 6-step re-pass, study root rails, regs library rows, reader opener + band flow, practice rail → run → reveal → source panel cover, dashboard cover hero, dark mode (covers blend with ink), real console clean
+- verification: tsc src clean, eslint clean, static export EXIT 0 with 23 covers, no unprefixed asset paths, CI-replicated (api stash, BASE_PATH)
+
+Stage Summary:
+- 5 commits: imagery system / study+library / dashboard / runner+result / practice+search
+- «Content itself is now the visual identity»: هر مبحث هویت تصویری خودش را دارد؛ covers appear in study root, library, lessons, readers, dashboard, practice, runner source, result analysis, search
+- all functionality/data/business logic preserved; zero fabricated statistics
