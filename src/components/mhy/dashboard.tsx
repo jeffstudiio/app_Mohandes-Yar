@@ -319,7 +319,7 @@ export default function Dashboard({
             ariaLabel={`ادامه مطالعه مبحث ${faNum(lastStudy.mabhas)} — ${mabhasTitle(lastStudy.mabhas)}`}
             badge={
               <span
-                className="inline-flex items-center gap-1.5 rounded-full px-2.5 py-1 text-[9.5px] font-extrabold"
+                className="inline-flex items-center gap-1.5 rounded-full px-2.5 py-1 text-[10px] font-extrabold"
                 style={{ background: "var(--primary)", color: "var(--primary-foreground)" }}
               >
                 <Play size={11} />
@@ -346,7 +346,7 @@ export default function Dashboard({
             ariaLabel="شروع مطالعه مقررات از مبحث ۱"
             badge={
               <span
-                className="inline-flex items-center gap-1.5 rounded-full px-2.5 py-1 text-[9.5px] font-extrabold"
+                className="inline-flex items-center gap-1.5 rounded-full px-2.5 py-1 text-[10px] font-extrabold"
                 style={{ background: "rgba(255,255,255,0.9)", color: "#10141b" }}
               >
                 <Play size={11} />
@@ -402,7 +402,7 @@ export default function Dashboard({
                   {faNum(i + 1)}
                 </span>
                 <div className="min-w-0 flex-1">
-                  <p className="truncate text-[12.5px] font-bold" style={{ color: "var(--foreground)" }}>
+                  <p className="truncate text-[13px] font-bold" style={{ color: "var(--foreground)" }}>
                     {it.label}
                     {it.count ? ` · ${faNum(it.count)} سؤال` : ""}
                   </p>
@@ -503,7 +503,7 @@ export default function Dashboard({
               <span className="flex h-9 w-9 items-center justify-center rounded-xl" style={{ background: "var(--muted)", color: "var(--muted-foreground)" }}>
                 <Icon size={19} strokeWidth={1.9} />
               </span>
-              <span className="text-[10.5px] font-bold" style={{ color: "var(--foreground)" }}>
+              <span className="text-[11px] font-bold" style={{ color: "var(--foreground)" }}>
                 {label}
               </span>
             </button>

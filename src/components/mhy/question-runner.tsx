@@ -146,12 +146,12 @@ export function QuestionRunner({
                 }}
               >
                 <span
-                  className="num flex h-7 w-7 shrink-0 items-center justify-center rounded-lg border text-[11.5px] font-bold"
+                  className="num flex h-7 w-7 shrink-0 items-center justify-center rounded-lg border text-[12px] font-bold"
                   style={{ borderColor: chipBg === "transparent" ? chipFg : "transparent", color: chipFg, background: chipBg }}
                 >
                   {faNum(i + 1)}
                 </span>
-                <span className="flex-1 text-[13.5px] leading-7" style={{ color: "var(--foreground)" }}>
+                <span className="flex-1 text-[14px] leading-7" style={{ color: "var(--foreground)" }}>
                   {opt}
                 </span>
                 {showState && isAnswer && <Check size={18} style={{ color: "var(--success)" }} strokeWidth={2.5} />}
@@ -250,7 +250,7 @@ function PostAnswerPanels({ question }: { question: MhyQuestion }) {
         aria-expanded={sourceOpen}
       >
         <FileText size={16} style={{ color: "var(--primary)" }} />
-        <span className="flex-1 text-[12.5px] font-bold" style={{ color: "var(--foreground)" }}>
+        <span className="flex-1 text-[13px] font-bold" style={{ color: "var(--foreground)" }}>
           مشاهده منبع {question.citation.mabhas ? `— ${question.citation.mabhas}` : ""}
         </span>
         <ChevronLeft size={15} style={{ color: "var(--muted-foreground)", transform: sourceOpen ? "rotate(90deg)" : "none", transition: "transform 0.2s ease" }} />
@@ -292,7 +292,7 @@ function PostAnswerPanels({ question }: { question: MhyQuestion }) {
         aria-expanded={relatedOpen}
       >
         <Link2 size={16} style={{ color: "var(--primary)" }} />
-        <span className="flex-1 text-[12.5px] font-bold" style={{ color: "var(--foreground)" }}>
+        <span className="flex-1 text-[13px] font-bold" style={{ color: "var(--foreground)" }}>
           سؤالات مشابه و همین مبحث
         </span>
         <ChevronLeft size={15} style={{ color: "var(--muted-foreground)", transform: relatedOpen ? "rotate(90deg)" : "none", transition: "transform 0.2s ease" }} />
@@ -317,7 +317,7 @@ function PostAnswerPanels({ question }: { question: MhyQuestion }) {
       <div className="mt-2 flex gap-2">
         <button
           onClick={() => setNoteOpen((v) => !v)}
-          className="press flex min-h-[44px] flex-1 items-center justify-center gap-1.5 rounded-xl border text-[11.5px] font-bold"
+          className="press flex min-h-[44px] flex-1 items-center justify-center gap-1.5 rounded-xl border text-[12px] font-bold"
           style={{ background: "var(--surface)", color: "var(--foreground)", borderColor: "var(--border)" }}
         >
           <StickyNote size={14} />
@@ -326,7 +326,7 @@ function PostAnswerPanels({ question }: { question: MhyQuestion }) {
         <button
           onClick={() => reportQuestion(question.id)}
           disabled={isReported}
-          className="press flex min-h-[44px] flex-1 items-center justify-center gap-1.5 rounded-xl border text-[11.5px] font-bold disabled:opacity-50"
+          className="press flex min-h-[44px] flex-1 items-center justify-center gap-1.5 rounded-xl border text-[12px] font-bold disabled:opacity-50"
           style={{ background: "var(--surface)", color: isReported ? "var(--success)" : "var(--danger)", borderColor: "var(--border)" }}
         >
           <Flag size={14} />
@@ -339,7 +339,7 @@ function PostAnswerPanels({ question }: { question: MhyQuestion }) {
           onChange={(e) => setNote(question.id, e.target.value)}
           placeholder="یادداشت شما درباره این سوال…"
           rows={3}
-          className="w-full rounded-2xl border p-3 text-[12.5px] outline-none"
+          className="w-full rounded-2xl border p-3 text-[13px] outline-none"
           style={{ background: "var(--surface)", borderColor: "var(--border)", color: "var(--foreground)" }}
         />
       )}

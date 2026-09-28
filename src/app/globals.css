@@ -164,7 +164,12 @@
   }
 }
 
-/* ─── Typography scale — directive §5 ─── */
+/* ─── Typography scale — directive §5 ───
+   Size grid (rule): every text-[Npx] utility MUST sit on the integer grid
+   9 / 10 / 11 / 12 / 13 / 14 / 15 / 16 / 17 / 20 / 24 / 30 / 38 px.
+   No half-pixel sizes (12.5, 11.5, …) — they caused cross-section inconsistency.
+   Semantic roles: display 30 · title 20 · section 17 · body 15 · body-sm/label 13
+   · card-title 14 · caption/eyebrow 11 · mini 12 · meta 10 · cover-micro 9. */
 .t-display { font-size: 30px; line-height: 1.25; font-weight: 800; letter-spacing: -0.01em; }
 .t-title   { font-size: 20px; line-height: 1.35; font-weight: 700; }
 .t-section { font-size: 17px; line-height: 1.4;  font-weight: 600; }

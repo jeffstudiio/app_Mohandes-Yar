@@ -110,7 +110,7 @@ export default function Settings({ bootstrap, dark, onToggleDark }: { bootstrap:
             onChange={(e) => updateProfile({ name: e.target.value })}
             placeholder="نام شما (اختیاری)"
             aria-label="نام شما"
-            className="h-11 w-full rounded-xl border px-3.5 text-[12.5px] outline-none"
+            className="h-11 w-full rounded-xl border px-3.5 text-[13px] outline-none"
             style={{ background: "var(--surface)", borderColor: "var(--border)", color: "var(--foreground)" }}
           />
         </div>
@@ -187,7 +187,7 @@ export default function Settings({ bootstrap, dark, onToggleDark }: { bootstrap:
                 }}
                 placeholder="MHYR-XXXX-XXXX"
                 aria-label="توکن فعال‌سازی"
-                className="num h-11 flex-1 rounded-xl border px-3.5 text-left text-[12.5px] outline-none"
+                className="num h-11 flex-1 rounded-xl border px-3.5 text-left text-[13px] outline-none"
                 style={{ background: "var(--surface)", borderColor: tokenState === "invalid" ? "var(--danger)" : "var(--border)", color: "var(--foreground)" }}
               />
               <Btn size="sm" onClick={tryActivate}>
@@ -214,7 +214,7 @@ export default function Settings({ bootstrap, dark, onToggleDark }: { bootstrap:
       <Card>
         <div className="flex items-center gap-2">
           <Database size={16} style={{ color: "var(--primary)" }} />
-          <p className="text-[12.5px] font-bold" style={{ color: "var(--foreground)" }}>
+          <p className="text-[13px] font-bold" style={{ color: "var(--foreground)" }}>
             نسخه محتوا
           </p>
         </div>
@@ -312,7 +312,7 @@ export default function Settings({ bootstrap, dark, onToggleDark }: { bootstrap:
                   style={{ background: on ? "var(--primary-soft)" : "var(--surface)", borderColor: on ? "var(--primary)" : "var(--border)" }}
                 >
                   <div className="min-w-0 flex-1">
-                    <p className="text-[13.5px] font-extrabold" style={{ color: "var(--foreground)" }}>
+                    <p className="text-[14px] font-extrabold" style={{ color: "var(--foreground)" }}>
                       {c.competency}
                     </p>
                     <p className="num t-caption" style={{ color: "var(--muted-foreground)" }}>

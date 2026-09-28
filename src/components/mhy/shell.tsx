@@ -185,10 +185,10 @@ export default function MhyShell() {
         <div className="flex items-center gap-3">
           <img src={`${BASE}/app-icon.webp`} alt="آیکون مهندس‌یار" className="h-14 w-14 rounded-[1rem] shadow-lg" style={{ background: "var(--primary)" }} />
           <div>
-            <h1 className="text-[22px] font-extrabold" style={{ color: dark ? "#e9edf3" : "#131a17" }}>
+            <h1 className="text-[20px] font-extrabold" style={{ color: dark ? "#e9edf3" : "#131a17" }}>
               مهندس‌یار
             </h1>
-            <p className="text-[11.5px]" style={{ color: dark ? "#929fad" : "#5c6b63" }}>
+            <p className="text-[12px]" style={{ color: dark ? "#929fad" : "#5c6b63" }}>
               V2 — دفتر فنی آمادگی آزمون نظام مهندسی
             </p>
           </div>

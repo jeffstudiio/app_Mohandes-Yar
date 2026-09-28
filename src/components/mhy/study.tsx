@@ -174,7 +174,7 @@ export default function Study({
           }
           badge={
             <span
-              className="inline-flex items-center gap-1.5 rounded-full px-2.5 py-1 text-[9.5px] font-extrabold"
+              className="inline-flex items-center gap-1.5 rounded-full px-2.5 py-1 text-[10px] font-extrabold"
               style={{
                 background: heroIsLast ? "var(--primary)" : "rgba(255,255,255,0.9)",
                 color: heroIsLast ? "var(--primary-foreground)" : "#10141b",
@@ -228,7 +228,7 @@ export default function Study({
             aria-label="مشاهده همه مباحث"
           >
             <BookMarked size={17} style={{ color: "var(--primary)" }} />
-            <span className="num text-[9.5px] font-bold" style={{ color: "var(--muted-foreground)" }}>
+            <span className="num text-[10px] font-bold" style={{ color: "var(--muted-foreground)" }}>
               همه
             </span>
           </button>
@@ -268,7 +268,7 @@ export default function Study({
             aria-label="مشاهده همه کتاب‌های تخصصی"
           >
             <LibraryBig size={17} style={{ color: "var(--primary)" }} />
-            <span className="num text-[9.5px] font-bold" style={{ color: "var(--muted-foreground)" }}>
+            <span className="num text-[10px] font-bold" style={{ color: "var(--muted-foreground)" }}>
               همه
             </span>
           </button>
@@ -282,7 +282,7 @@ export default function Study({
         <div className="mt-3 flex items-center gap-4">
           <ProgressRing pct={readPct} size={84} strokeWidth={8} label="بندها" />
           <div className="min-w-0 flex-1">
-            <p className="num text-[12.5px] font-bold" style={{ color: "var(--foreground)" }}>
+            <p className="num text-[13px] font-bold" style={{ color: "var(--foreground)" }}>
               {faNum(new Set(studiedBands).size)} بند از {faNum(bootstrap?.stats.regulationBandTexts ?? 0)} بند موجود
             </p>
             <p className="t-caption mt-1 leading-5" style={{ color: "var(--muted-foreground)" }}>
@@ -423,7 +423,7 @@ function RegulationReader({
           <ChevronLeft size={20} style={{ transform: "rotate(180deg)" }} />
         </button>
         <div className="min-w-0 flex-1">
-          <h1 className="truncate text-[14.5px] font-extrabold" style={{ color: "var(--foreground)" }}>
+          <h1 className="truncate text-[14px] font-extrabold" style={{ color: "var(--foreground)" }}>
             {mabhasTitle(mabhas)}
           </h1>
           <p className="num t-meta" style={{ color: "var(--muted-foreground)" }}>
@@ -500,7 +500,7 @@ function RegulationReader({
                         {faNum(ch.num)}
                       </span>
                       <span className="min-w-0 flex-1">
-                        <span className="block truncate text-[12.5px] font-bold" style={{ color: "var(--foreground)" }}>
+                        <span className="block truncate text-[13px] font-bold" style={{ color: "var(--foreground)" }}>
                           فصل {faNum(ch.num)}{cleanChapterTitle(ch.title) ? ` — ${cleanChapterTitle(ch.title)}` : ""}
                         </span>
                         <span className="num t-meta" style={{ color: "var(--muted-foreground)" }}>
@@ -524,7 +524,7 @@ function RegulationReader({
                       <GraduationCap size={16} />
                     </span>
                     <span className="min-w-0 flex-1">
-                      <span className="block text-[12.5px] font-bold" style={{ color: "var(--foreground)" }}>
+                      <span className="block text-[13px] font-bold" style={{ color: "var(--foreground)" }}>
                         درسنامه آموزشی مبحث {faNum(mabhas)}
                       </span>
                       <span className="t-meta" style={{ color: "var(--muted-foreground)" }}>
@@ -566,7 +566,7 @@ function RegulationReader({
                 )}
                 <div className="flex items-start justify-between gap-2">
                   <div className="flex items-center gap-2">
-                    <span className="num inline-flex items-center rounded-md px-2 py-0.5 text-[10.5px] font-extrabold" style={{ background: studied ? "var(--success-soft)" : "var(--primary-soft)", color: studied ? "var(--success)" : "var(--primary)" }}>
+                    <span className="num inline-flex items-center rounded-md px-2 py-0.5 text-[11px] font-extrabold" style={{ background: studied ? "var(--success-soft)" : "var(--primary-soft)", color: studied ? "var(--success)" : "var(--primary)" }}>
                       بند {b.band}
                     </span>
                     {b.page ? (
@@ -592,7 +592,7 @@ function RegulationReader({
                   </button>
                 </div>
                 {b.title && (
-                  <h3 className="mt-2.5 text-[14.5px] font-bold leading-7" style={{ color: "var(--foreground)" }}>
+                  <h3 className="mt-2.5 text-[14px] font-bold leading-7" style={{ color: "var(--foreground)" }}>
                     {b.title}
                   </h3>
                 )}
@@ -676,7 +676,7 @@ function RegulationReader({
                   aria-label="درسنامه آموزشی این مبحث"
                 >
                   <GraduationCap size={16} style={{ color: "var(--success)" }} />
-                  <span className="text-[12.5px] font-bold" style={{ color: "var(--success)" }}>
+                  <span className="text-[13px] font-bold" style={{ color: "var(--success)" }}>
                     درسنامه آموزشی مبحث {faNum(mabhas)}
                   </span>
                 </button>
@@ -729,7 +729,7 @@ function LessonReader({ mabhas, onBack }: { mabhas: number; onBack: () => void }
           <ChevronLeft size={20} style={{ transform: "rotate(180deg)" }} />
         </button>
         <div className="min-w-0 flex-1">
-          <h1 className="truncate text-[14.5px] font-extrabold" style={{ color: "var(--foreground)" }}>
+          <h1 className="truncate text-[14px] font-extrabold" style={{ color: "var(--foreground)" }}>
             {lesson.title}
           </h1>
           <p className="num t-meta" style={{ color: "var(--muted-foreground)" }}>
@@ -812,7 +812,7 @@ function SpecialBookReader({ book, onBack }: { book: (typeof SPECIAL_BOOKS)[numb
           <ChevronLeft size={20} style={{ transform: "rotate(180deg)" }} />
         </button>
         <div className="min-w-0 flex-1">
-          <h1 className="truncate text-[14.5px] font-extrabold" style={{ color: "var(--foreground)" }}>
+          <h1 className="truncate text-[14px] font-extrabold" style={{ color: "var(--foreground)" }}>
             {book.title}
           </h1>
           <p className="t-meta" style={{ color: "var(--muted-foreground)" }}>

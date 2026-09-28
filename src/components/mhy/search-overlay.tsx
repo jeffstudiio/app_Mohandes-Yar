@@ -109,13 +109,13 @@ export default function SearchOverlay({
                   >
                     <MabhasCover mabhas={h.mabhas} variant="thumb" className="shrink-0" />
                     <div className="min-w-0 flex-1">
-                      <p className="num flex items-center gap-1.5 text-[11.5px] font-bold" style={{ color: "var(--primary)" }}>
+                      <p className="num flex items-center gap-1.5 text-[12px] font-bold" style={{ color: "var(--primary)" }}>
                         <BookOpen size={13} />
                         مبحث {faNum(h.mabhas)} · بند {h.band}
                         {h.page ? ` · ص ${faNum(h.page)}` : ""}
                       </p>
                       {h.title && (
-                        <p className="mt-1 truncate text-[12.5px] font-bold" style={{ color: "var(--foreground)" }}>
+                        <p className="mt-1 truncate text-[13px] font-bold" style={{ color: "var(--foreground)" }}>
                           {h.title}
                         </p>
                       )}
@@ -143,7 +143,7 @@ export default function SearchOverlay({
                     className="press w-full rounded-2xl border p-3.5 text-right"
                     style={{ background: "var(--card)", borderColor: "var(--border)" }}
                   >
-                    <p className="num flex items-center gap-1.5 text-[10.5px] font-bold" style={{ color: h.sourceType === "OFFICIAL_EXAM" ? "var(--primary)" : "var(--warning)" }}>
+                    <p className="num flex items-center gap-1.5 text-[11px] font-bold" style={{ color: h.sourceType === "OFFICIAL_EXAM" ? "var(--primary)" : "var(--warning)" }}>
                       {h.sourceType === "OFFICIAL_EXAM" ? <ShieldCheck size={12} /> : <PenLine size={12} />}
                       {h.sourceType === "OFFICIAL_EXAM" ? `رسمی${h.session ? ` · ${h.session}` : ""}` : "تألیفی"} · {h.topic}
                     </p>
@@ -171,7 +171,7 @@ export default function SearchOverlay({
                     style={{ background: "var(--card)", borderColor: "var(--border)" }}
                   >
                     <GraduationCap size={16} style={{ color: "var(--success)" }} />
-                    <span className="flex-1 text-[12.5px] font-bold" style={{ color: "var(--foreground)" }}>
+                    <span className="flex-1 text-[13px] font-bold" style={{ color: "var(--foreground)" }}>
                       {h.title}
                     </span>
                   </button>

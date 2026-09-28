@@ -152,7 +152,7 @@ function QuickCard({ n, majors, onStart }: { n: number; majors: string[]; onStar
       style={{ background: "var(--card)", borderColor: "var(--border)" }}
     >
       <Zap size={17} style={{ color: "var(--primary)" }} />
-      <span className="num text-[11.5px] font-extrabold" style={{ color: "var(--foreground)" }}>
+      <span className="num text-[12px] font-extrabold" style={{ color: "var(--foreground)" }}>
         {faNum(n)} سؤال
       </span>
     </button>
@@ -206,7 +206,7 @@ function OfficialSessions({
           <button onClick={() => { setQuestions(null); setSel(null); }} aria-label="بازگشت" className="press flex h-11 w-11 items-center justify-center rounded-xl" style={{ color: "var(--muted-foreground)" }}>
             <ChevronLeft size={20} style={{ transform: "rotate(180deg)" }} />
           </button>
-          <h1 className="flex-1 text-[15.5px] font-extrabold" style={{ color: "var(--foreground)" }}>
+          <h1 className="flex-1 text-[16px] font-extrabold" style={{ color: "var(--foreground)" }}>
             آزمون {sel}
           </h1>
         </div>
@@ -296,7 +296,7 @@ function OfficialSessions({
                 right={
                   <span className="flex shrink-0 items-center gap-1.5">
                     {done && (
-                      <span className="num inline-flex items-center gap-1 rounded-full px-2 py-0.5 text-[9.5px] font-bold" style={{ background: "var(--success-soft)", color: "var(--success)" }}>
+                      <span className="num inline-flex items-center gap-1 rounded-full px-2 py-0.5 text-[10px] font-bold" style={{ background: "var(--success-soft)", color: "var(--success)" }}>
                         <Check size={10} strokeWidth={3} />
                         انجام‌شده
                       </span>
@@ -542,7 +542,7 @@ function ExamRunner({
         </div>
         {durationMin > 0 ? (
           <div
-            className={`num flex items-center gap-1 rounded-full px-2.5 py-1.5 text-[11.5px] font-extrabold ${lowTime ? "pulse-soft" : ""}`}
+            className={`num flex items-center gap-1 rounded-full px-2.5 py-1.5 text-[12px] font-extrabold ${lowTime ? "pulse-soft" : ""}`}
             style={{ background: lowTime ? "var(--danger-soft)" : "var(--primary-soft)", color: lowTime ? "var(--danger)" : "var(--primary)" }}
             aria-label="زمان باقی‌مانده"
           >
@@ -743,14 +743,14 @@ function ExamResult({ attempt, onHome, onReview }: { attempt: ExamAttempt; onHom
               <div key={r.m} className="flex items-center gap-2.5 py-2.5">
                 <MabhasCover mabhas={r.m} variant="thumb" className="shrink-0" />
                 <div className="min-w-0 flex-1">
-                  <p className="truncate text-[12.5px] font-bold" style={{ color: "var(--foreground)" }}>
+                  <p className="truncate text-[13px] font-bold" style={{ color: "var(--foreground)" }}>
                     {mabhasTitle(r.m)}
                   </p>
                   <p className="t-meta" style={{ color: "var(--muted-foreground)" }}>
                     {faNum(r.correct)} درست از {faNum(r.correct + r.wrong)} پاسخ
                   </p>
                 </div>
-                <span className="num flex h-9 w-11 shrink-0 items-center justify-center rounded-xl text-[10.5px] font-extrabold" style={{ background: "var(--warning-soft)", color: "var(--warning)" }}>
+                <span className="num flex h-9 w-11 shrink-0 items-center justify-center rounded-xl text-[11px] font-extrabold" style={{ background: "var(--warning-soft)", color: "var(--warning)" }}>
                   ٪{faNum(r.pct)}
                 </span>
               </div>
@@ -802,7 +802,7 @@ function AttemptHistory() {
               ٪{faNum(s.accuracyPct)}
             </div>
             <div className="min-w-0 flex-1">
-              <p className="truncate text-[12.5px] font-bold" style={{ color: "var(--foreground)" }}>
+              <p className="truncate text-[13px] font-bold" style={{ color: "var(--foreground)" }}>
                 {a.title}
               </p>
               <p className="num t-meta" style={{ color: "var(--muted-foreground)" }}>

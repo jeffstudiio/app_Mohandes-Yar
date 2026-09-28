@@ -167,7 +167,7 @@ export function Badge({
   const fg = soft ? `var(--${tint === "neutral" ? "muted-foreground" : tint})` : `var(--primary-foreground)`;
   return (
     <span
-      className="inline-flex items-center gap-1 rounded-full px-2.5 py-1 text-[10.5px] font-bold"
+      className="inline-flex items-center gap-1 rounded-full px-2.5 py-1 text-[11px] font-bold"
       style={{ background: bg, color: fg }}
     >
       {Icon && <Icon size={12} />}
@@ -180,7 +180,7 @@ export function SourceBadge({ sourceType, session, qnum }: { sourceType: "OFFICI
   if (sourceType === "OFFICIAL_EXAM") {
     return (
       <span
-        className="inline-flex items-center gap-1 rounded-full px-2.5 py-1 text-[10.5px] font-bold"
+        className="inline-flex items-center gap-1 rounded-full px-2.5 py-1 text-[11px] font-bold"
         style={{ background: "var(--primary-soft)", color: "var(--primary)" }}
         aria-label={`سوال رسمی${session ? ` آزمون ${session}` : ""}${qnum ? ` شماره ${qnum}` : ""}`}
       >
@@ -191,7 +191,7 @@ export function SourceBadge({ sourceType, session, qnum }: { sourceType: "OFFICI
   }
   return (
     <span
-      className="inline-flex items-center gap-1 rounded-full px-2.5 py-1 text-[10.5px] font-bold"
+      className="inline-flex items-center gap-1 rounded-full px-2.5 py-1 text-[11px] font-bold"
       style={{ background: "var(--muted)", color: "var(--muted-foreground)" }}
       aria-label="سوال تألیفی"
     >
@@ -535,7 +535,7 @@ export function SectionHeader({ title, action, onAction }: { title: string; acti
         {title}
       </h2>
       {action && (
-        <button onClick={onAction} className="press flex items-center gap-0.5 text-[11.5px] font-bold" style={{ color: "var(--primary)" }}>
+        <button onClick={onAction} className="press flex items-center gap-0.5 text-[12px] font-bold" style={{ color: "var(--primary)" }}>
           {action}
           <ChevronLeft size={14} />
         </button>
@@ -571,7 +571,7 @@ export function ListItem({
           <Icon size={20} strokeWidth={1.9} />
         </div>
         <div className="min-w-0 flex-1">
-          <p className="text-[13.5px] font-bold" style={{ color: "var(--foreground)" }}>
+          <p className="text-[14px] font-bold" style={{ color: "var(--foreground)" }}>
             {title}
           </p>
           {desc && (
@@ -926,7 +926,7 @@ export function MeterRows({
             <span className="t-body-sm font-bold" style={{ color: "var(--foreground)" }}>
               {it.label}
             </span>
-            <span className="num text-[11.5px] font-extrabold" style={{ color: it.color ?? "var(--primary)" }}>
+            <span className="num text-[12px] font-extrabold" style={{ color: it.color ?? "var(--primary)" }}>
               {faNum(Math.round(it.pct))}٪
             </span>
           </div>
@@ -1032,7 +1032,7 @@ export function DenseRow({
       )}
       <div className="min-w-0 flex-1">
         <div className="flex items-center gap-2">
-          <p className="truncate text-[13.5px] font-bold" style={{ color: "var(--foreground)" }}>
+          <p className="truncate text-[14px] font-bold" style={{ color: "var(--foreground)" }}>
             {title}
           </p>
           {meta}
@@ -1287,7 +1287,7 @@ export function MabhasCover({
       {/* oversized number — top inline-start (§19) */}
       <span className="absolute right-3.5 top-3 z-10 flex flex-col items-start gap-0.5" style={variant === "mini" ? { right: 8, top: 7 } : undefined}>
         {showMicroLabel && (
-        <span className="text-[8.5px] font-bold tracking-[0.14em]" style={{ color: "rgba(255,255,255,0.55)" }}>
+        <span className="text-[9px] font-bold tracking-[0.14em]" style={{ color: "rgba(255,255,255,0.55)" }}>
           مبحث
         </span>
         )}
@@ -1302,7 +1302,7 @@ export function MabhasCover({
         <span className="absolute inset-x-0 bottom-0 z-10 flex flex-col gap-1.5 p-3.5">
           {mabhasEdition(mabhas) && (
             <span
-              className="num text-[8.5px] font-bold tracking-[0.12em]"
+              className="num text-[9px] font-bold tracking-[0.12em]"
               style={{ color: "rgba(255,255,255,0.52)" }}
             >
               {mabhasEdition(mabhas)}
@@ -1310,14 +1310,14 @@ export function MabhasCover({
           )}
           {title && (
             <span
-              className="line-clamp-2 text-[12.5px] font-extrabold leading-5"
+              className="line-clamp-2 text-[13px] font-extrabold leading-5"
               style={{ color: "#f2f5f4", textShadow: "0 1px 8px rgba(0,0,0,0.5)" }}
             >
               {title}
             </span>
           )}
           {meta && (
-            <span className="num text-[9.5px] font-bold" style={{ color: "rgba(255,255,255,0.62)" }}>
+            <span className="num text-[10px] font-bold" style={{ color: "rgba(255,255,255,0.62)" }}>
               {meta}
             </span>
           )}
@@ -1495,7 +1495,7 @@ export function BookCover({
       <span aria-hidden className="cover-grain" />
       <span className="absolute right-3.5 top-3 z-10 flex flex-col items-start gap-0.5" style={variant === "mini" ? { right: 8, top: 7 } : undefined}>
         {showText && (
-          <span className="text-[8.5px] font-bold tracking-[0.14em]" style={{ color: "rgba(255,255,255,0.55)" }}>
+          <span className="text-[9px] font-bold tracking-[0.14em]" style={{ color: "rgba(255,255,255,0.55)" }}>
             کتاب تخصصی
           </span>
         )}
@@ -1504,17 +1504,17 @@ export function BookCover({
       {showText && (
         <span className="absolute inset-x-0 bottom-0 z-10 flex flex-col gap-1.5 p-3.5">
           {book.meta && (
-            <span className="num text-[8.5px] font-bold tracking-[0.12em]" style={{ color: "rgba(255,255,255,0.52)" }}>
+            <span className="num text-[9px] font-bold tracking-[0.12em]" style={{ color: "rgba(255,255,255,0.52)" }}>
               {book.meta}
             </span>
           )}
           {title && (
-            <span className="line-clamp-2 text-[12.5px] font-extrabold leading-5" style={{ color: "#f2f5f4", textShadow: "0 1px 8px rgba(0,0,0,0.5)" }}>
+            <span className="line-clamp-2 text-[13px] font-extrabold leading-5" style={{ color: "#f2f5f4", textShadow: "0 1px 8px rgba(0,0,0,0.5)" }}>
               {title}
             </span>
           )}
           {meta && (
-            <span className="num text-[9.5px] font-bold" style={{ color: "rgba(255,255,255,0.62)" }}>
+            <span className="num text-[10px] font-bold" style={{ color: "rgba(255,255,255,0.62)" }}>
               {meta}
             </span>
           )}
@@ -1593,7 +1593,7 @@ export function ExamCountdown({ target, title }: { target: number; title: string
       </div>
       <div className="px-5 pb-4 pt-1.5">
         <div className="construction mb-2.5" />
-        <p className="text-center text-[11.5px] font-bold" style={{ color: "var(--copper)" }}>
+        <p className="text-center text-[12px] font-bold" style={{ color: "var(--copper)" }}>
           زمان باقی مانده تا {title}
         </p>
       </div>

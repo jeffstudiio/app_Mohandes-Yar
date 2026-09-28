@@ -170,7 +170,7 @@ export default function Practice({
             style={{ background: "var(--surface)", borderColor: "var(--border)" }}
           >
             <Zap size={17} style={{ color: "var(--primary)" }} />
-            <span className="num text-[11.5px] font-extrabold" style={{ color: "var(--foreground)" }}>
+            <span className="num text-[12px] font-extrabold" style={{ color: "var(--foreground)" }}>
               {faNum(n)} سؤال
             </span>
           </button>

@@ -64,7 +64,7 @@ export default function Shop() {
                 setNeed("all");
               }}
               aria-pressed={active}
-              className="press shrink-0 rounded-full border px-3.5 py-1.5 text-[11.5px] font-bold"
+              className="press shrink-0 rounded-full border px-3.5 py-1.5 text-[12px] font-bold"
               style={
                 active
                   ? { borderColor: "var(--primary)", background: "var(--primary-soft)", color: "var(--primary)" }
@@ -160,7 +160,7 @@ function ShopCard({ p }: { p: { title: string; url: string; img: string | null; 
           <LibraryBig size={30} style={{ color: "var(--muted-foreground)" }} />
         )}
         <span
-          className="absolute right-1.5 top-1.5 rounded-full px-2 py-0.5 text-[8.5px] font-extrabold"
+          className="absolute right-1.5 top-1.5 rounded-full px-2 py-0.5 text-[9px] font-extrabold"
           style={{ background: "var(--primary-soft)", color: "var(--primary)" }}
         >
           {p.need}
@@ -174,7 +174,7 @@ function ShopCard({ p }: { p: { title: string; url: string; img: string | null; 
           <span className="t-meta" style={{ color: "var(--muted-foreground)" }}>
             {p.group}
           </span>
-          <span className="flex items-center gap-0.5 text-[9.5px] font-extrabold" style={{ color: "var(--primary)" }}>
+          <span className="flex items-center gap-0.5 text-[10px] font-extrabold" style={{ color: "var(--primary)" }}>
             مشاهده
             <ExternalLink size={11} />
           </span>
