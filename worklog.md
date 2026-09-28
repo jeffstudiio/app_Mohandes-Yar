@@ -197,3 +197,20 @@ Work Log:
 Stage Summary:
 - ref4 (زبان‌آموزی) نزدیک‌ترین مرجع به «Premium Academic Productivity»؛ ref5 فقط منبع ایده نمودار (اجرایش ممنوع)
 - پالت پیشنهادی: dark tinted neutral + تک‌اکسنت آکادمیک + کِرِم برای callout
+
+---
+Task ID: 9
+Agent: main
+Task: تحلیل عمیق ۷ رفرنس بصری + استخراج Design Direction واحد مهندس‌یار V2 (بدون تغییر کد)
+
+Work Log:
+- تحلیل ۷ تصویر در ۷ بُعد خواسته‌شده (layout/visual/dataviz/interaction/motion/graphics/UX)
+- جمع‌بندی cross-reference: ۸ عامل پرمیوم بودن
+- استخراج Design Direction با ۱۱ محور + Token Spec عددی
+- Mapping رفرنس‌ها به ۱۱ بخش اپ (onboarding تا settings)
+- سند نهایی: design-refs/DESIGN_DIRECTION.md (۵ اصل هویت + ۳ WOW moment)
+
+Stage Summary:
+- جهت‌گیری: «دفتر فنی مهندس» — ink surfaces + تک‌اکسنت سبز آکادمیک + کرم callout + مس فقط برای کانت‌داون آزمون
+- ref4 = مرجع runner/study، ref3 = مرجع chart/analytics، ref7 = مرجع dashboard ساختار، ref5 فقط بانک ایده (اجرای خنثی)
+- آماده برای فاز پیاده‌سازی پس از تأیید کاربر
