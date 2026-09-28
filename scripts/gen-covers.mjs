@@ -19,13 +19,13 @@ const FAMILY =
   "Dark cinematic editorial photograph, deep charcoal-black ink background, dramatic low-key directional rim light from one side, subtle muted teal-green color grade, desaturated moody tones, fine film grain, premium engineering technical atmosphere, shallow depth of field, minimalist composition with generous dark negative space in the upper third, high detail, photorealistic. No text, no letters, no numbers, no watermark, no people, no faces, no logo, no cartoon.";
 
 const SUBJECTS = {
-  1: "rolled architectural blueprint drawings and a brass drafting compass on a dark technical desk",
+  1: "open technical reference book with architectural line drawings and building section diagrams on its pages, brass drafting compass and scale ruler on a dark technical desk",
   2: "stack of official stamped technical permit documents and a heavy desk stamp on dark wood, administrative paperwork with ribbon seal",
   3: "fire protection sprinkler head and flame-resistant steel door detail, faint warm ember glow against dark metal",
   4: "architectural cross-section drawing of a multi-story building, technical section lines on dark drafting paper",
   5: "arranged construction material samples: concrete cube, clay brick, steel profile, wood block and cement bag on dark surface",
   6: "steel truss structure with diagonal members under dramatic light, structural load engineering detail",
-  7: "foundation excavation with rebar cage and concrete footing formwork at a dark construction site",
+  7: "geotechnical engineering cross-section showing layered soil strata beneath a concrete building foundation, soil core sample tubes, earth engineering detail, dramatic side light",
   8: "masonry brick wall pattern with mortar joints, partially built clay brick wall with dramatic side light",
   9: "reinforced concrete column with exposed rebar grid and fresh concrete surface, formwork detail",
   10: "steel I-beam columns and beams of a structural frame, bolted steel connections, welding sparks faint in background",
@@ -35,13 +35,13 @@ const SUBJECTS = {
   14: "industrial HVAC ductwork and mechanical pipes with valves along a dark ceiling",
   15: "elevator machine room with steel traction cables and pulley sheaves, elevator shaft doors",
   16: "sanitary plumbing pipes and drainage fittings, copper and PVC pipe assembly detail on dark background",
-  17: "building facade thermal insulation layers and energy efficient glazing reflecting dusk sky",
+  17: "copper natural gas piping with brass valves and a building gas meter, one small controlled blue gas flame on a burner, dark mechanical room atmosphere",
   18: "acoustic sound insulation foam panels and mineral wool layer inside a wall section, texture detail",
   19: "solar photovoltaic panels on a rooftop at dusk with building energy meter, sustainable energy systems",
   20: "illuminated emergency exit sign and fire extinguisher mounted on dark concrete wall, fire alarm detail",
-  21: "aerial night view of a dense city district grid with streets and blocks like an urban masterplan",
+  21: "massive reinforced concrete protective barriers and hardened bunker structure, passive defense engineering with blast-resistant concrete blocks, dramatic low-key light",
   22: "construction supervision desk at a building site: technical drawings, clipboard checklist and total station instrument",
-  23: "precision theodolite surveying instrument on tripod against dark dusk sky with coordinate grid feel",
+  23: "underground parking garage ramp with painted traffic lane lines, warning bollards and traffic barriers inside a building, dramatic overhead lighting",
 };
 
 async function genOne(zai, m, attempt = 1) {

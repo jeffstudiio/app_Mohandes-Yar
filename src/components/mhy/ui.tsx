@@ -2,7 +2,7 @@
 
 import { useEffect, useRef, useState } from "react";
 import { faNum } from "@/lib/mhy/engines";
-import { mabhasTitle } from "@/lib/mhy/store";
+import { mabhasTitle, mabhasEdition } from "@/lib/mhy/store";
 import { mabhasCoverSrc } from "@/lib/mhy/covers";
 import {
   ShieldCheck,
@@ -1295,6 +1295,14 @@ export function MabhasCover({
       )}
       {showText && (
         <span className="absolute inset-x-0 bottom-0 z-10 flex flex-col gap-1.5 p-3.5">
+          {mabhasEdition(mabhas) && (
+            <span
+              className="num text-[8.5px] font-bold tracking-[0.12em]"
+              style={{ color: "rgba(255,255,255,0.52)" }}
+            >
+              {mabhasEdition(mabhas)}
+            </span>
+          )}
           {title && (
             <span
               className="line-clamp-2 text-[12.5px] font-extrabold leading-5"

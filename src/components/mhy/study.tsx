@@ -3,7 +3,7 @@
 import { useEffect, useMemo, useState } from "react";
 import type { Bootstrap, MhyBand, LessonJson } from "@/lib/mhy/server";
 import { api } from "@/lib/mhy/api";
-import { useMhy, mabhasTitle } from "@/lib/mhy/store";
+import { useMhy, mabhasTitle, mabhasEdition } from "@/lib/mhy/store";
 import { faNum, buildRoadmap, mabhasMastery, type QLite } from "@/lib/mhy/engines";
 import { SectionHeader, ProgressBar, EmptyState, Btn, SearchField, LoadingBlock, ProgressRing, DenseRow, DenseList, Eyebrow, SegmentedProgress, CheckBadge, MabhasCover, SnapRail } from "./ui";
 import {
@@ -161,6 +161,7 @@ export default function Study({
                       {hasText && <BookMarked size={13} style={{ color: "var(--primary)", flexShrink: 0 }} aria-label="متن بندها موجود" />}
                     </div>
                     <p className="num t-caption mt-0.5" style={{ color: "var(--muted-foreground)" }}>
+                      {mabhasEdition(mi.mabhas) && <span style={{ color: "var(--primary)", opacity: 0.85 }}>{mabhasEdition(mi.mabhas)} · </span>}
                       {hasText ? "متن بندها · " : ""}
                       {faNum(mi.questions)} سؤال ({faNum(mi.official)} رسمی)
                       {m ? ` · ٪${faNum(m.mastery)} تسلط` : ""}

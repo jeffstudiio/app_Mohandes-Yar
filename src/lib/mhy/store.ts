@@ -3,6 +3,7 @@
 import { create } from "zustand";
 import { persist } from "zustand/middleware";
 import type { AnswerState, ExamAttempt } from "./engines";
+import { faNum } from "./engines";
 import type { MhyDiscipline, DisciplineStat } from "./content-core";
 
 // ─── Client state — persisted progress (offline-first §39) ───
@@ -164,33 +165,66 @@ export const useMhy = create<MhyState>()(
 
 // ─── The real mabhas metadata of مقررات ملی ساختمان (titles only — no content fabrication) ───
 export const MABHAS_TITLES: Record<number, string> = {
-  1: "کلیات و تعاریف",
+  1: "تعاریف",
   2: "نظامات اداری",
   3: "حفاظت ساختمان‌ها در مقابل حریق",
   4: "الزامات عمومی ساختمان",
-  5: "مصالح و فنون ساختمان",
-  6: "بارهای وارد بر ساختمان",
-  7: "پی و فونداسیون",
-  8: "طراحی اجرایی ساختمان‌های بتن‌آرمه",
-  9: "طراحی و اجرای ساختمان‌های بتن‌آرمه",
-  10: "طراحی و اجرای ساختمان‌های فولادی",
-  11: "طراحی و اجرای سازه‌های چوبی",
-  12: "ضوابط طراحی ساختمان‌ها برای بهره‌وری انرژی",
-  13: "طراحی تفصیلی و اجرایی تأسیسات برقی ساختمان‌ها",
-  14: "تأسیسات مکانیکی",
-  15: "آسانسور و پله برقی",
+  5: "مصالح و فرآورده‌های ساختمانی",
+  6: "بارهای وارد بر ساختمان‌ها",
+  7: "ژئوتکنیک و مهندسی پی",
+  8: "طرح و اجرای ساختمان‌های با مصالح بنایی",
+  9: "طرح و اجرای ساختمان‌های بتن آرمه",
+  10: "طرح و اجرای ساختمان‌های فولادی",
+  11: "طرح و اجرای صنعتی ساختمان‌ها",
+  12: "ایمنی، بهداشت کار و محیط زیست در حین اجرا",
+  13: "تاسیسات برقی ساختمان‌ها",
+  14: "تاسیسات مکانیکی ساختمان‌ها",
+  15: "آسانسورها و پلکان برقی",
   16: "تأسیسات بهداشتی",
-  17: "لوله‌کشی گاز طبیعی",
-  18: "بهره‌برداری از تأسیسات و تجهیزات مکانیکی",
-  19: "صرفه‌جویی در مصرف انرژی و برق",
-  20: "نشانه‌گذاری ساختمان‌ها (راهنما و علامت‌گذاری)",
+  17: "سامانه گاز طبیعی در ساختمان",
+  18: "عایق‌بندی و تنظیم صدا",
+  19: "مدیریت انرژی در ساختمان‌ها",
+  20: "علائم و تابلوها",
   21: "پدافند غیرعامل",
-  22: "مراقبت و نگهداری از ساختمان",
-  23: "علائم و تابلوهای ایمنی",
+  22: "مراقبت و نگهداری از ساختمان‌ها",
+  23: "مقررات ترافیکی ساختمان‌ها",
+};
+
+/** Official edition (ویرایش) of each مبحث مقررات ملی ساختمان — user-provided authoritative list. */
+export const MABHAS_EDITIONS: Record<number, number> = {
+  1: 1392,
+  2: 1384,
+  3: 1395,
+  4: 1396,
+  5: 1396,
+  6: 1398,
+  7: 1400,
+  8: 1398,
+  9: 1399,
+  10: 1401,
+  11: 1400,
+  12: 1403,
+  13: 1395,
+  14: 1396,
+  15: 1392,
+  16: 1396,
+  17: 1403,
+  18: 1396,
+  19: 1404,
+  20: 1396,
+  21: 1395,
+  22: 1392,
+  23: 1401,
 };
 
 export const mabhasTitle = (m: number | null | undefined) =>
   m == null ? "عمومی" : MABHAS_TITLES[m] ?? `مبحث ${m}`;
+
+/** «ویرایش ۱۳۹۶» — null when the مبحث has no edition on record */
+export const mabhasEdition = (m: number | null | undefined): string | null => {
+  const e = m == null ? undefined : MABHAS_EDITIONS[m];
+  return e == null ? null : `ویرایش ${faNum(e)}`;
+};
 
 // ─── Discipline grouping — derived from REAL DB disciplines (§9.1/§32.2/§32.3) ───
 // majorCodes like CIVIL-SUPERVISION group under parent CIVIL; the competency label
