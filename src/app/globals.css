@@ -16,6 +16,11 @@
   --color-primary-strong: var(--primary-strong);
   --color-primary-soft: var(--primary-soft);
   --color-primary-foreground: var(--primary-foreground);
+  --color-cream: var(--cream);
+  --color-cream-soft: var(--cream-soft);
+  --color-copper: var(--copper);
+  --color-copper-strong: var(--copper-strong);
+  --color-copper-soft: var(--copper-soft);
   --color-success: var(--success);
   --color-success-soft: var(--success-soft);
   --color-warning: var(--warning);
@@ -26,7 +31,7 @@
   --font-sans: "Vazirmatn", system-ui, sans-serif;
 }
 
-/* ─── Vazirmatn (bundled, fixes Finding F2) ─── */
+/* ─── Vazirmatn (bundled) ─── */
 @font-face {
   font-family: "Vazirmatn";
   src: url("/fonts/Vazirmatn-Regular.ttf") format("truetype");
@@ -54,79 +59,95 @@
 
 @layer base {
   :root {
-    /* ── Premium academic productivity — light ──
-       Brand anchored on petrol-blue #023c69 (app identity) */
-    --background: #eef1f6;
-    --surface: #f7f9fc;
+    /* ── MAHENDESYAR — «دفتر فنی مهندس» · light = paper & ink ── */
+    --background: #f4f6f5;
+    --surface: #fafbfa;
     --card: #ffffff;
-    --card-foreground: #0e1c2a;
-    --foreground: #0e1c2a;
-    --muted: #eaedf3;
-    --muted-foreground: #50647c;
-    --border: #dbe3ec;
-    --border-strong: #c5d2e0;
-    --input: #dbe3ec;
+    --card-foreground: #131a17;
+    --foreground: #131a17;
+    --muted: #eaecea;
+    --muted-foreground: #5c6b63;
+    --border: #dfe5e1;
+    --border-strong: #c9d2cc;
+    --input: #dfe5e1;
 
-    --primary: #0a4e7a;
-    --primary-strong: #023c69;
-    --primary-soft: #e2edf7;
+    /* academic technical green — the single signal */
+    --primary: #0e7a52;
+    --primary-strong: #0a5e3f;
+    --primary-soft: #e0f1e8;
     --primary-foreground: #ffffff;
 
-    --success: #177245;
-    --success-soft: #e2f3e8;
-    --warning: #9c5703;
-    --warning-soft: #fcefdc;
+    /* cream = callouts only · copper = exam target object only · amber = review flag */
+    --cream: #7a6420;
+    --cream-soft: #f6efda;
+    --copper: #9c6220;
+    --copper-strong: #7e4e19;
+    --copper-soft: #f5eadc;
+
+    --success: #0e7a52;
+    --success-soft: #e0f1e8;
+    --warning: #9c6a10;
+    --warning-soft: #fbf0d9;
     --danger: #b3261e;
     --danger-soft: #fbe7e4;
 
-    --ring: #0a4e7a;
-    --tabbar: rgba(255, 255, 255, 0.92);
-    --statusbar: #023c69;
-    --scrim: rgba(10, 20, 32, 0.5);
+    --ring: #0e7a52;
+    --tabbar: rgba(255, 255, 255, 0.94);
+    --statusbar: #0a3d2b;
+    --scrim: rgba(8, 14, 11, 0.5);
 
-    /* hero gradient — identity, used sparingly */
-    --grad-hero: linear-gradient(135deg, #023c69 0%, #0a5a8c 55%, #1173ab 100%);
+    /* technical drawing helpers */
+    --grid-line: rgba(15, 26, 20, 0.05);
+    --accent-glow: rgba(14, 122, 82, 0.07);
+    --grad-hero: linear-gradient(145deg, #119a66 0%, #0a5e3f 100%);
     --grad-progress: linear-gradient(90deg, var(--primary-strong), var(--primary));
 
-    --shadow-card: 0 1px 2px rgba(14, 28, 42, 0.05), 0 10px 30px -18px rgba(14, 28, 42, 0.18);
-    --shadow-float: 0 12px 40px -12px rgba(14, 28, 42, 0.28);
+    --shadow-card: 0 1px 2px rgba(19, 26, 23, 0.05), 0 10px 30px -18px rgba(19, 26, 23, 0.18);
+    --shadow-float: 0 12px 40px -12px rgba(19, 26, 23, 0.28);
     --radius: 1rem;
   }
 
   .dark {
-    /* ── Dark is first-class: deep neutral, elevated surfaces, controlled accents ── */
-    --background: #0a0f18;
-    --surface: #0d1420;
-    --card: #131c2e;
-    --card-foreground: #e6edf6;
-    --foreground: #e6edf6;
-    --muted: #1a2537;
-    --muted-foreground: #8ea3bb;
-    --border: #22304a;
-    --border-strong: #2e405e;
-    --input: #22304a;
+    /* ── dark is first-class: ink surfaces, hairline borders, surgical accent ── */
+    --background: #0b0e13;
+    --surface: #12161d;
+    --card: #1a2029;
+    --card-foreground: #e9edf3;
+    --foreground: #e9edf3;
+    --muted: #151b23;
+    --muted-foreground: #929fad;
+    --border: rgba(255, 255, 255, 0.08);
+    --border-strong: rgba(255, 255, 255, 0.15);
+    --input: rgba(255, 255, 255, 0.1);
 
-    --primary: #63a9de;
-    --primary-strong: #8ec2ea;
-    --primary-soft: #16304a;
-    --primary-foreground: #051827;
+    --primary: #7ce3a4;
+    --primary-strong: #a7f1c3;
+    --primary-soft: #11291d;
+    --primary-foreground: #071410;
 
-    --success: #4bd483;
-    --success-soft: #10301f;
-    --warning: #eeb45c;
-    --warning-soft: #33260f;
+    --cream: #ede4c6;
+    --cream-soft: rgba(237, 228, 198, 0.12);
+    --copper: #d9a16e;
+    --copper-strong: #eec496;
+    --copper-soft: rgba(217, 161, 110, 0.13);
+
+    --success: #7ce3a4;
+    --success-soft: #11291d;
+    --warning: #e3b25e;
+    --warning-soft: #2b2210;
     --danger: #f2837a;
     --danger-soft: #3a1512;
 
-    --ring: #63a9de;
-    --tabbar: rgba(12, 19, 32, 0.94);
-    --statusbar: #060b13;
-    --scrim: rgba(2, 6, 12, 0.66);
+    --ring: #7ce3a4;
+    --tabbar: rgba(13, 17, 23, 0.94);
+    --statusbar: #070a0e;
+    --scrim: rgba(3, 5, 9, 0.68);
 
-    --grad-hero: linear-gradient(135deg, #0d3a5c 0%, #10558a 55%, #1a6ea8 100%);
-    --grad-progress: linear-gradient(90deg, #2f7fb8, #63a9de);
+    --grid-line: rgba(255, 255, 255, 0.045);
+    --accent-glow: rgba(124, 227, 164, 0.08);
+    --grad-hero: linear-gradient(145deg, #2e7d57 0%, #174d36 100%);
 
-    --shadow-card: 0 1px 2px rgba(0, 0, 0, 0.3), 0 10px 30px -18px rgba(0, 0, 0, 0.55);
+    --shadow-card: 0 1px 2px rgba(0, 0, 0, 0.32), 0 10px 30px -18px rgba(0, 0, 0, 0.55);
     --shadow-float: 0 12px 40px -12px rgba(0, 0, 0, 0.7);
   }
 
@@ -143,19 +164,53 @@
   }
 }
 
-/* ─── Typography scale (§6) ─── */
+/* ─── Typography scale — directive §5 ─── */
 .t-display { font-size: 30px; line-height: 1.25; font-weight: 800; letter-spacing: -0.01em; }
-.t-title   { font-size: 20px; line-height: 1.35; font-weight: 800; }
-.t-section { font-size: 15px; line-height: 1.4;  font-weight: 800; }
-.t-body    { font-size: 14px; line-height: 1.75; font-weight: 500; }
-.t-body-sm { font-size: 12.5px; line-height: 1.7; font-weight: 500; }
+.t-title   { font-size: 20px; line-height: 1.35; font-weight: 700; }
+.t-section { font-size: 17px; line-height: 1.4;  font-weight: 600; }
+.t-body    { font-size: 15px; line-height: 1.8;  font-weight: 400; }
+.t-body-sm { font-size: 13px; line-height: 1.7;  font-weight: 500; }
+.t-label   { font-size: 13px; line-height: 1.6;  font-weight: 500; }
 .t-caption { font-size: 11px;  line-height: 1.6;  font-weight: 500; }
 .t-meta    { font-size: 10px;  line-height: 1.5;  font-weight: 500; }
+.t-eyebrow { font-size: 11px;  line-height: 1.4;  font-weight: 600; letter-spacing: 0.12em; }
 .t-kpi     { font-size: 24px; line-height: 1.1; font-weight: 800; font-feature-settings: "tnum"; letter-spacing: 0; }
+.t-num-hero{ font-size: 38px; line-height: 1;   font-weight: 800; font-feature-settings: "tnum"; letter-spacing: 0; }
 .num       { font-feature-settings: "tnum"; }
 
-/* reader typography — bigger, calmer surface (§14.2) */
+/* reader typography — focus by subtraction */
 .reader-body { font-size: 14.5px; line-height: 2.15; font-weight: 400; }
+
+/* ─── Technical graphic language (directive §6) ─── */
+/* blueprint grid — identity surface, very low contrast */
+.blueprint-grid {
+  background-image:
+    linear-gradient(var(--grid-line) 1px, transparent 1px),
+    linear-gradient(90deg, var(--grid-line) 1px, transparent 1px);
+  background-size: 28px 28px;
+}
+/* fine grid for small surfaces */
+.blueprint-grid-sm {
+  background-image:
+    linear-gradient(var(--grid-line) 1px, transparent 1px),
+    linear-gradient(90deg, var(--grid-line) 1px, transparent 1px);
+  background-size: 14px 14px;
+}
+/* construction line — dashed hairline divider */
+.construction { border-top: 1px dashed var(--border-strong); }
+/* soft radial accent glow — hero compositions only */
+.tech-glow { position: relative; }
+.tech-glow::before {
+  content: "";
+  position: absolute;
+  inset: 0;
+  pointer-events: none;
+  background: radial-gradient(560px 220px at 50% -8%, var(--accent-glow), transparent 70%);
+}
+/* copper variant for the target-exam composition */
+.tech-glow-copper::before {
+  background: radial-gradient(560px 220px at 50% -8%, rgba(217, 161, 110, 0.1), transparent 70%);
+}
 
 /* phone-internal scrollbar */
 .phone-scroll {
@@ -182,30 +237,30 @@
   display: none;
 }
 
-/* ─── Motion system (§22) — micro 80-180ms, transition 250-400ms, hero 500-900ms ─── */
+/* ─── Motion system — micro 80-160ms · standard 200-320ms · hero 450-700ms ─── */
 @keyframes screen-in {
   from { opacity: 0; transform: translateY(8px); }
   to   { opacity: 1; transform: translateY(0); }
 }
-.screen-in { animation: screen-in 0.3s cubic-bezier(0.2, 0.8, 0.2, 1) both; }
+.screen-in { animation: screen-in 0.28s cubic-bezier(0.2, 0.8, 0.2, 1) both; }
 
 @keyframes pop-in {
   0%   { opacity: 0; transform: scale(0.92); }
   100% { opacity: 1; transform: scale(1); }
 }
-.pop-in { animation: pop-in 0.32s cubic-bezier(0.2, 0.9, 0.3, 1.2) both; }
+.pop-in { animation: pop-in 0.3s cubic-bezier(0.2, 0.9, 0.3, 1.2) both; }
 
 @keyframes sheet-up {
   from { transform: translateY(100%); }
   to   { transform: translateY(0); }
 }
-.sheet-up { animation: sheet-up 0.32s cubic-bezier(0.2, 0.8, 0.2, 1) both; }
+.sheet-up { animation: sheet-up 0.3s cubic-bezier(0.2, 0.8, 0.2, 1) both; }
 
 @keyframes fade-in {
   from { opacity: 0; }
   to   { opacity: 1; }
 }
-.fade-in { animation: fade-in 0.25s ease-out both; }
+.fade-in { animation: fade-in 0.24s ease-out both; }
 
 @keyframes bar-grow {
   from { transform: scaleY(0); }
@@ -213,7 +268,7 @@
 }
 .bar-grow { transform-origin: bottom; animation: bar-grow 0.55s cubic-bezier(0.2, 0.8, 0.2, 1) both; }
 
-/* skeleton shimmer — subtle (§24) */
+/* skeleton shimmer — subtle */
 @keyframes shimmer {
   0%   { background-position: 200% 0; }
   100% { background-position: -200% 0; }
@@ -230,7 +285,7 @@
   border-radius: 0.75rem;
 }
 
-/* soft pulse for urgent timer — restrained (§22 ambient) */
+/* soft pulse for urgent timer — restrained */
 @keyframes pulse-soft {
   0%, 100% { opacity: 1; }
   50%      { opacity: 0.72; }

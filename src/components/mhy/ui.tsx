@@ -190,7 +190,7 @@ export function SourceBadge({ sourceType, session, qnum }: { sourceType: "OFFICI
   return (
     <span
       className="inline-flex items-center gap-1 rounded-full px-2.5 py-1 text-[10.5px] font-bold"
-      style={{ background: "var(--warning-soft)", color: "var(--warning)" }}
+      style={{ background: "var(--muted)", color: "var(--muted-foreground)" }}
       aria-label="سوال تألیفی"
     >
       <PenLine size={12} />
@@ -217,7 +217,7 @@ export function ReviewFlagBadge() {
   return (
     <span
       className="inline-flex items-center gap-1 rounded-full px-2 py-0.5 text-[10px] font-bold"
-      style={{ background: "var(--danger-soft)", color: "var(--danger)" }}
+      style={{ background: "var(--warning-soft)", color: "var(--warning)" }}
       aria-label="این محتوا نیازمند بازبینی است"
       title="طبق داده اصلی، این مورد نیازمند بازبینی است"
     >
@@ -399,29 +399,34 @@ export function ProgressRing({
   );
 }
 
-/* Countdown hero — orbit/arc motif, calm states (§11.1) */
+/* Countdown — the target-exam composition (copper object + orbit arcs + blueprint grid).
+   Not a timer widget: it tells the user which phase of readiness they are in (§13 WOW#1). */
 export function CountdownRing({ daysLeft, examTitle }: { daysLeft: number | null; examTitle?: string | null }) {
   if (daysLeft === null) {
     return (
-      <div className="rounded-2xl border p-4" style={{ background: "var(--card)", borderColor: "var(--border)" }}>
-        <p className="text-[12.5px] font-bold" style={{ color: "var(--foreground)" }}>
-          آزمون هدف انتخاب نشده
-        </p>
-        <p className="mt-1 t-caption" style={{ color: "var(--muted-foreground)" }}>
-          از تنظیمات، آزمون هدف و تاریخ آن را ثبت کنید تا شمارش معکوس فعال شود.
-        </p>
+      <div className="blueprint-grid relative overflow-hidden rounded-3xl border" style={{ background: "var(--surface)", borderColor: "var(--border)" }}>
+        <div className="px-5 py-4">
+          <Eyebrow tone="copper">هدف آزمون</Eyebrow>
+          <p className="mt-2 text-[14px] font-bold" style={{ color: "var(--foreground)" }}>
+            آزمون هدف ثبت نشده
+          </p>
+          <p className="mt-1 t-body-sm" style={{ color: "var(--muted-foreground)" }}>
+            از تنظیمات، آزمون و تاریخ هدف را ثبت کنید تا شمارش معکوس و فاز آمادگی فعال شود.
+          </p>
+        </div>
       </div>
     );
   }
-  const size = 128;
-  const stroke = 9;
+  const size = 132;
+  const stroke = 7;
   const r = (size - stroke) / 2;
   const c = 2 * Math.PI * r;
   const past = daysLeft < 0;
   const urgent = daysLeft <= 7;
   const soon = daysLeft <= 30;
-  const color = past ? "var(--muted-foreground)" : urgent ? "var(--danger)" : soon ? "var(--warning)" : "var(--primary)";
-  const arcPct = past ? 100 : Math.max(0.02, 1 - Math.min(daysLeft, 90) / 90);
+  const arcColor = past ? "var(--muted-foreground)" : urgent ? "var(--danger)" : "var(--copper)";
+  const arcPct = past ? 1 : Math.max(0.03, 1 - Math.min(daysLeft, 90) / 90);
+  const phase = past ? "پایان دوره" : urgent ? "فاز اوج مرور" : soon ? "فاز جمع‌بندی" : "فاز ساخت پایه";
   const stateText = past
     ? "آزمون برگزار شده"
     : daysLeft === 0
@@ -429,45 +434,77 @@ export function CountdownRing({ daysLeft, examTitle }: { daysLeft: number | null
       : daysLeft === 1
         ? "فردا روز آزمون است"
         : "تا آزمون هدف";
+  const advice = past
+    ? "برای دوره بعد، هدف تازه‌ای ثبت کنید."
+    : urgent
+      ? "تمرکز روی مرور اشتباهات و نقاط ضعف"
+      : soon
+        ? "شبیه‌سازی آزمون‌های رسمی با زمان واقعی"
+        : "پایه‌ها را محکم کنید؛ برنامه امروز را کامل کنید";
+  // arc end-point for the orbit node
+  const ang = -90 + arcPct * 360;
+  const rad = (ang * Math.PI) / 180;
+  const nodeX = size / 2 + r * Math.cos(rad);
+  const nodeY = size / 2 + r * Math.sin(rad);
   return (
-    <div className="flex items-center gap-4 rounded-2xl border p-4" style={{ background: "var(--card)", borderColor: "var(--border)", boxShadow: "var(--shadow-card)" }}>
-      <div className="relative shrink-0" style={{ width: size, height: size }} role="img" aria-label={`${faNum(daysLeft)} روز تا آزمون`}>
-        <svg width={size} height={size} className="-rotate-90">
-          <circle cx={size / 2} cy={size / 2} r={r} fill="none" stroke="var(--muted)" strokeWidth={stroke} />
-          <circle
-            cx={size / 2}
-            cy={size / 2}
-            r={r}
-            fill="none"
-            stroke={color}
-            strokeWidth={stroke}
-            strokeLinecap="round"
-            strokeDasharray={c}
-            strokeDashoffset={c * (1 - arcPct)}
-            style={{ transition: "stroke-dashoffset 0.9s cubic-bezier(0.2,0.8,0.2,1)" }}
-          />
-        </svg>
-        <div className="absolute inset-0 flex flex-col items-center justify-center">
-          <span className="t-display num" style={{ fontSize: 34, color, lineHeight: 1 }}>
-            {faNum(Math.abs(daysLeft))}
-          </span>
-          <span className="t-meta mt-1" style={{ color: "var(--muted-foreground)" }}>
-            {past ? "روز گذشته" : "روز"}
-          </span>
-        </div>
+    <div
+      className="tech-glow tech-glow-copper blueprint-grid relative overflow-hidden rounded-3xl border"
+      style={{ background: "var(--surface)", borderColor: "var(--border)", boxShadow: "var(--shadow-card)" }}
+    >
+      <div className="flex items-center justify-between px-5 pt-4">
+        <Eyebrow tone="copper">هدف آزمون</Eyebrow>
+        <span className="t-meta" style={{ color: "var(--muted-foreground)" }}>
+          {phase}
+        </span>
       </div>
-      <div className="min-w-0 flex-1">
-        <p className="text-[13.5px] font-extrabold" style={{ color: "var(--foreground)" }}>
-          {stateText}
-        </p>
-        {examTitle && (
-          <p className="mt-0.5 truncate t-caption" style={{ color: "var(--muted-foreground)" }}>
-            {examTitle}
+      <div className="flex items-center gap-4 px-5 pb-5 pt-2.5">
+        <div className="relative shrink-0" style={{ width: size, height: size }} role="img" aria-label={`${faNum(daysLeft)} روز تا آزمون هدف`}>
+          <svg width={size} height={size} className="-rotate-90">
+            {/* construction circle */}
+            <circle cx={size / 2} cy={size / 2} r={r} fill="none" stroke="var(--border-strong)" strokeWidth={1} strokeDasharray="2 5" opacity={0.8} />
+            {/* progress arc */}
+            <circle
+              cx={size / 2}
+              cy={size / 2}
+              r={r}
+              fill="none"
+              stroke={arcColor}
+              strokeWidth={stroke}
+              strokeLinecap="round"
+              strokeDasharray={c}
+              strokeDashoffset={c * (1 - arcPct)}
+              style={{ transition: "stroke-dashoffset 0.9s cubic-bezier(0.2,0.8,0.2,1)" }}
+            />
+          </svg>
+          {/* orbit node at arc head */}
+          <span
+            aria-hidden
+            className="absolute h-2 w-2 rounded-full"
+            style={{ background: arcColor, left: nodeX - 4, top: nodeY - 4, boxShadow: "0 0 0 3px var(--surface)" }}
+          />
+          <div className="absolute inset-0 flex flex-col items-center justify-center">
+            <span className="t-num-hero num" style={{ fontSize: 36, color: "var(--foreground)", lineHeight: 1 }}>
+              {faNum(Math.abs(daysLeft))}
+            </span>
+            <span className="t-meta mt-1.5" style={{ color: "var(--muted-foreground)" }}>
+              {past ? "روز گذشته" : "روز"}
+            </span>
+          </div>
+        </div>
+        <div className="min-w-0 flex-1">
+          <p className="text-[15px] font-bold" style={{ color: "var(--foreground)" }}>
+            {stateText}
           </p>
-        )}
-        <p className="mt-1.5 t-caption" style={{ color: urgent && !past ? "var(--danger)" : "var(--muted-foreground)" }}>
-          {past ? "برای دور بعد، هدف تازه‌ای ثبت کنید." : urgent ? "تمرکز روی مرور اشتباهات و نقاط ضعف" : soon ? "فاز جمع‌بندی — آزمون‌های رسمی را شبیه‌سازی کنید" : "برنامه امروز را کامل کنید تا در مسیر بمانید"}
-        </p>
+          {examTitle && (
+            <p className="mt-0.5 truncate t-caption" style={{ color: "var(--copper)" }}>
+              {examTitle}
+            </p>
+          )}
+          <div className="construction my-2.5" />
+          <p className="t-caption leading-5" style={{ color: "var(--muted-foreground)" }}>
+            {advice}
+          </p>
+        </div>
       </div>
     </div>
   );
@@ -914,5 +951,280 @@ export function CheckBadge({ on }: { on: boolean }) {
     >
       {on && <Check size={13} style={{ color: "var(--primary-foreground)" }} strokeWidth={3} />}
     </span>
+  );
+}
+
+/* ═══════════ Composition primitives — «دفتر فنی مهندس» (directive §3/§6/§7) ═══════════ */
+
+/** Eyebrow label — technical title-block tick + tracked text. */
+export function Eyebrow({
+  children,
+  tone = "muted",
+  className = "",
+}: {
+  children: React.ReactNode;
+  tone?: "muted" | "accent" | "copper" | "cream";
+  className?: string;
+}) {
+  const color =
+    tone === "accent" ? "var(--primary)" : tone === "copper" ? "var(--copper)" : tone === "cream" ? "var(--cream)" : "var(--muted-foreground)";
+  return (
+    <p className={`t-eyebrow flex items-center gap-1.5 ${className}`} style={{ color }}>
+      <span aria-hidden className="inline-block h-[3px] w-[3px]" style={{ background: color }} />
+      {children}
+    </p>
+  );
+}
+
+/** Corner tick marks — technical drawing frame for composition surfaces. */
+export function TechFrame({
+  children,
+  className = "",
+  style,
+}: {
+  children: React.ReactNode;
+  className?: string;
+  style?: React.CSSProperties;
+}) {
+  const tickStyle: React.CSSProperties = { borderColor: "var(--border-strong)" };
+  return (
+    <div className={`relative ${className}`} style={style}>
+      <span aria-hidden className="absolute right-0 top-0 h-2.5 w-2.5 border-r border-t" style={tickStyle} />
+      <span aria-hidden className="absolute left-0 top-0 h-2.5 w-2.5 border-l border-t" style={tickStyle} />
+      <span aria-hidden className="absolute bottom-0 right-0 h-2.5 w-2.5 border-b border-r" style={tickStyle} />
+      <span aria-hidden className="absolute bottom-0 left-0 h-2.5 w-2.5 border-b border-l" style={tickStyle} />
+      {children}
+    </div>
+  );
+}
+
+/** Dense row — the DENSE ROW surface (§3-C): hairline-separated rows instead of card stacks. */
+export function DenseRow({
+  icon: Icon,
+  glyph,
+  title,
+  desc,
+  meta,
+  right,
+  onClick,
+  tone,
+}: {
+  icon?: React.ElementType;
+  glyph?: React.ReactNode;
+  title: React.ReactNode;
+  desc?: React.ReactNode;
+  meta?: React.ReactNode;
+  right?: React.ReactNode;
+  onClick?: () => void;
+  tone?: string;
+}) {
+  const inner = (
+    <div className="flex min-h-[56px] items-center gap-3 py-3">
+      {(Icon || glyph) && (
+        <span
+          className="flex h-10 w-10 shrink-0 items-center justify-center rounded-xl"
+          style={{ background: tone ? `color-mix(in srgb, ${tone} 11%, transparent)` : "var(--muted)", color: tone ?? "var(--muted-foreground)" }}
+        >
+          {glyph ?? (Icon ? <Icon size={19} strokeWidth={1.9} /> : null)}
+        </span>
+      )}
+      <div className="min-w-0 flex-1">
+        <div className="flex items-center gap-2">
+          <p className="truncate text-[13.5px] font-bold" style={{ color: "var(--foreground)" }}>
+            {title}
+          </p>
+          {meta}
+        </div>
+        {desc && (
+          <p className="mt-0.5 truncate t-caption" style={{ color: "var(--muted-foreground)" }}>
+            {desc}
+          </p>
+        )}
+      </div>
+      {right ?? (onClick ? <ChevronLeft size={16} style={{ color: "var(--muted-foreground)" }} /> : null)}
+    </div>
+  );
+  if (onClick)
+    return (
+      <button onClick={onClick} className="press block w-full text-right">
+        {inner}
+      </button>
+    );
+  return <div>{inner}</div>;
+}
+
+/** DenseList — wraps dense rows with hairline separators. */
+export function DenseList({ children, className = "" }: { children: React.ReactNode; className?: string }) {
+  return (
+    <div className={`divide-y ${className}`} style={{ borderColor: "var(--border)" }}>
+      {children}
+    </div>
+  );
+}
+
+/** Week strip — adherence visualization (7 days, done-marks, selected day). */
+export function WeekStrip({
+  days,
+  selected,
+  onSelect,
+  ariaLabel = "هفته جاری",
+}: {
+  days: { label: string; dateNum: number; done: boolean }[];
+  selected?: number;
+  onSelect?: (i: number) => void;
+  ariaLabel?: string;
+}) {
+  return (
+    <div role="group" aria-label={ariaLabel} className="flex items-stretch justify-between gap-1">
+      {days.map((d, i) => {
+        const on = selected === i;
+        return (
+          <button
+            key={i}
+            onClick={() => onSelect?.(i)}
+            aria-pressed={on}
+            className="press flex min-h-[58px] flex-1 flex-col items-center justify-center gap-0.5 rounded-2xl border"
+            style={{ background: on ? "var(--primary-soft)" : "var(--surface)", borderColor: on ? "var(--primary)" : "transparent" }}
+          >
+            {d.done ? (
+              <Check size={12} strokeWidth={3} style={{ color: "var(--primary)" }} aria-label="روز مطالعه انجام شده" />
+            ) : (
+              <span className="h-1.5 w-1.5 rounded-full" style={{ background: "var(--border-strong)" }} aria-hidden />
+            )}
+            <span className="t-meta" style={{ color: "var(--muted-foreground)" }}>
+              {d.label}
+            </span>
+            <span className="num text-[13px] font-extrabold" style={{ color: on ? "var(--primary)" : "var(--foreground)" }}>
+              {faNum(d.dateNum)}
+            </span>
+          </button>
+        );
+      })}
+    </div>
+  );
+}
+
+/** Segmented progress — checkpoint language (reader phases, plan steps). */
+export function SegmentedProgress({
+  value,
+  total,
+  color = "var(--primary)",
+  height = 6,
+  ariaLabel,
+}: {
+  value: number;
+  total: number;
+  color?: string;
+  height?: number;
+  ariaLabel?: string;
+}) {
+  const safeTotal = Math.max(total, 1);
+  const done = Math.min(Math.max(value, 0), safeTotal);
+  return (
+    <div
+      role="progressbar"
+      aria-label={ariaLabel}
+      aria-valuenow={Math.round((done / safeTotal) * 100)}
+      aria-valuemin={0}
+      aria-valuemax={100}
+      className="flex gap-1"
+      style={{ height }}
+    >
+      {Array.from({ length: safeTotal }).map((_, i) => (
+        <span key={i} className="flex-1 rounded-full transition-colors" style={{ background: i < done ? color : "var(--muted)", transitionDuration: "0.3s" }} />
+      ))}
+    </div>
+  );
+}
+
+/** TrendChart — editorial technical line: thin stroke, one highlighted point, cream callout (ref3 pattern). */
+export function TrendChart({
+  data,
+  width = 300,
+  height = 96,
+  color = "var(--primary)",
+  ariaLabel,
+  callout,
+}: {
+  data: number[];
+  width?: number;
+  height?: number;
+  color?: string;
+  ariaLabel?: string;
+  callout?: { index: number; label: string } | null;
+}) {
+  if (data.length < 2) return null;
+  const min = Math.min(...data);
+  const max = Math.max(...data);
+  const span = Math.max(max - min, 12);
+  const padX = 12;
+  const padTop = 24;
+  const padBottom = 10;
+  const pts = data.map((v, i) => {
+    const x = padX + (i / (data.length - 1)) * (width - padX * 2);
+    const y = padTop + (1 - (v - min) / span) * (height - padTop - padBottom);
+    return [x, y] as const;
+  });
+  const path = pts.map((p, i) => `${i === 0 ? "M" : "L"}${p[0].toFixed(1)},${p[1].toFixed(1)}`).join(" ");
+  const area = `${path} L${pts[pts.length - 1][0].toFixed(1)},${height} L${pts[0][0].toFixed(1)},${height} Z`;
+  const hiIdx = callout ? Math.min(Math.max(callout.index, 0), pts.length - 1) : pts.length - 1;
+  const hi = pts[hiIdx];
+  const hiLabel = callout?.label;
+  const cw = hiLabel ? Math.max(52, hiLabel.length * 6.4 + 20) : 0;
+  const cx = Math.min(Math.max(hi[0] - cw / 2, 4), width - cw - 4);
+  const cy = Math.max(hi[1] - 36, 4);
+  return (
+    <svg viewBox={`0 0 ${width} ${height}`} className="h-auto w-full" role="img" aria-label={ariaLabel}>
+      {/* hairline mid grid */}
+      <line x1={4} y1={height / 2} x2={width - 4} y2={height / 2} stroke="var(--border)" strokeWidth={1} strokeDasharray="3 6" />
+      <path d={area} fill={color} opacity={0.06} />
+      <path d={path} fill="none" stroke={color} strokeWidth={2} strokeLinecap="round" strokeLinejoin="round" />
+      {/* guide line to highlighted point */}
+      <line x1={hi[0]} y1={hi[1]} x2={hi[0]} y2={cy + 14} stroke="var(--border-strong)" strokeWidth={1} strokeDasharray="2 4" />
+      {hiLabel && (
+        <>
+          <rect x={cx} y={cy} width={cw} height={20} rx={7} fill="var(--cream-soft)" stroke="var(--border)" strokeWidth={1} />
+          <text x={cx + cw / 2} y={cy + 13.5} textAnchor="middle" fontSize={10.5} fontWeight={700} fill="var(--cream)">
+            {hiLabel}
+          </text>
+        </>
+      )}
+      <circle cx={hi[0]} cy={hi[1]} r={4.5} fill="var(--surface)" stroke={color} strokeWidth={2} />
+    </svg>
+  );
+}
+
+/** CompareCard — two-value comparison with slanted divider + winner emphasis (ref5 concept, neutral execution). */
+export function CompareCard({
+  items,
+  ariaLabel,
+}: {
+  items: { label: string; value: string; hint?: string; winner?: boolean }[];
+  ariaLabel?: string;
+}) {
+  return (
+    <div role="img" aria-label={ariaLabel} className="flex items-stretch justify-around gap-2 py-1">
+      {items.map((it, i) => (
+        <div key={it.label} className="relative flex min-w-0 flex-1 flex-col items-center justify-center gap-0.5 py-1">
+          {i > 0 && (
+            <span aria-hidden className="absolute right-[-6px] top-1 h-[80%] w-px self-center" style={{ background: "var(--border-strong)", transform: "rotate(18deg)" }} />
+          )}
+          <div className="flex items-center gap-1">
+            <span className="t-kpi num" style={{ fontSize: 26, color: it.winner ? "var(--primary)" : "var(--muted-foreground)" }}>
+              {it.value}
+            </span>
+            {it.winner && <Check size={14} strokeWidth={3} style={{ color: "var(--primary)" }} aria-label="بهتر" />}
+          </div>
+          <span className="t-meta" style={{ color: "var(--muted-foreground)" }}>
+            {it.label}
+          </span>
+          {it.hint && (
+            <span className="t-meta mt-0.5" style={{ color: it.winner ? "var(--primary)" : "var(--muted-foreground)", opacity: it.winner ? 1 : 0.75 }}>
+              {it.hint}
+            </span>
+          )}
+        </div>
+      ))}
+    </div>
   );
 }

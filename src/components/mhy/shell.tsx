@@ -173,8 +173,8 @@ export default function MhyShell() {
       className="flex min-h-screen w-full items-center justify-center gap-10 p-4 lg:p-8 max-lg:p-0"
       style={{
         background: dark
-          ? "radial-gradient(1200px 600px at 70% -10%, #0f2438 0%, #070c14 55%)"
-          : "radial-gradient(1200px 600px at 70% -10%, #d8e6f2 0%, #edf1f6 55%)",
+          ? "radial-gradient(1200px 600px at 70% -10%, #0e211a 0%, #06090d 55%)"
+          : "radial-gradient(1200px 600px at 70% -10%, #dcebe2 0%, #eff2f1 55%)",
       }}
     >
       {/* desktop side panel — product identity + trust stats */}
@@ -182,11 +182,11 @@ export default function MhyShell() {
         <div className="flex items-center gap-3">
           <img src={`${BASE}/app-icon.webp`} alt="آیکون مهندس‌یار" className="h-14 w-14 rounded-[1rem] shadow-lg" style={{ background: "var(--primary)" }} />
           <div>
-            <h1 className="text-[22px] font-extrabold" style={{ color: dark ? "#e5edf6" : "#10202f" }}>
+            <h1 className="text-[22px] font-extrabold" style={{ color: dark ? "#e9edf3" : "#131a17" }}>
               مهندس‌یار
             </h1>
-            <p className="text-[11.5px]" style={{ color: dark ? "#9db2c9" : "#46607a" }}>
-              V2 — کابین آمادگی آزمون نظام مهندسی
+            <p className="text-[11.5px]" style={{ color: dark ? "#929fad" : "#5c6b63" }}>
+              V2 — دفتر فنی آمادگی آزمون نظام مهندسی
             </p>
           </div>
         </div>
@@ -200,24 +200,24 @@ export default function MhyShell() {
             <div
               key={l}
               className="rounded-2xl border p-3.5"
-              style={{ background: dark ? "rgba(19,28,46,0.6)" : "rgba(255,255,255,0.75)", borderColor: dark ? "#24344f" : "#dde5ee" }}
+              style={{ background: dark ? "rgba(26,32,41,0.6)" : "rgba(255,255,255,0.78)", borderColor: dark ? "rgba(255,255,255,0.1)" : "#dfe5e1" }}
             >
-              <p className="t-kpi num" style={{ fontSize: 19, color: dark ? "#e5edf6" : "#10202f" }}>
+              <p className="t-kpi num" style={{ fontSize: 19, color: dark ? "#e9edf3" : "#131a17" }}>
                 {v}
               </p>
-              <p className="t-meta mt-0.5" style={{ color: dark ? "#9db2c9" : "#46607a" }}>
+              <p className="t-meta mt-0.5" style={{ color: dark ? "#929fad" : "#5c6b63" }}>
                 {l}
               </p>
             </div>
           ))}
         </div>
-        <p className="mt-5 t-body-sm leading-7" style={{ color: dark ? "#9db2c9" : "#46607a" }}>
-          این نسخه، معماری کامل دستور V2 را روی <b style={{ color: dark ? "#e5edf6" : "#10202f" }}>محتوای واقعی APK</b> پیاده می‌کند:
+        <p className="mt-5 t-body-sm leading-7" style={{ color: dark ? "#929fad" : "#5c6b63" }}>
+          این نسخه، معماری کامل دستور V2 را روی <b style={{ color: dark ? "#e9edf3" : "#131a17" }}>محتوای واقعی APK</b> پیاده می‌کند:
           پنج فضای کاری (داشبورد، مطالعه، تمرین، آزمون، تنظیمات)، انتخاب چند صلاحیت، نقشه راه و برنامه امروز پویا،
           موتور آزمون رسمی/جامع با زمان‌سنج مبتنی بر زمان واقعی، هویت منبع هر سؤال (رسمی/تألیفی + جلسه + شماره)،
           مرورگر مقررات با متن واقعی بندها، اشتباهات و نشانک‌ها، جستجوی سراسری و دارک‌مود کامل.
         </p>
-        <p className="mt-4 t-meta leading-5" style={{ color: dark ? "#5b7290" : "#8aa0b5" }}>
+        <p className="mt-4 t-meta leading-5" style={{ color: dark ? "#5d6b78" : "#93a39a" }}>
           {bootstrap && bootstrap.stats.reviewRequired > 0
             ? `${bootstrap.stats.reviewRequired} محتوا در داده اصلی پرچم «نیازمند بازبینی» دارد و بدون پنهان‌کاری با برچسب نمایش داده می‌شود.`
             : ""}
@@ -228,11 +228,11 @@ export default function MhyShell() {
       <div className={dark ? "dark" : ""}>
         <div
           className="relative h-screen w-full overflow-hidden max-lg:rounded-none max-lg:border-0 lg:h-[min(88vh,780px)] lg:w-[400px] lg:max-w-full lg:rounded-[2.4rem] lg:border-[10px]"
-          style={{ borderColor: "#10151c", background: "var(--background)", boxShadow: "var(--shadow-float)" }}
+          style={{ borderColor: "#0a0d12", background: "var(--background)", boxShadow: "var(--shadow-float)" }}
           role="region"
           aria-label="اپ مهندس‌یار"
         >
-          <div className="absolute left-1/2 top-0 z-30 hidden h-6 w-32 -translate-x-1/2 rounded-b-2xl lg:block" style={{ background: "#10151c" }} aria-hidden />
+          <div className="absolute left-1/2 top-0 z-30 hidden h-6 w-32 -translate-x-1/2 rounded-b-2xl lg:block" style={{ background: "#0a0d12" }} aria-hidden />
           <div className="flex h-full flex-col">
             {/* status bar (desktop frame chrome only) */}
             <div className="hidden items-center justify-between px-6 pb-1 pt-3 text-[11px] font-medium text-white select-none lg:flex" style={{ background: "var(--statusbar)" }}>
