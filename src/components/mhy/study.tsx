@@ -5,7 +5,7 @@ import type { Bootstrap, MhyBand, LessonJson } from "@/lib/mhy/server";
 import { api } from "@/lib/mhy/api";
 import { useMhy, mabhasTitle } from "@/lib/mhy/store";
 import { faNum, buildRoadmap, mabhasMastery, type QLite } from "@/lib/mhy/engines";
-import { Card, SectionHeader, ProgressBar, EmptyState, Btn, SearchField, LoadingBlock, ProgressRing, ListItem, CheckBadge } from "./ui";
+import { Card, SectionHeader, ProgressBar, EmptyState, Btn, SearchField, LoadingBlock, ProgressRing, DenseRow, DenseList, Eyebrow, SegmentedProgress, CheckBadge } from "./ui";
 import {
   Route,
   BookOpen,
@@ -66,7 +66,7 @@ export default function Study({
     return <LessonReader mabhas={view.mabhas} onBack={() => setView({ kind: "lessons" })} nav={nav} />;
   }
 
-  /* ── regulations topics (§14.1) ── */
+  /* ── regulations topics (§14.1) — dense technical library rows ── */
   if (view.kind === "regulations") {
     return (
       <div className="phone-scroll flex-1 overflow-y-auto px-4 pb-6 screen-in">
@@ -74,55 +74,62 @@ export default function Study({
         <p className="t-caption mt-1 px-1 leading-6" style={{ color: "var(--muted-foreground)" }}>
           متن واقعی بندها از کتابخانه دستگاه. مبحث‌های دارای متن کامل بند، قابل مطالعه و علامت‌گذاری هستند.
         </p>
-        <div className="mt-3 space-y-2">
-          {mabhasIndex.map((mi) => {
-            const hasText = mabhasRegs.includes(mi.mabhas);
-            const m = mastery[mi.mabhas];
-            return (
-              <Card
-                key={mi.mabhas}
-                onClick={() => (hasText ? setView({ kind: "regulation-reader", mabhas: mi.mabhas }) : nav.startMabhasPractice(mi.mabhas))}
-                ariaLabel={`مبحث ${mi.mabhas}`}
-              >
-                <div className="flex items-center gap-3">
-                  <div
-                    className="num flex h-11 w-11 shrink-0 items-center justify-center rounded-xl text-[15px] font-extrabold"
-                    style={{
-                      background: hasText ? "var(--primary-soft)" : "var(--muted)",
-                      color: hasText ? "var(--primary)" : "var(--muted-foreground)",
-                    }}
-                  >
-                    {faNum(mi.mabhas)}
-                  </div>
-                  <div className="min-w-0 flex-1">
-                    <p className="truncate text-[13.5px] font-bold" style={{ color: "var(--foreground)" }}>
-                      {mabhasTitle(mi.mabhas)}
-                    </p>
-                    <p className="num mt-0.5 t-caption" style={{ color: "var(--muted-foreground)" }}>
+        <div className="mt-3 rounded-2xl border px-4" style={{ background: "var(--card)", borderColor: "var(--border)" }}>
+          <DenseList>
+            {mabhasIndex.map((mi) => {
+              const hasText = mabhasRegs.includes(mi.mabhas);
+              const m = mastery[mi.mabhas];
+              return (
+                <DenseRow
+                  key={mi.mabhas}
+                  glyph={
+                    <span
+                      className="num flex h-10 w-10 items-center justify-center text-[14px] font-extrabold"
+                      style={{
+                        color: hasText ? "var(--primary)" : "var(--muted-foreground)",
+                        borderRight: "1px solid var(--border)",
+                        paddingLeft: 8,
+                      }}
+                    >
+                      {faNum(mi.mabhas)}
+                    </span>
+                  }
+                  title={mabhasTitle(mi.mabhas)}
+                  desc={
+                    <span className="num">
                       {hasText ? "متن بندها · " : ""}
                       {faNum(mi.questions)} سؤال ({faNum(mi.official)} رسمی)
-                    </p>
-                    {m && (
-                      <div className="mt-1.5 flex items-center gap-2">
-                        <ProgressBar pct={m.mastery} height={4} gradient />
-                        <span className="num text-[9.5px] font-bold" style={{ color: "var(--primary)" }}>
-                          ٪{faNum(m.mastery)}
+                    </span>
+                  }
+                  meta={
+                    m ? (
+                      <span className="num text-[9.5px] font-bold" style={{ color: "var(--primary)" }}>
+                        ٪{faNum(m.mastery)} تسلط
+                      </span>
+                    ) : undefined
+                  }
+                  onClick={() => (hasText ? setView({ kind: "regulation-reader", mabhas: mi.mabhas }) : nav.startMabhasPractice(mi.mabhas))}
+                  right={
+                    <span className="flex shrink-0 items-center gap-1.5">
+                      {m && (
+                        <span className="w-14">
+                          <ProgressBar pct={m.mastery} height={4} />
                         </span>
-                      </div>
-                    )}
-                  </div>
-                  {hasText && <BookMarked size={16} style={{ color: "var(--primary)", opacity: 0.7 }} />}
-                  <ChevronLeft size={17} style={{ color: "var(--muted-foreground)" }} />
-                </div>
-              </Card>
-            );
-          })}
+                      )}
+                      {hasText && <BookMarked size={16} style={{ color: "var(--primary)", opacity: 0.7 }} />}
+                      <ChevronLeft size={16} style={{ color: "var(--muted-foreground)" }} />
+                    </span>
+                  }
+                />
+              );
+            })}
+          </DenseList>
         </div>
       </div>
     );
   }
 
-  /* ── lessons list ── */
+  /* ── lessons list — numbered chapters, dense ── */
   if (view.kind === "lessons") {
     return (
       <div className="phone-scroll flex-1 overflow-y-auto px-4 pb-6 screen-in">
@@ -130,65 +137,79 @@ export default function Study({
         <p className="num t-caption mt-1 px-1" style={{ color: "var(--muted-foreground)" }}>
           {faNum(bootstrap?.stats.lessons ?? 0)} درسنامه جامع مبحث‌محور
         </p>
-        <div className="mt-3 space-y-2">
-          {[...new Set((bootstrap?.mabhasIndex ?? []).map((m) => m.mabhas))].filter((m) => m <= 22).map((m) => (
-            <ListItem
-              key={m}
-              icon={GraduationCap}
-              title={`درسنامه مبحث ${faNum(m)} — ${mabhasTitle(m)}`}
-              onClick={() => setView({ kind: "lesson-reader", mabhas: m })}
-              tint="var(--success)"
-            />
-          ))}
+        <div className="mt-3 rounded-2xl border px-4" style={{ background: "var(--card)", borderColor: "var(--border)" }}>
+          <DenseList>
+            {[...new Set((bootstrap?.mabhasIndex ?? []).map((m) => m.mabhas))].filter((m) => m <= 22).map((m) => (
+              <DenseRow
+                key={m}
+                glyph={
+                  <span className="num flex h-10 w-10 items-center justify-center text-[14px] font-extrabold" style={{ color: "var(--primary)", borderRight: "1px solid var(--border)", paddingLeft: 8 }}>
+                    {faNum(m)}
+                  </span>
+                }
+                title={`درسنامه — ${mabhasTitle(m)}`}
+                onClick={() => setView({ kind: "lesson-reader", mabhas: m })}
+              />
+            ))}
+          </DenseList>
         </div>
       </div>
     );
   }
 
-  /* ── roadmap ── */
+  /* ── roadmap — checkpoint/timeline language (§7) ── */
   if (view.kind === "roadmap") {
     const steps = buildRoadmap(mabhasIndex.map((m) => m.mabhas), mistakes.length > 0, officialSessionsSeen.length);
+    const doneCount = steps.filter((s) => s.done).length;
     return (
       <div className="phone-scroll flex-1 overflow-y-auto px-4 pb-6 screen-in">
         <SubHeader title="نقشه راه آمادگی" onBack={() => setView({ kind: "root" })} />
         <p className="t-caption mt-1 px-1 leading-6" style={{ color: "var(--muted-foreground)" }}>
           مسیر پیشنهادی بر اساس رشته، صلاحیت و عملکرد شما — با پیشرفت شما به‌روز می‌شود.
         </p>
-        <div className="mt-4 space-y-0">
+        <div className="mt-4 px-1">
+          <div className="mb-1.5 flex items-center justify-between">
+            <Eyebrow tone="accent">مسیر شما</Eyebrow>
+            <span className="num t-caption" style={{ color: "var(--muted-foreground)" }}>
+              {faNum(doneCount)} از {faNum(steps.length)} مرحله
+            </span>
+          </div>
+          <SegmentedProgress value={doneCount} total={steps.length} ariaLabel="پیشرفت نقشه راه" />
+        </div>
+        <div className="mt-4">
           {steps.map((s, i) => (
             <div key={s.id} className="relative flex gap-3 pb-5">
-              {i < steps.length - 1 && <div className="absolute right-[17px] top-10 h-full w-0.5" style={{ background: "var(--border)" }} />}
+              {i < steps.length - 1 && <div className="absolute right-[17px] top-10 h-full w-px" style={{ background: "var(--border-strong)" }} />}
               <div
                 className="num z-10 flex h-9 w-9 shrink-0 items-center justify-center rounded-full text-[12px] font-extrabold"
                 style={{
-                  background: s.done ? "var(--success)" : "var(--card)",
-                  border: s.done ? "none" : "2px solid var(--border)",
-                  color: s.done ? "#fff" : "var(--muted-foreground)",
+                  background: s.done ? "var(--primary)" : "var(--surface)",
+                  border: s.done ? "none" : "2px solid var(--border-strong)",
+                  color: s.done ? "var(--primary-foreground)" : "var(--muted-foreground)",
                 }}
               >
-                {s.done ? <Check size={16} /> : faNum(s.phase)}
+                {s.done ? <Check size={16} strokeWidth={2.6} /> : faNum(s.phase)}
               </div>
-              <div className="flex-1 rounded-2xl border p-3.5" style={{ background: "var(--card)", borderColor: "var(--border)" }}>
-                <p className="text-[13px] font-bold" style={{ color: "var(--foreground)" }}>
+              <div className="min-w-0 flex-1 pt-1">
+                <p className="text-[13.5px] font-bold" style={{ color: s.done ? "var(--muted-foreground)" : "var(--foreground)" }}>
                   {s.title}
                 </p>
                 <p className="t-caption mt-1 leading-5" style={{ color: "var(--muted-foreground)" }}>
                   {s.desc}
                 </p>
-                <div className="mt-2.5">
-                  <Btn
-                    size="sm"
-                    variant={s.done ? "secondary" : "primary"}
-                    onClick={() => {
-                      if (s.action.kind === "study-mabhas" && s.action.mabhas) setView({ kind: "regulation-reader", mabhas: s.action.mabhas });
-                      else if (s.action.kind === "official-exams") nav.go("exam");
-                      else if (s.action.kind === "comprehensive") nav.go("exam");
-                      else nav.go("practice");
-                    }}
-                  >
-                    {s.done ? "مرور دوباره" : "شروع مرحله"}
-                  </Btn>
-                </div>
+                <button
+                  className="press mt-2 inline-flex min-h-[36px] items-center gap-1 text-[12px] font-bold"
+                  style={{ color: "var(--primary)" }}
+                  onClick={() => {
+                    if (s.action.kind === "study-mabhas" && s.action.mabhas) setView({ kind: "regulation-reader", mabhas: s.action.mabhas });
+                    else if (s.action.kind === "official-exams") nav.go("exam");
+                    else if (s.action.kind === "comprehensive") nav.go("exam");
+                    else nav.go("practice");
+                  }}
+                >
+                  {s.done ? "مرور دوباره" : "شروع مرحله"}
+                  <ChevronLeft size={14} />
+                </button>
               </div>
             </div>
           ))}
@@ -197,85 +218,90 @@ export default function Study({
     );
   }
 
-  /* ── root — reading-first (§14) ── */
+  /* ── root — reading-first composition (§14) ── */
   const readPct = bootstrap && mabhasRegs.length ? Math.round((new Set(studiedBands).size / (bootstrap.stats.regulationBandTexts || 1)) * 100) : 0;
   return (
     <div className="phone-scroll flex-1 overflow-y-auto px-4 pb-6 screen-in">
-      <h1 className="t-title pt-4">مطالعه</h1>
-      <p className="t-caption mt-0.5" style={{ color: "var(--muted-foreground)" }}>
-        کتابخانه مطالعاتی شما از مقررات و درسنامه‌ها
-      </p>
+      <header className="pt-4">
+        <Eyebrow tone="accent">مطالعه</Eyebrow>
+        <h1 className="t-title mt-1">کتابخانه مطالعاتی شما</h1>
+        <p className="t-caption mt-0.5" style={{ color: "var(--muted-foreground)" }}>
+          مقررات ملی با متن واقعی بندها + درسنامه‌های مبحث‌محور
+        </p>
+      </header>
 
-      {/* Continue Reading — hero */}
+      {/* Continue Reading — the one strong surface */}
       {lastStudy ? (
-        <div className="mt-4">
-          <Card onClick={() => setView(lastStudy.kind === "lesson" ? { kind: "lesson-reader", mabhas: lastStudy.mabhas } : { kind: "regulation-reader", mabhas: lastStudy.mabhas })} elevated>
-            <div className="flex items-center gap-3">
-              <div className="flex h-12 w-12 shrink-0 items-center justify-center rounded-2xl" style={{ background: "var(--grad-hero)", color: "#fff" }}>
-                <BookOpen size={21} />
-              </div>
-              <div className="min-w-0 flex-1">
-                <p className="t-meta font-bold" style={{ color: "var(--primary)" }}>
-                  ادامه مطالعه
-                </p>
-                <p className="truncate text-[13.5px] font-extrabold" style={{ color: "var(--foreground)" }}>
-                  {lastStudy.kind === "lesson" ? "درسنامه" : "مقررات"} — {mabhasTitle(lastStudy.mabhas)}
-                </p>
-                <p className="t-caption mt-0.5" style={{ color: "var(--muted-foreground)" }}>
-                  مبحث {faNum(lastStudy.mabhas)}
-                  {lastStudy.bandId ? " · از آخرین بند" : ""}
-                </p>
-              </div>
-              <ChevronLeft size={17} style={{ color: "var(--muted-foreground)" }} />
+        <Card
+          className="mt-4"
+          onClick={() => setView(lastStudy.kind === "lesson" ? { kind: "lesson-reader", mabhas: lastStudy.mabhas } : { kind: "regulation-reader", mabhas: lastStudy.mabhas })}
+          elevated
+        >
+          <div className="flex items-center gap-3">
+            <div className="flex h-12 w-12 shrink-0 items-center justify-center rounded-2xl" style={{ background: "var(--grad-hero)", color: "#fff" }}>
+              <BookOpen size={21} />
             </div>
-          </Card>
-        </div>
+            <div className="min-w-0 flex-1">
+              <p className="t-meta font-bold" style={{ color: "var(--primary)" }}>
+                ادامه مطالعه
+              </p>
+              <p className="truncate text-[13.5px] font-extrabold" style={{ color: "var(--foreground)" }}>
+                {lastStudy.kind === "lesson" ? "درسنامه" : "مقررات"} — {mabhasTitle(lastStudy.mabhas)}
+              </p>
+              <p className="t-caption mt-0.5" style={{ color: "var(--muted-foreground)" }}>
+                مبحث {faNum(lastStudy.mabhas)}
+                {lastStudy.bandId ? " · از آخرین بند" : ""}
+              </p>
+            </div>
+            <ChevronLeft size={17} style={{ color: "var(--muted-foreground)" }} />
+          </div>
+        </Card>
       ) : (
-        <div className="mt-4">
-          <Card onClick={() => setView({ kind: "regulations" })} elevated>
-            <div className="flex items-center gap-3">
-              <div className="flex h-12 w-12 shrink-0 items-center justify-center rounded-2xl" style={{ background: "var(--grad-hero)", color: "#fff" }}>
-                <BookOpen size={21} />
-              </div>
-              <div className="flex-1">
-                <p className="text-[13.5px] font-extrabold" style={{ color: "var(--foreground)" }}>
-                  شروع مطالعه
-                </p>
-                <p className="t-caption mt-0.5" style={{ color: "var(--muted-foreground)" }}>
-                  مباحث مقررات ملی — متن واقعی بندها
-                </p>
-              </div>
-              <ChevronLeft size={17} style={{ color: "var(--muted-foreground)" }} />
+        <Card className="mt-4" onClick={() => setView({ kind: "regulations" })} elevated>
+          <div className="flex items-center gap-3">
+            <div className="flex h-12 w-12 shrink-0 items-center justify-center rounded-2xl" style={{ background: "var(--grad-hero)", color: "#fff" }}>
+              <BookOpen size={21} />
             </div>
-          </Card>
-        </div>
+            <div className="flex-1">
+              <p className="text-[13.5px] font-extrabold" style={{ color: "var(--foreground)" }}>
+                شروع مطالعه
+              </p>
+              <p className="t-caption mt-0.5" style={{ color: "var(--muted-foreground)" }}>
+                مباحث مقررات ملی — متن واقعی بندها
+              </p>
+            </div>
+            <ChevronLeft size={17} style={{ color: "var(--muted-foreground)" }} />
+          </div>
+        </Card>
       )}
 
       <SectionHeader title="فضاهای مطالعه" />
-      <div className="space-y-2.5">
-        {[
-          { icon: Route, title: "نقشه راه", desc: "مسیر آمادگی گام‌به‌گام بر اساس عملکرد شما", onClick: () => setView({ kind: "roadmap" }) },
-          { icon: BookMarked, title: "مباحث مقررات ملی", desc: `${faNum(mabhasRegs.length)} مبحث با متن واقعی بندها`, onClick: () => setView({ kind: "regulations" }) },
-          { icon: GraduationCap, title: "درسنامه‌ها", desc: `${faNum(bootstrap?.stats.lessons ?? 0)} درسنامه جامع مبحث‌محور`, onClick: () => setView({ kind: "lessons" }) },
-        ].map(({ icon: Icon, title, desc, onClick }) => (
-          <ListItem key={title} icon={Icon} title={title} desc={desc} onClick={onClick} />
-        ))}
+      <div className="rounded-2xl border px-4" style={{ background: "var(--card)", borderColor: "var(--border)" }}>
+        <DenseList>
+          {[
+            { icon: Route, title: "نقشه راه", desc: "مسیر آمادگی گام‌به‌گام بر اساس عملکرد شما", onClick: () => setView({ kind: "roadmap" }) },
+            { icon: BookMarked, title: "مباحث مقررات ملی", desc: `${faNum(mabhasRegs.length)} مبحث با متن واقعی بندها`, onClick: () => setView({ kind: "regulations" }) },
+            { icon: GraduationCap, title: "درسنامه‌ها", desc: `${faNum(bootstrap?.stats.lessons ?? 0)} درسنامه جامع مبحث‌محور`, onClick: () => setView({ kind: "lessons" }) },
+          ].map(({ icon: Icon, title, desc, onClick }) => (
+            <DenseRow key={title} icon={Icon} title={title} desc={desc} onClick={onClick} />
+          ))}
+        </DenseList>
       </div>
 
-      <SectionHeader title="پیشرفت مطالعه" />
-      <Card>
-        <div className="flex items-center gap-4">
-          <ProgressRing pct={readPct} size={84} label="بندها" />
-          <div className="flex-1">
+      <section className="mt-6" aria-label="پیشرفت مطالعه">
+        <Eyebrow>پیشرفت مطالعه</Eyebrow>
+        <div className="mt-3 flex items-center gap-4">
+          <ProgressRing pct={readPct} size={84} strokeWidth={8} label="بندها" />
+          <div className="min-w-0 flex-1">
             <p className="num text-[12.5px] font-bold" style={{ color: "var(--foreground)" }}>
               {faNum(new Set(studiedBands).size)} بند از {faNum(bootstrap?.stats.regulationBandTexts ?? 0)} بند موجود
             </p>
-            <p className="t-caption mt-1" style={{ color: "var(--muted-foreground)" }}>
+            <p className="t-caption mt-1 leading-5" style={{ color: "var(--muted-foreground)" }}>
               با علامت‌گذاری هر بند در حالت مطالعه، پیشرفت اینجا ثبت می‌شود.
             </p>
           </div>
         </div>
-      </Card>
+      </section>
     </div>
   );
 }
@@ -392,35 +418,29 @@ function RegulationReader({ mabhas, onBack, nav }: { mabhas: number; onBack: () 
         </div>
       )}
 
-      {/* reading surface — calm, larger type (§14.2) */}
-      <div className="phone-scroll flex-1 overflow-y-auto px-4 py-4">
-        <div className="mx-auto max-w-[560px] space-y-4">
-          {bands.map((b) => {
+      {/* reading surface — focus by subtraction: typographic bands, no boxes (§14.2) */}
+      <div className="phone-scroll flex-1 overflow-y-auto px-5 py-4">
+        <div className="mx-auto max-w-[560px]">
+          {bands.map((b, bi) => {
             const studied = studiedBands.includes(b.id);
             return (
-              <div
+              <section
                 key={b.id}
                 id={`band-${b.id}`}
-                className="rounded-2xl border p-4"
-                style={{
-                  background: "var(--card)",
-                  borderColor: studied ? "var(--success)" : "var(--border)",
-                  transition: "border-color 0.25s ease",
-                }}
+                aria-label={`بند ${b.band}`}
+                style={{ transition: "opacity 0.25s ease" }}
               >
+                {bi > 0 && <div className="construction my-5" />}
                 <div className="flex items-start justify-between gap-2">
-                  <div className="min-w-0 flex-1">
-                    <p className="num flex items-center gap-1.5 text-[11.5px] font-extrabold" style={{ color: "var(--primary)" }}>
-                      <span className="inline-flex items-center justify-center rounded-md px-1.5 py-0.5" style={{ background: "var(--primary-soft)" }}>
-                        بند {b.band}
+                  <div className="flex items-center gap-2">
+                    <span className="num inline-flex items-center rounded-md px-2 py-0.5 text-[10.5px] font-extrabold" style={{ background: studied ? "var(--success-soft)" : "var(--primary-soft)", color: studied ? "var(--success)" : "var(--primary)" }}>
+                      بند {b.band}
+                    </span>
+                    {b.page ? (
+                      <span className="num t-meta" style={{ color: "var(--muted-foreground)" }}>
+                        ص {faNum(b.page)}
                       </span>
-                      {b.page ? <span style={{ color: "var(--muted-foreground)" }}>ص {faNum(b.page)}</span> : null}
-                    </p>
-                    {b.title && (
-                      <p className="mt-2 text-[13.5px] font-bold leading-7" style={{ color: "var(--foreground)" }}>
-                        {b.title}
-                      </p>
-                    )}
+                    ) : null}
                   </div>
                   <button
                     onClick={() => toggleStudiedBand(b.id)}
@@ -435,8 +455,13 @@ function RegulationReader({ mabhas, onBack, nav }: { mabhas: number; onBack: () 
                     {studied ? <CheckCircle2 size={19} /> : <CheckCheck size={19} />}
                   </button>
                 </div>
+                {b.title && (
+                  <h2 className="mt-2.5 text-[14.5px] font-bold leading-7" style={{ color: "var(--foreground)" }}>
+                    {b.title}
+                  </h2>
+                )}
                 {b.text && (
-                  <p className="reader-body mt-2.5" style={{ color: "var(--foreground)", opacity: studied ? 0.72 : 1 }}>
+                  <p className="reader-body mt-2" style={{ color: "var(--foreground)", opacity: studied ? 0.62 : 1 }}>
                     {b.text}
                   </p>
                 )}
@@ -450,7 +475,7 @@ function RegulationReader({ mabhas, onBack, nav }: { mabhas: number; onBack: () 
                 >
                   سؤالات مرتبط با این مبحث ←
                 </button>
-              </div>
+              </section>
             );
           })}
           {bands.length === 0 && (
@@ -476,15 +501,14 @@ function RegulationReader({ mabhas, onBack, nav }: { mabhas: number; onBack: () 
               {faNum(studiedInMabhas)} از {faNum(data.bands.length)} بند مطالعه‌شده
             </p>
             <div className="phone-scroll flex-1 overflow-y-auto px-4 py-3">
-              <div className="space-y-1.5">
+              <div className="divide-y" style={{ borderColor: "var(--border)" }}>
                 {data.bands.map((b) => {
                   const studied = studiedBands.includes(b.id);
                   return (
                     <button
                       key={b.id}
                       onClick={() => jumpTo(b.id)}
-                      className="press flex min-h-[46px] w-full items-center gap-3 rounded-xl border px-3 py-2 text-right"
-                      style={{ background: "var(--surface)", borderColor: "var(--border)" }}
+                      className="press flex min-h-[46px] w-full items-center gap-3 py-2 text-right"
                     >
                       <CheckBadge on={studied} />
                       <span className="num text-[12px] font-bold" style={{ color: "var(--foreground)" }}>
