@@ -12,15 +12,14 @@ import {
   type QLite,
 } from "@/lib/mhy/engines";
 import {
-  Card,
   SectionHeader,
   CountdownRing,
-  StatTile,
   ProgressRing,
-  Sparkline,
-  MeterRows,
+  TrendChart,
+  WeekStrip,
+  SegmentedProgress,
+  Eyebrow,
   DisciplineGlyph,
-  MhyGlyph,
   Skeleton,
 } from "./ui";
 import type { PoolItem } from "./shell";
@@ -53,6 +52,8 @@ export type Nav = {
 };
 
 type MajorOf = (qid: number) => string | null;
+
+const REGULATION_MABHAS_TOTAL = 22;
 
 export default function Dashboard({
   bootstrap,
@@ -91,7 +92,7 @@ export default function Dashboard({
     return Math.round((vals.filter((a) => a.correct).length / vals.length) * 100);
   }, [answers]);
 
-  // ── per-competency progress (§12) — real accuracy + coverage from pool.major ──
+  // ── per-competency progress — real accuracy + coverage from pool.major ──
   const competencyRows = useMemo(() => {
     const comps = profile.competencies ?? [];
     if (!comps.length) return [];
@@ -115,7 +116,7 @@ export default function Dashboard({
     });
   }, [profile.competencies, answers, majorOf, bootstrap]);
 
-  // ── 7-day accuracy trend (§13) — real answer timestamps ──
+  // ── 7-day accuracy trend — real answer timestamps ──
   const trend = useMemo(() => {
     const DAY = 86400000;
     const now = Date.now();
@@ -144,22 +145,67 @@ export default function Dashboard({
     return { series: valid.length >= 2 ? series.map((v) => (v < 0 ? lastValid ?? 0 : v)) : [], last: lastValid, delta };
   }, [answers]);
 
+  // ── week adherence — real study days from answer timestamps (Jalali via Intl) ──
+  const week = useMemo(() => {
+    const DAY = 86400000;
+    const now = Date.now();
+    const fmtDay = new Intl.DateTimeFormat("fa-IR", { day: "numeric" });
+    // single-letter weekday labels — RTL week starts Saturday
+    const wdShort = ["ی", "د", "س", "چ", "پ", "ج", "ش"]; // getDay(): 0=Sunday … 6=Saturday
+    const done = new Array<boolean>(7).fill(false);
+    for (const a of Object.values(answers)) {
+      if (a.choice === null) continue;
+      const age = now - a.at;
+      if (age > 7 * DAY) continue;
+      const bi = Math.min(6, Math.floor((7 * DAY - age) / DAY));
+      done[bi] = true;
+    }
+    const out: { label: string; dateLabel: string; done: boolean }[] = [];
+    for (let i = 6; i >= 0; i--) {
+      const d = new Date(now - i * DAY);
+      out.push({ label: wdShort[d.getDay()], dateLabel: fmtDay.format(d), done: done[6 - i] });
+    }
+    return out;
+  }, [answers]);
+
+  // streak — consecutive active days ending today (today itself optional)
+  const streak = useMemo(() => {
+    const DAY = 86400000;
+    const days = new Set<number>();
+    for (const a of Object.values(answers)) if (a.choice !== null) days.add(Math.floor(a.at / DAY));
+    const today = Math.floor(Date.now() / DAY);
+    let s = 0;
+    let d = days.has(today) ? today : today - 1;
+    while (days.has(d)) {
+      s++;
+      d--;
+    }
+    return s;
+  }, [answers]);
+
   const todayQs = plan.totalQuestions;
   const doneToday = Math.min(answeredCount, todayQs);
 
   const hour = new Date().getHours();
   const greeting = hour < 5 ? "شب‌زنده‌داری" : hour < 12 ? "صبح بخیر" : hour < 17 ? "بعدازظهر بخیر" : "شب بخیر";
   const comps = profile.competencies ?? [];
+  const dateLabel = useMemo(() => new Intl.DateTimeFormat("fa-IR", { weekday: "long", day: "numeric", month: "long" }).format(new Date()), []);
+  const doneDays = week.filter((d) => d.done).length;
+
+  const trendMax = trend.series.length ? Math.max(...trend.series) : 0;
+  const trendMaxIdx = trend.series.indexOf(trendMax);
 
   return (
-    <div className="phone-scroll flex-1 overflow-y-auto px-4 pb-6 screen-in">
-      {/* L0 — greeting/context */}
-      <div className="relative pt-5">
-        <div className="pointer-events-none absolute -top-6 left-0 opacity-[0.05]" aria-hidden>
-          <MhyGlyph size={150} style={{ color: "var(--primary)" }} />
-        </div>
-        <p className="t-caption font-bold" style={{ color: "var(--muted-foreground)" }}>
-          {greeting}{profile.name ? `، ${profile.name}` : ""}
+    <div className="phone-scroll flex-1 overflow-y-auto pb-6 screen-in">
+      {/* ── L0 · greeting — composition head, not a card ── */}
+      <header
+        className="blueprint-grid relative px-5 pb-4 pt-5"
+        style={{ maskImage: "linear-gradient(180deg, black 55%, transparent 100%)", WebkitMaskImage: "linear-gradient(180deg, black 55%, transparent 100%)" }}
+      >
+        <Eyebrow tone="accent">{dateLabel}</Eyebrow>
+        <p className="mt-2 t-caption font-bold" style={{ color: "var(--muted-foreground)" }}>
+          {greeting}
+          {profile.name ? `، ${profile.name}` : ""}
         </p>
         <h1 className="t-title mt-0.5 flex items-center gap-2" style={{ color: "var(--foreground)" }}>
           {profile.disciplineTitle ?? "رشته انتخاب نشده"}
@@ -170,264 +216,312 @@ export default function Dashboard({
           )}
         </h1>
         {comps.length > 0 && (
-          <div className="mt-2 flex flex-wrap gap-1.5">
-            {comps.map((c) => (
-              <span
-                key={c}
-                className="rounded-full px-2.5 py-1 text-[10px] font-bold"
-                style={{
-                  background: profile.activeCompetency === c ? "var(--primary)" : "var(--muted)",
-                  color: profile.activeCompetency === c ? "var(--primary-foreground)" : "var(--muted-foreground)",
-                }}
-              >
-                {competencyOfCode(bootstrap?.disciplines, c)}
-              </span>
-            ))}
+          <div className="mt-2.5 flex flex-wrap gap-1.5">
+            {comps.map((c) => {
+              const active = profile.activeCompetency === c;
+              return (
+                <span
+                  key={c}
+                  className="rounded-full border px-2.5 py-1 text-[10px] font-bold"
+                  style={
+                    active
+                      ? { borderColor: "var(--primary)", background: "var(--primary-soft)", color: "var(--primary)" }
+                      : { borderColor: "var(--border)", color: "var(--muted-foreground)" }
+                  }
+                >
+                  {competencyOfCode(bootstrap?.disciplines, c)}
+                </span>
+              );
+            })}
           </div>
         )}
-      </div>
+      </header>
 
-      {/* L1 — countdown hero */}
-      <div className="mt-3.5">
+      <div className="px-4">
+        {/* ── L2 · WOW#1 — target exam countdown (copper composition) ── */}
         <CountdownRing daysLeft={daysLeft} examTitle={profile.targetExam} />
-      </div>
 
-      {/* L2 — continue studying: the hero action */}
-      <SectionHeader title="ادامه مسیر" />
-      {lastStudy ? (
-        <Card onClick={nav.resumeStudy} ariaLabel="ادامه مطالعه از آخرین موقعیت" elevated>
-          <div className="flex items-center gap-3">
-            <div
-              className="flex h-12 w-12 shrink-0 items-center justify-center rounded-2xl"
-              style={{ background: "var(--grad-hero)", color: "#fff", boxShadow: "var(--shadow-card)" }}
-            >
-              <Play size={21} fill="currentColor" />
-            </div>
-            <div className="min-w-0 flex-1">
-              <p className="text-[14px] font-extrabold" style={{ color: "var(--foreground)" }}>
-                ادامه مطالعه
-              </p>
-              <p className="mt-0.5 t-caption truncate" style={{ color: "var(--muted-foreground)" }}>
-                {lastStudy.kind === "lesson" ? "درسنامه" : "مقررات"} — مبحث {faNum(lastStudy.mabhas)} · {mabhasTitle(lastStudy.mabhas)}
-              </p>
-            </div>
-            <ChevronLeft size={17} style={{ color: "var(--muted-foreground)" }} />
+        {/* ── L3 · readiness state — inline composition, no card ── */}
+        <section className="mt-5" aria-label="وضعیت آمادگی">
+          <div className="flex items-center justify-between">
+            <Eyebrow>وضعیت آمادگی</Eyebrow>
+            <span className="t-meta num" style={{ color: "var(--muted-foreground)" }}>
+              {faNum(answeredCount)} پاسخ ثبت‌شده
+            </span>
           </div>
-        </Card>
-      ) : (
-        <Card onClick={() => nav.startMabhasStudy(1)} ariaLabel="شروع مطالعه" elevated>
-          <div className="flex items-center gap-3">
-            <div
-              className="flex h-12 w-12 shrink-0 items-center justify-center rounded-2xl"
-              style={{ background: "var(--grad-hero)", color: "#fff", boxShadow: "var(--shadow-card)" }}
-            >
-              <Play size={21} fill="currentColor" />
+          <div className="mt-3 flex items-center gap-4">
+            <ProgressRing pct={readiness} size={92} strokeWidth={8} label="آمادگی" />
+            <div className="min-w-0 flex-1 space-y-2">
+              {strong && (
+                <div className="flex items-center gap-2">
+                  <TrendingUp size={15} style={{ color: "var(--primary)" }} />
+                  <p className="t-caption flex-1 truncate font-bold" style={{ color: "var(--foreground)" }}>
+                    {mabhasTitle(strong.m)}
+                  </p>
+                  <span className="num text-[11px] font-extrabold" style={{ color: "var(--primary)" }}>
+                    ٪{faNum(strong.accPct)}
+                  </span>
+                </div>
+              )}
+              {weak && weak.m !== strong?.m && (
+                <div className="flex items-center gap-2">
+                  <TrendingDown size={15} style={{ color: "var(--danger)" }} />
+                  <p className="t-caption flex-1 truncate font-bold" style={{ color: "var(--foreground)" }}>
+                    {mabhasTitle(weak.m)}
+                  </p>
+                  <span className="num text-[11px] font-extrabold" style={{ color: "var(--danger)" }}>
+                    ٪{faNum(weak.accPct)}
+                  </span>
+                </div>
+              )}
+              <div className="construction !border-solid" />
+              <div className="flex items-stretch">
+                {[
+                  { v: accuracyAll === null ? "—" : `٪${faNum(accuracyAll)}`, l: "دقت کل" },
+                  { v: faNum(answeredCount), l: "پاسخ" },
+                  { v: faNum(streak), l: "روز پیوسته" },
+                ].map((x, i) => (
+                  <div key={x.l} className={`flex-1 text-center ${i > 0 ? "border-r" : ""}`} style={{ borderColor: "var(--border)" }}>
+                    <p className="t-kpi num" style={{ fontSize: 16, color: "var(--foreground)" }}>
+                      {x.v}
+                    </p>
+                    <p className="t-meta mt-0.5" style={{ color: "var(--muted-foreground)" }}>
+                      {x.l}
+                    </p>
+                  </div>
+                ))}
+              </div>
             </div>
-            <div className="flex-1">
-              <p className="text-[14px] font-extrabold" style={{ color: "var(--foreground)" }}>
-                شروع مطالعه مقررات
-              </p>
-              <p className="mt-0.5 t-caption" style={{ color: "var(--muted-foreground)" }}>
-                از مبحث ۱ — کلیات و تعاریف
-              </p>
-            </div>
-            <ChevronLeft size={17} style={{ color: "var(--muted-foreground)" }} />
           </div>
-        </Card>
-      )}
+        </section>
 
-      {/* L3 — today's plan (engine-derived, interactive) */}
-      <SectionHeader title="امروز" />
-      <Card>
-        <div className="flex items-center justify-between">
-          <div className="flex items-center gap-1.5 text-[12.5px] font-bold" style={{ color: "var(--foreground)" }}>
-            <Target size={15} style={{ color: "var(--primary)" }} />
-            برنامه امروز
+        {/* ── L4 · week adherence ── */}
+        <section className="mt-5" aria-label="پیوستگی مطالعه هفته">
+          <div className="flex items-center justify-between">
+            <Eyebrow>پیوستگی هفته</Eyebrow>
+            <span className="t-meta num" style={{ color: doneDays >= 5 ? "var(--primary)" : "var(--muted-foreground)" }}>
+              {faNum(doneDays)} روز از ۷ روز
+            </span>
           </div>
-          <span
-            className="num rounded-full px-2.5 py-1 text-[10px] font-bold"
-            style={{
-              background: doneToday >= todayQs ? "var(--success-soft)" : "var(--primary-soft)",
-              color: doneToday >= todayQs ? "var(--success)" : "var(--primary)",
-            }}
+          <div className="mt-2.5">
+            <WeekStrip days={week} selected={6} />
+          </div>
+        </section>
+
+        {/* ── L5 · continue studying — the hero action ── */}
+        <SectionHeader title="ادامه مسیر" />
+        {lastStudy ? (
+          <button
+            onClick={nav.resumeStudy}
+            aria-label="ادامه مطالعه از آخرین موقعیت"
+            className="press relative w-full overflow-hidden rounded-3xl p-4 text-right"
+            style={{ background: "var(--grad-hero)", boxShadow: "var(--shadow-card)" }}
           >
-            {doneToday >= todayQs ? "کامل شد ✓" : `${faNum(doneToday)} از ${faNum(todayQs)}`}
-          </span>
-        </div>
-        <div className="mt-3 space-y-2">
-          {plan.items.map((it, i) => (
-            <button
-              key={i}
-              onClick={() =>
-                it.kind === "study" && it.mabhas != null
-                  ? nav.startMabhasStudy(it.mabhas)
-                  : it.kind === "practice"
-                    ? nav.startMabhasPractice(it.mabhas ?? 0)
-                    : it.kind === "review"
-                      ? nav.go("practice")
-                      : nav.go("exam")
-              }
-              className="press flex min-h-[48px] w-full items-center gap-2.5 rounded-xl border px-3 py-2 text-right"
-              style={{ background: "var(--surface)", borderColor: "var(--border)" }}
-            >
-              <span
-                className="num flex h-7 w-7 items-center justify-center rounded-lg text-[10px] font-bold"
-                style={{
-                  background: it.kind === "review" ? "var(--warning-soft)" : it.kind === "study" ? "var(--primary-soft)" : "var(--success-soft)",
-                  color: it.kind === "review" ? "var(--warning)" : it.kind === "study" ? "var(--primary)" : "var(--success)",
-                }}
-              >
-                {faNum(i + 1)}
+            <div className="flex items-center gap-3">
+              <span className="flex h-12 w-12 shrink-0 items-center justify-center rounded-2xl" style={{ background: "rgba(255,255,255,0.16)", color: "#fff" }}>
+                <Play size={21} fill="currentColor" />
+              </span>
+              <div className="min-w-0 flex-1">
+                <p className="text-[14.5px] font-extrabold text-white">ادامه مطالعه</p>
+                <p className="mt-0.5 truncate text-[11px] text-white/75">
+                  {lastStudy.kind === "lesson" ? "درسنامه" : "مقررات"} — مبحث {faNum(lastStudy.mabhas)} · {mabhasTitle(lastStudy.mabhas)}
+                </p>
+              </div>
+              <ChevronLeft size={18} className="shrink-0 text-white/80" />
+            </div>
+            <div className="mt-3 flex items-center gap-2.5">
+              <div className="h-1.5 flex-1 overflow-hidden rounded-full" style={{ background: "rgba(255,255,255,0.22)" }}>
+                <div className="h-full rounded-full bg-white/90" style={{ width: `${Math.min(100, (lastStudy.mabhas / REGULATION_MABHAS_TOTAL) * 100)}%` }} />
+              </div>
+              <span className="num text-[10px] font-bold text-white/85">
+                مبحث {faNum(lastStudy.mabhas)} از {faNum(REGULATION_MABHAS_TOTAL)}
+              </span>
+            </div>
+          </button>
+        ) : (
+          <button
+            onClick={() => nav.startMabhasStudy(1)}
+            aria-label="شروع مطالعه مقررات"
+            className="press relative w-full overflow-hidden rounded-3xl p-4 text-right"
+            style={{ background: "var(--grad-hero)", boxShadow: "var(--shadow-card)" }}
+          >
+            <div className="flex items-center gap-3">
+              <span className="flex h-12 w-12 shrink-0 items-center justify-center rounded-2xl" style={{ background: "rgba(255,255,255,0.16)", color: "#fff" }}>
+                <Play size={21} fill="currentColor" />
               </span>
               <div className="flex-1">
-                <p className="text-[12px] font-bold" style={{ color: "var(--foreground)" }}>
-                  {it.label}
-                  {it.count ? ` · ${faNum(it.count)} سؤال` : ""}
-                </p>
-                <p className="t-meta" style={{ color: "var(--muted-foreground)" }}>
-                  {it.detail}
-                </p>
+                <p className="text-[14.5px] font-extrabold text-white">شروع مطالعه مقررات</p>
+                <p className="mt-0.5 text-[11px] text-white/75">از مبحث ۱ — کلیات و تعاریف</p>
               </div>
-              <ChevronLeft size={15} style={{ color: "var(--muted-foreground)" }} />
-            </button>
-          ))}
-        </div>
-      </Card>
-
-      {/* L4 — readiness */}
-      <SectionHeader title="آمادگی کلی" />
-      <Card>
-        <div className="flex items-center gap-4">
-          <ProgressRing pct={readiness} size={96} label="آمادگی" />
-          <div className="flex-1 space-y-2.5">
-            {strong && (
-              <div className="flex items-center gap-2">
-                <TrendingUp size={15} style={{ color: "var(--success)" }} />
-                <p className="t-caption flex-1 truncate font-bold" style={{ color: "var(--foreground)" }}>
-                  قوی‌ترین: {mabhasTitle(strong.m)}
-                </p>
-                <span className="num text-[11px] font-extrabold" style={{ color: "var(--success)" }}>
-                  ٪{faNum(strong.accPct)}
-                </span>
-              </div>
-            )}
-            {weak && weak.m !== strong?.m && (
-              <div className="flex items-center gap-2">
-                <TrendingDown size={15} style={{ color: "var(--danger)" }} />
-                <p className="t-caption flex-1 truncate font-bold" style={{ color: "var(--foreground)" }}>
-                  ضعیف‌ترین: {mabhasTitle(weak.m)}
-                </p>
-                <span className="num text-[11px] font-extrabold" style={{ color: "var(--danger)" }}>
-                  ٪{faNum(weak.accPct)}
-                </span>
-              </div>
-            )}
-            <div className="grid grid-cols-2 gap-2">
-              <StatTile value={faNum(answeredCount)} label="سؤال پاسخ‌داده" />
-              <StatTile value={accuracyAll === null ? "—" : `٪${faNum(accuracyAll)}`} label="دقت کل" />
+              <ChevronLeft size={18} className="shrink-0 text-white/80" />
             </div>
-          </div>
-        </div>
-      </Card>
+            <div className="mt-3">
+              <SegmentedProgress value={0} total={REGULATION_MABHAS_TOTAL} color="rgba(255,255,255,0.9)" height={4} ariaLabel="پیشرفت مباحث مقررات" />
+            </div>
+          </button>
+        )}
 
-      {/* L5 — competency progress (§12, multi-select) */}
-      {competencyRows.length > 0 && (
-        <>
-          <SectionHeader title="پیشرفت صلاحیت‌ها" />
-          <Card>
-            <div className="space-y-3.5">
+        {/* ── L6 · today — dense rows, no card ── */}
+        <section className="mt-6" aria-label="برنامه امروز">
+          <div className="mb-1.5 flex items-center justify-between">
+            <Eyebrow>برنامه امروز</Eyebrow>
+            <span
+              className="num inline-flex items-center gap-1 rounded-full px-2.5 py-1 text-[10px] font-bold"
+              style={{
+                background: doneToday >= todayQs ? "var(--success-soft)" : "var(--primary-soft)",
+                color: doneToday >= todayQs ? "var(--success)" : "var(--primary)",
+              }}
+            >
+              <Target size={11} />
+              {doneToday >= todayQs ? "کامل شد" : `${faNum(doneToday)} از ${faNum(todayQs)}`}
+            </span>
+          </div>
+          <div className="divide-y" style={{ borderColor: "var(--border)" }}>
+            {plan.items.map((it, i) => (
+              <button
+                key={i}
+                onClick={() =>
+                  it.kind === "study" && it.mabhas != null
+                    ? nav.startMabhasStudy(it.mabhas)
+                    : it.kind === "practice"
+                      ? nav.startMabhasPractice(it.mabhas ?? 0)
+                      : it.kind === "review"
+                        ? nav.go("practice")
+                        : nav.go("exam")
+                }
+                className="press flex min-h-[52px] w-full items-center gap-2.5 py-2.5 text-right"
+              >
+                <span
+                  className="num flex h-7 w-7 shrink-0 items-center justify-center rounded-lg text-[10px] font-bold"
+                  style={{
+                    background: it.kind === "review" ? "var(--warning-soft)" : it.kind === "study" ? "var(--primary-soft)" : "var(--muted)",
+                    color: it.kind === "review" ? "var(--warning)" : it.kind === "study" ? "var(--primary)" : "var(--muted-foreground)",
+                  }}
+                >
+                  {faNum(i + 1)}
+                </span>
+                <div className="min-w-0 flex-1">
+                  <p className="truncate text-[12.5px] font-bold" style={{ color: "var(--foreground)" }}>
+                    {it.label}
+                    {it.count ? ` · ${faNum(it.count)} سؤال` : ""}
+                  </p>
+                  <p className="t-meta truncate" style={{ color: "var(--muted-foreground)" }}>
+                    {it.detail}
+                  </p>
+                </div>
+                <ChevronLeft size={15} style={{ color: "var(--muted-foreground)" }} />
+              </button>
+            ))}
+          </div>
+        </section>
+
+        {/* ── L7 · performance insight — chart with a message ── */}
+        {trend.series.length >= 2 && (
+          <section className="mt-6" aria-label="روند عملکرد">
+            <Eyebrow>عملکرد هفته اخیر</Eyebrow>
+            <div className="mt-2">
+              <TrendChart
+                data={trend.series}
+                ariaLabel="روند دقت هفته اخیر"
+                callout={{ index: trendMaxIdx, label: `٪${faNum(trendMax)}` }}
+              />
+            </div>
+            <p className="t-body-sm mt-1.5" style={{ color: "var(--foreground)" }}>
+              {trend.delta !== null ? (
+                <>
+                  {trend.delta >= 0 ? "این هفته دقتت بهتر شده" : "دقت هفته اخیر کمی افت کرده"} —{" "}
+                  <b className="num" style={{ color: trend.delta >= 0 ? "var(--primary)" : "var(--danger)" }}>
+                    {trend.delta >= 0 ? "+" : "−"}
+                    {faNum(Math.abs(trend.delta))}٪
+                  </b>{" "}
+                  نسبت به روزهای قبل.
+                </>
+              ) : (
+                <>
+                  دقت روزهای اخیر{" "}
+                  <b className="num" style={{ color: "var(--primary)" }}>
+                    ٪{faNum(trend.last ?? 0)}
+                  </b>{" "}
+                  است؛ با ادامه برنامه امروز، روند کامل رسم می‌شود.
+                </>
+              )}
+            </p>
+          </section>
+        )}
+
+        {/* ── L8 · competency progress — dense blocks with construction dividers ── */}
+        {competencyRows.length > 0 && (
+          <section className="mt-6" aria-label="پیشرفت صلاحیت‌ها">
+            <Eyebrow>پیشرفت صلاحیت‌ها</Eyebrow>
+            <div className="mt-1 divide-y" style={{ borderColor: "var(--border)" }}>
               {competencyRows.map((r) => (
-                <div key={r.code}>
-                  <div className="mb-1.5 flex items-center justify-between">
-                    <p className="text-[12.5px] font-bold" style={{ color: "var(--foreground)" }}>
+                <div key={r.code} className="py-3.5">
+                  <div className="mb-2 flex items-center justify-between gap-2">
+                    <p className="truncate text-[13px] font-bold" style={{ color: "var(--foreground)" }}>
                       {r.label}
                     </p>
-                    <span className="num t-caption" style={{ color: "var(--muted-foreground)" }}>
-                      {r.acc === null ? `${faNum(r.answered)}/${faNum(r.totalQ)} پاسخ‌داده` : `دقت ٪${faNum(r.acc)} · ${faNum(r.answered)}/${faNum(r.totalQ)}`}
+                    <span className="num t-caption shrink-0" style={{ color: r.acc !== null && r.acc >= 60 ? "var(--primary)" : "var(--muted-foreground)" }}>
+                      {r.acc === null ? `${faNum(r.answered)}/${faNum(r.totalQ)}` : `دقت ٪${faNum(r.acc)}`}
                     </span>
                   </div>
-                  <MeterRows
-                    items={[
-                      { label: "پوشش سؤالات", pct: r.coverage, color: "var(--primary)" },
-                      ...(r.acc !== null ? [{ label: "دقت پاسخ", pct: r.acc, color: r.acc >= 60 ? "var(--success)" : "var(--warning)" }] : []),
-                    ]}
-                  />
+                  <div className="h-1.5 overflow-hidden rounded-full" style={{ background: "var(--muted)" }}>
+                    <div
+                      className="h-full rounded-full"
+                      style={{
+                        width: `${r.coverage}%`,
+                        background: "var(--primary)",
+                        transition: "width 0.6s cubic-bezier(0.2,0.8,0.2,1)",
+                      }}
+                    />
+                  </div>
+                  <p className="t-meta mt-1.5" style={{ color: "var(--muted-foreground)" }}>
+                    پوشش {faNum(r.coverage)}٪ از {faNum(r.totalQ)} سؤال این صلاحیت
+                  </p>
                 </div>
               ))}
             </div>
-          </Card>
-        </>
-      )}
+          </section>
+        )}
 
-      {/* L6 — performance trend (§13) */}
-      {trend.series.length >= 2 && (
-        <>
-          <SectionHeader title="عملکرد هفته اخیر" />
-          <Card>
-            <div className="flex items-center justify-between">
-              <div>
-                <p className="t-kpi num" style={{ fontSize: 22, color: "var(--foreground)" }}>
-                  {trend.last !== null ? `٪${faNum(trend.last)}` : "—"}
-                </p>
-                <p className="t-meta mt-0.5" style={{ color: "var(--muted-foreground)" }}>
-                  دقت روزهای اخیر
-                </p>
-                {trend.delta !== null && (
-                  <p
-                    className="mt-1.5 inline-flex items-center gap-1 rounded-full px-2 py-0.5 text-[10px] font-bold"
-                    style={{
-                      background: trend.delta >= 0 ? "var(--success-soft)" : "var(--danger-soft)",
-                      color: trend.delta >= 0 ? "var(--success)" : "var(--danger)",
-                    }}
-                  >
-                    {trend.delta >= 0 ? <ArrowUpRight size={11} /> : <ArrowDownRight size={11} />}
-                    {trend.delta >= 0 ? "+" : "−"}
-                    {faNum(Math.abs(trend.delta))}٪ نسبت به روزهای قبل
-                  </p>
-                )}
-              </div>
-              <Sparkline data={trend.series} ariaLabel="روند دقت هفته اخیر" />
-            </div>
-          </Card>
-        </>
-      )}
-
-      {/* L7 — quick actions */}
-      <SectionHeader title="اقدامات سریع" />
-      <div className="grid grid-cols-3 gap-2.5">
-        {[
-          { label: "مباحث مقررات", icon: BookMarked, fn: () => nav.startMabhasStudy(1), tint: "var(--primary)" },
-          { label: "سؤال سریع", icon: Zap, fn: () => nav.startQuickExam(10), tint: "var(--warning)" },
-          { label: "آزمون‌های رسمی", icon: ClipboardList, fn: nav.openOfficialExams, tint: "var(--success)" },
-          { label: "نقشه راه", icon: Route, fn: nav.openRoadmap, tint: "var(--primary)" },
-          { label: "آزمون جامع", icon: Layers, fn: nav.openComprehensive, tint: "var(--danger)" },
-          { label: "جستجو", icon: Search, fn: nav.openSearch, tint: "var(--muted-foreground)" },
-        ].map(({ label, icon: Icon, fn, tint }) => (
-          <button
-            key={label}
-            onClick={fn}
-            className="press flex min-h-[76px] flex-col items-center justify-center gap-1.5 rounded-2xl border"
-            style={{ background: "var(--card)", borderColor: "var(--border)" }}
-          >
-            <span className="flex h-9 w-9 items-center justify-center rounded-xl" style={{ background: `color-mix(in srgb, ${tint} 11%, transparent)`, color: tint }}>
-              <Icon size={19} strokeWidth={1.9} />
-            </span>
-            <span className="text-[10.5px] font-bold" style={{ color: "var(--foreground)" }}>
-              {label}
-            </span>
-          </button>
-        ))}
-      </div>
-
-      <p className="t-meta mt-5 flex items-center justify-center gap-1.5" style={{ color: "var(--muted-foreground)" }}>
-        کتابخانه: {bootstrap ? `${faNum(bootstrap.stats.questions)} سؤال · ${faNum(bootstrap.stats.official)} رسمی · ${faNum(bootstrap.stats.lessons)} درسنامه` : "در حال بارگذاری…"}
-      </p>
-      {!bootstrap && (
-        <div className="mt-3 space-y-2">
-          <Skeleton h={64} />
-          <Skeleton h={120} />
+        {/* ── L9 · quick actions — quiet tiles ── */}
+        <SectionHeader title="اقدامات سریع" />
+        <div className="grid grid-cols-3 gap-2">
+          {[
+            { label: "مباحث مقررات", icon: BookMarked, fn: () => nav.startMabhasStudy(1) },
+            { label: "سؤال سریع", icon: Zap, fn: () => nav.startQuickExam(10) },
+            { label: "آزمون‌های رسمی", icon: ClipboardList, fn: nav.openOfficialExams },
+            { label: "نقشه راه", icon: Route, fn: nav.openRoadmap },
+            { label: "آزمون جامع", icon: Layers, fn: nav.openComprehensive },
+            { label: "جستجو", icon: Search, fn: nav.openSearch },
+          ].map(({ label, icon: Icon, fn }) => (
+            <button
+              key={label}
+              onClick={fn}
+              className="press flex min-h-[72px] flex-col items-center justify-center gap-1.5 rounded-2xl border"
+              style={{ background: "var(--surface)", borderColor: "var(--border)" }}
+            >
+              <span className="flex h-9 w-9 items-center justify-center rounded-xl" style={{ background: "var(--muted)", color: "var(--muted-foreground)" }}>
+                <Icon size={19} strokeWidth={1.9} />
+              </span>
+              <span className="text-[10.5px] font-bold" style={{ color: "var(--foreground)" }}>
+                {label}
+              </span>
+            </button>
+          ))}
         </div>
-      )}
+
+        {/* footer — library trust line */}
+        <div className="construction mt-6" />
+        <p className="t-meta mt-3 flex items-center justify-center gap-1.5" style={{ color: "var(--muted-foreground)" }}>
+          کتابخانه: {bootstrap ? `${faNum(bootstrap.stats.questions)} سؤال · ${faNum(bootstrap.stats.official)} رسمی · ${faNum(bootstrap.stats.lessons)} درسنامه` : "در حال بارگذاری…"}
+        </p>
+        {!bootstrap && (
+          <div className="mt-3 space-y-2">
+            <Skeleton h={64} />
+            <Skeleton h={120} />
+          </div>
+        )}
+      </div>
     </div>
   );
 }

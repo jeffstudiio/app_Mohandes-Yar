@@ -1069,7 +1069,7 @@ export function WeekStrip({
   onSelect,
   ariaLabel = "هفته جاری",
 }: {
-  days: { label: string; dateNum: number; done: boolean }[];
+  days: { label: string; dateLabel: string; done: boolean }[];
   selected?: number;
   onSelect?: (i: number) => void;
   ariaLabel?: string;
@@ -1095,7 +1095,7 @@ export function WeekStrip({
               {d.label}
             </span>
             <span className="num text-[13px] font-extrabold" style={{ color: on ? "var(--primary)" : "var(--foreground)" }}>
-              {faNum(d.dateNum)}
+              {d.dateLabel}
             </span>
           </button>
         );
