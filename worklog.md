@@ -237,3 +237,16 @@ Stage Summary:
 - ۸ کامیت طبق نام‌های پیشنهادی دستور؛ همه قابلیت‌ها حفظ (routing/engines/store/migration)؛ هیچ داده ساختگی
 - هویت بصری مستقل: ink surfaces + تک‌اکسنت سبز + کرم callout + مس فقط آزمون هدف + geometry (blueprint/orbit/construction/eyebrow)
 - آماده push → Pages
+
+---
+Task ID: 10-b
+Agent: main
+Task: Deploy verification of visual identity on GitHub Pages
+
+Work Log:
+- push 1becf086 → Actions run 36411280554 completed: success
+- live checks: / 200 · data/content.json 200 (3.84MB) · data/regulations.json 200 (1.52MB) · app-icon 200 · chunk 200
+- QA screenshots committed to design-refs/
+
+Stage Summary:
+- «دفتر فنی مهندس» identity is LIVE on https://jeffstudiio.github.io/app_Mohandes-Yar/
