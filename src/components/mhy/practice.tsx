@@ -5,7 +5,7 @@ import type { Bootstrap, MhyQuestion } from "@/lib/mhy/server";
 import { api } from "@/lib/mhy/api";
 import { useMhy, mabhasTitle } from "@/lib/mhy/store";
 import { faNum, type QLite } from "@/lib/mhy/engines";
-import { SectionHeader, EmptyState, Btn, BottomSheet, Chip, LoadingBlock, SegmentedControl, DenseRow, DenseList, Eyebrow } from "./ui";
+import { SectionHeader, EmptyState, Btn, BottomSheet, Chip, LoadingBlock, SegmentedControl, DenseRow, DenseList, Eyebrow, MabhasCover, SnapRail } from "./ui";
 import { QuestionRunner } from "./question-runner";
 import {
   ShieldCheck,
@@ -135,6 +135,30 @@ export default function Practice({
           ))}
         </DenseList>
       </div>
+
+      {/* mabhas rail — one tap from cover to practice (§21/§39) */}
+      {(bootstrap?.mabhasIndex ?? []).length > 0 && (
+        <section className="mt-6" aria-label="تمرین مبحثی سریع">
+          <SectionHeader title="تمرین مبحثی" />
+          <SnapRail ariaLabel="انتخاب مبحث برای تمرین">
+            {(bootstrap?.mabhasIndex ?? [])
+              .slice()
+              .sort((a, b) => b.questions - a.questions)
+              .slice(0, 12)
+              .map((mi) => (
+                <div className="rail-item" key={mi.mabhas}>
+                  <MabhasCover
+                    mabhas={mi.mabhas}
+                    variant="rail"
+                    onClick={() => setView({ kind: "run", preset: { ...DEFAULT_FILTER, mabhas: mi.mabhas }, title: `تمرین مبحث ${faNum(mi.mabhas)}` })}
+                    title={mabhasTitle(mi.mabhas)}
+                    meta={`${faNum(mi.questions)} سؤال · ${faNum(mi.official)} رسمی`}
+                  />
+                </div>
+              ))}
+          </SnapRail>
+        </section>
+      )}
 
       <SectionHeader title="تمرین سریع" />
       <div className="grid grid-cols-3 gap-2">

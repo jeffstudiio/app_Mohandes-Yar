@@ -5,7 +5,7 @@ import type { SearchHit } from "@/lib/mhy/server";
 import { api } from "@/lib/mhy/api";
 import { faNum } from "@/lib/mhy/engines";
 import { ShieldCheck, PenLine, BookOpen, GraduationCap, X, Search } from "lucide-react";
-import { SearchField, OrbitSpinner } from "./ui";
+import { SearchField, OrbitSpinner, MabhasCover } from "./ui";
 
 // ─── Global search overlay (§25/§34) — regulations first, then questions, lessons ───
 export default function SearchOverlay({
@@ -104,22 +104,25 @@ export default function SearchOverlay({
                   <button
                     key={`r${i}`}
                     onClick={() => onOpenRegulation(h.mabhas)}
-                    className="press w-full rounded-2xl border p-3.5 text-right"
+                    className="press flex w-full items-center gap-3 rounded-2xl border p-3.5 text-right"
                     style={{ background: "var(--card)", borderColor: "var(--border)" }}
                   >
-                    <p className="num flex items-center gap-1.5 text-[11.5px] font-bold" style={{ color: "var(--primary)" }}>
-                      <BookOpen size={13} />
-                      مبحث {faNum(h.mabhas)} · بند {h.band}
-                      {h.page ? ` · ص ${faNum(h.page)}` : ""}
-                    </p>
-                    {h.title && (
-                      <p className="mt-1 truncate text-[12.5px] font-bold" style={{ color: "var(--foreground)" }}>
-                        {h.title}
+                    <MabhasCover mabhas={h.mabhas} variant="thumb" className="shrink-0" />
+                    <div className="min-w-0 flex-1">
+                      <p className="num flex items-center gap-1.5 text-[11.5px] font-bold" style={{ color: "var(--primary)" }}>
+                        <BookOpen size={13} />
+                        مبحث {faNum(h.mabhas)} · بند {h.band}
+                        {h.page ? ` · ص ${faNum(h.page)}` : ""}
                       </p>
-                    )}
-                    <p className="t-caption mt-1 line-clamp-2 leading-5" style={{ color: "var(--muted-foreground)" }}>
-                      …{h.snippet}…
-                    </p>
+                      {h.title && (
+                        <p className="mt-1 truncate text-[12.5px] font-bold" style={{ color: "var(--foreground)" }}>
+                          {h.title}
+                        </p>
+                      )}
+                      <p className="t-caption mt-1 line-clamp-2 leading-5" style={{ color: "var(--muted-foreground)" }}>
+                        …{h.snippet}…
+                      </p>
+                    </div>
                   </button>
                 );
               })}
