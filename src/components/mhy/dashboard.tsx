@@ -2,10 +2,9 @@
 
 import { useMemo } from "react";
 import type { Bootstrap } from "@/lib/mhy/server";
-import { useMhy, mabhasTitle, competencyOfCode } from "@/lib/mhy/store";
+import { useMhy, mabhasTitle, competencyOfCode, DEFAULT_EXAM_1405 } from "@/lib/mhy/store";
 import {
   faNum,
-  daysUntil,
   mabhasMastery,
   readinessPct,
   todayPlan,
@@ -13,7 +12,7 @@ import {
 } from "@/lib/mhy/engines";
 import {
   SectionHeader,
-  CountdownRing,
+  ExamCountdown,
   ProgressRing,
   TrendChart,
   WeekStrip,
@@ -41,7 +40,7 @@ import {
 } from "lucide-react";
 
 export type Nav = {
-  go: (tab: "dashboard" | "study" | "practice" | "exam" | "settings") => void;
+  go: (tab: "dashboard" | "study" | "practice" | "exam" | "shop" | "settings") => void;
   openSearch: () => void;
   startMabhasStudy: (m: number) => void;
   startMabhasPractice: (m: number) => void;
@@ -76,8 +75,6 @@ export default function Dashboard({
   const mastery = useMemo(() => mabhasMastery(answers, (qid) => pool.find((q) => q.id === qid)?.mabhas ?? null), [answers, pool]);
   const readiness = readinessPct(mastery);
   const plan = useMemo(() => todayPlan(mastery, mistakes, (m) => mabhasTitle(m), 20), [mastery, mistakes]);
-
-  const daysLeft = profile.targetExamDate ? daysUntil(profile.targetExamDate) : null;
 
   const ranked = Object.entries(mastery)
     .map(([m, v]) => ({ m: Number(m), ...v }))
@@ -239,8 +236,11 @@ export default function Dashboard({
       </header>
 
       <div className="px-4">
-        {/* ── L2 · WOW#1 — target exam countdown (copper composition) ── */}
-        <CountdownRing daysLeft={daysLeft} examTitle={profile.targetExam} />
+        {/* ── L2 · WOW#1 — target exam countdown: live روز/ساعت/دقیقه/ثانیه (user spec) ── */}
+        <ExamCountdown
+          target={profile.targetExamDate ?? DEFAULT_EXAM_1405.at}
+          title={profile.targetExamDate ? profile.targetExam ?? DEFAULT_EXAM_1405.title : DEFAULT_EXAM_1405.title}
+        />
 
         {/* ── L3 · readiness state — inline composition, no card ── */}
         <section className="mt-5" aria-label="وضعیت آمادگی">
