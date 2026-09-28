@@ -3,9 +3,9 @@
 import { useEffect, useMemo, useState } from "react";
 import type { Bootstrap, MhyBand, LessonJson } from "@/lib/mhy/server";
 import { api } from "@/lib/mhy/api";
-import { useMhy, mabhasTitle, mabhasEdition } from "@/lib/mhy/store";
+import { useMhy, mabhasTitle, mabhasEdition, SPECIAL_BOOKS } from "@/lib/mhy/store";
 import { faNum, type QLite } from "@/lib/mhy/engines";
-import { SectionHeader, ProgressBar, EmptyState, Btn, SearchField, LoadingBlock, ProgressRing, Eyebrow, CheckBadge, MabhasCover, SnapRail } from "./ui";
+import { SectionHeader, ProgressBar, EmptyState, Btn, SearchField, LoadingBlock, ProgressRing, Eyebrow, CheckBadge, MabhasCover, BookCover, SnapRail } from "./ui";
 import {
   BookOpen,
   BookMarked,
@@ -22,7 +22,9 @@ type StudyView =
   | { kind: "root" }
   | { kind: "regulations" }
   | { kind: "regulation-reader"; mabhas: number }
-  | { kind: "lesson-reader"; mabhas: number };
+  | { kind: "lesson-reader"; mabhas: number }
+  | { kind: "special-books" }
+  | { kind: "special-book"; bookId: string };
 
 export default function Study({
   bootstrap,
@@ -33,7 +35,7 @@ export default function Study({
   pool: QLite[];
   initialView: StudyView | null;
   onViewConsumed: () => void;
-  nav: { startMabhasPractice: (m: number) => void; go: (t: "dashboard" | "study" | "practice" | "exam" | "settings") => void };
+  nav: { startMabhasPractice: (m: number) => void; go: (t: "dashboard" | "study" | "practice" | "exam" | "shop" | "settings") => void };
 }) {
   const { lastStudy, studiedBands } = useMhy();
   const [view, setView] = useState<StudyView>(initialView ?? { kind: "root" });
@@ -67,6 +69,40 @@ export default function Study({
   }
   if (view.kind === "lesson-reader") {
     return <LessonReader mabhas={view.mabhas} onBack={() => setView({ kind: "regulation-reader", mabhas: view.mabhas })} />;
+  }
+  if (view.kind === "special-book") {
+    const b = SPECIAL_BOOKS.find((x) => x.id === view.bookId);
+    return b ? <SpecialBookReader book={b} onBack={() => setView({ kind: "root" })} /> : null;
+  }
+
+  /* ── special-books — «همه»: same original-size wall, vertical scroll (user spec) ── */
+  if (view.kind === "special-books") {
+    return (
+      <div className="phone-scroll flex-1 overflow-y-auto pb-8 screen-in">
+        <SubHeader title="کتاب‌های تخصصی" onBack={() => setView({ kind: "root" })} />
+        <div className="px-5 pt-2">
+          <Eyebrow tone="accent">قفسه تخصصی</Eyebrow>
+          <p className="num t-caption mt-1 leading-6" style={{ color: "var(--muted-foreground)" }}>
+            {faNum(SPECIAL_BOOKS.length)} کتاب مرجع — استانداردها، دستورالعمل‌ها و منابع اختصاصی آزمون
+          </p>
+        </div>
+        <section className="mt-5 px-4" aria-label="فهرست کامل کتاب‌های تخصصی">
+          <div className="grid grid-cols-2 gap-x-3 gap-y-5">
+            {SPECIAL_BOOKS.map((b) => (
+              <BookCover
+                key={b.id}
+                book={b}
+                variant="rail"
+                className="mx-auto"
+                onClick={() => setView({ kind: "special-book", bookId: b.id })}
+                title={b.title}
+                meta={b.meta ?? undefined}
+              />
+            ))}
+          </div>
+        </section>
+      </div>
+    );
   }
 
   /* ── regulations — «همه»: full wall of original-size covers, vertical scroll (user spec) ── */
@@ -199,31 +235,45 @@ export default function Study({
         </div>
       </SnapRail>
 
-      {/* RAIL 2 — کتاب‌های تخصصی: shelf reserved, real titles arrive next (user spec) */}
-      <SectionHeader title="کتاب‌های تخصصی" />
-      <div className="px-5">
-        <button
-          disabled
-          className="flex w-full items-center gap-3.5 rounded-2xl border border-dashed px-4 py-5 text-right"
-          style={{ borderColor: "var(--border-strong)", background: "var(--surface)", opacity: 0.75 }}
-          aria-label="قفسه کتاب‌های تخصصی — به‌زودی"
-        >
-          <span
-            className="flex h-12 w-12 shrink-0 items-center justify-center rounded-xl"
-            style={{ background: "var(--primary-soft)", color: "var(--primary)" }}
+      {/* RAIL 2 — کتاب‌های تخصصی: same rail behavior as مباحث (user spec) — 7 real books */}
+      <SectionHeader
+        title="کتاب‌های تخصصی"
+        action="همه"
+        onAction={() => setView({ kind: "special-books" })}
+      />
+      <SnapRail ariaLabel="کتاب‌های تخصصی — مرور افقی دوطرفه" arrows>
+        {SPECIAL_BOOKS.map((b) => (
+          <div className="rail-item" key={b.id}>
+            <BookCover
+              book={b}
+              variant="mini"
+              onClick={() => setView({ kind: "special-book", bookId: b.id })}
+              ariaLabel={b.title}
+            />
+            <p
+              className="mt-1.5 line-clamp-2 w-[78px] text-[10px] font-bold leading-4"
+              style={{ color: "var(--foreground)" }}
+              title={b.title}
+            >
+              {b.title}
+            </p>
+          </div>
+        ))}
+        {/* end-cap — keep browsing */}
+        <div className="rail-item flex items-center">
+          <button
+            onClick={() => setView({ kind: "special-books" })}
+            className="press flex h-[104px] w-[78px] flex-col items-center justify-center gap-1.5 rounded-2xl border"
+            style={{ background: "var(--surface)", borderColor: "var(--border)" }}
+            aria-label="مشاهده همه کتاب‌های تخصصی"
           >
-            <LibraryBig size={22} />
-          </span>
-          <span className="min-w-0 flex-1">
-            <span className="block text-[13px] font-bold" style={{ color: "var(--foreground)" }}>
-              قفسه کتاب‌های تخصصی
+            <LibraryBig size={17} style={{ color: "var(--primary)" }} />
+            <span className="num text-[9.5px] font-bold" style={{ color: "var(--muted-foreground)" }}>
+              همه
             </span>
-            <span className="num t-caption mt-0.5 block leading-5" style={{ color: "var(--muted-foreground)" }}>
-              فهرست کتاب‌های فنی به‌زودی اینجا تکمیل می‌شود — مثل مباحث، با کاور و فصل‌بندی.
-            </span>
-          </span>
-        </button>
-      </div>
+          </button>
+        </div>
+      </SnapRail>
 
       {/* progress — editorial visualization (§16) */}
       <section className="mt-7 px-4" aria-label="پیشرفت مطالعه">
@@ -347,24 +397,26 @@ function RegulationReader({
 
   if (error) {
     return (
-      <div className="flex flex-1 flex-col screen-in">
+      <div className="flex min-h-0 flex-1 flex-col screen-in">
         <SubHeader title={`مبحث ${faNum(mabhas)}`} onBack={onBack} />
-        <div className="mx-auto w-full max-w-[420px]">
-          <MabhasCover mabhas={mabhas} variant="hero" className="mx-5 mt-2" title={mabhasTitle(mabhas)} meta={mabhasEdition(mabhas) ?? undefined} />
+        <div className="phone-scroll min-h-0 flex-1 overflow-y-auto">
+          <div className="mx-auto w-full max-w-[420px]">
+            <MabhasCover mabhas={mabhas} variant="hero" className="mx-5 mt-2" title={mabhasTitle(mabhas)} meta={mabhasEdition(mabhas) ?? undefined} />
+          </div>
+          <EmptyState
+            icon={BookOpen}
+            title="متن کامل این مبحث هنوز موجود نیست"
+            desc="کلید فصل‌ها و بندهای این مبحث به‌محض افزودن متن رسمی، همین‌جا مثل یک کتاب نمایش داده می‌شود."
+            action={hasLesson ? { label: "مطالعه درسنامه آموزشی این مبحث", onClick: onOpenLesson } : undefined}
+          />
         </div>
-        <EmptyState
-          icon={BookOpen}
-          title="متن کامل این مبحث هنوز موجود نیست"
-          desc="کلید فصل‌ها و بندهای این مبحث به‌محض افزودن متن رسمی، همین‌جا مثل یک کتاب نمایش داده می‌شود."
-          action={hasLesson ? { label: "مطالعه درسنامه آموزشی این مبحث", onClick: onOpenLesson } : undefined}
-        />
       </div>
     );
   }
   if (!data) return <LoadingBlock label="بارگذاری کتاب…" />;
 
   return (
-    <div className="flex flex-1 flex-col screen-in">
+    <div className="flex min-h-0 flex-1 flex-col screen-in">
       {/* reader top bar */}
       <div className="flex items-center gap-1.5 border-b px-3 pb-2.5 pt-4" style={{ borderColor: "var(--border)", background: "var(--card)" }}>
         <button onClick={onBack} aria-label="بازگشت" className="press flex h-11 w-11 items-center justify-center rounded-xl" style={{ color: "var(--muted-foreground)" }}>
@@ -409,7 +461,7 @@ function RegulationReader({
       )}
 
       {/* reading surface — the book itself: cover, فهرست, فصل‌ها, بندها */}
-      <div className="phone-scroll flex-1 overflow-y-auto px-5 py-4">
+      <div className="phone-scroll min-h-0 flex-1 overflow-y-auto px-5 py-4">
         <div className="mx-auto max-w-[560px]">
           {/* chapter opener — the content object itself (§21/§24) */}
           <MabhasCover
@@ -574,7 +626,7 @@ function RegulationReader({
             <p className="num px-5 t-caption" style={{ color: "var(--muted-foreground)" }}>
               {faNum(studiedInMabhas)} از {faNum(data.bands.length)} بند مطالعه‌شده · {faNum(chapters.length)} فصل
             </p>
-            <div className="phone-scroll flex-1 overflow-y-auto px-4 py-3">
+            <div className="phone-scroll min-h-0 flex-1 overflow-y-auto px-4 py-3">
               {chapters.map((ch) => (
                 <div key={ch.key} className="mb-2">
                   <button
@@ -661,15 +713,17 @@ function LessonReader({ mabhas, onBack }: { mabhas: number; onBack: () => void }
 
   if (!lesson) {
     return (
-      <div className="flex flex-1 flex-col">
+      <div className="flex min-h-0 flex-1 flex-col">
         <SubHeader title={`درسنامه مبحث ${faNum(mabhas)}`} onBack={onBack} />
-        <EmptyState icon={GraduationCap} title="درسنامه موجود نیست" desc="درسنامه این مبحث در کتابخانه دستگاه یافت نشد." />
+        <div className="phone-scroll min-h-0 flex-1 overflow-y-auto">
+          <EmptyState icon={GraduationCap} title="درسنامه موجود نیست" desc="درسنامه این مبحث در کتابخانه دستگاه یافت نشد." />
+        </div>
       </div>
     );
   }
   const topics = lesson.json?.topics ?? [];
   return (
-    <div className="flex flex-1 flex-col screen-in">
+    <div className="flex min-h-0 flex-1 flex-col screen-in">
       <div className="flex items-center gap-1.5 border-b px-3 pb-2.5 pt-4" style={{ borderColor: "var(--border)", background: "var(--card)" }}>
         <button onClick={onBack} aria-label="بازگشت" className="press flex h-11 w-11 items-center justify-center rounded-xl" style={{ color: "var(--muted-foreground)" }}>
           <ChevronLeft size={20} style={{ transform: "rotate(180deg)" }} />
@@ -683,7 +737,7 @@ function LessonReader({ mabhas, onBack }: { mabhas: number; onBack: () => void }
           </p>
         </div>
       </div>
-      <div className="phone-scroll flex-1 overflow-y-auto px-4 py-3.5">
+      <div className="phone-scroll min-h-0 flex-1 overflow-y-auto px-4 py-3.5">
         <div className="mx-auto max-w-[560px]">
           {/* chapter opener — lesson as a chapter of a technical book (§23) */}
           <MabhasCover
@@ -743,6 +797,41 @@ function LessonReader({ mabhas, onBack }: { mabhas: number; onBack: () => void }
               </div>
             );
           })}
+        </div>
+      </div>
+    </div>
+  );
+}
+
+/* ═══ Special Book Reader — کتاب‌های تخصصی (covers + honest detail until reading content lands) ═══ */
+function SpecialBookReader({ book, onBack }: { book: (typeof SPECIAL_BOOKS)[number]; onBack: () => void }) {
+  return (
+    <div className="flex min-h-0 flex-1 flex-col screen-in">
+      <div className="flex items-center gap-1.5 border-b px-3 pb-2.5 pt-4" style={{ borderColor: "var(--border)", background: "var(--card)" }}>
+        <button onClick={onBack} aria-label="بازگشت" className="press flex h-11 w-11 items-center justify-center rounded-xl" style={{ color: "var(--muted-foreground)" }}>
+          <ChevronLeft size={20} style={{ transform: "rotate(180deg)" }} />
+        </button>
+        <div className="min-w-0 flex-1">
+          <h1 className="truncate text-[14.5px] font-extrabold" style={{ color: "var(--foreground)" }}>
+            {book.title}
+          </h1>
+          <p className="t-meta" style={{ color: "var(--muted-foreground)" }}>
+            {book.meta ?? "کتاب تخصصی"}
+          </p>
+        </div>
+      </div>
+      <div className="phone-scroll min-h-0 flex-1 overflow-y-auto px-5 py-4">
+        <div className="mx-auto max-w-[560px]">
+          <BookCover book={book} variant="banner" title={book.title} meta={book.meta ?? undefined} />
+          <p className="t-body mt-4 leading-8" style={{ color: "var(--foreground)" }}>
+            {book.desc}
+          </p>
+          <div className="construction my-5" />
+          <EmptyState
+            icon={BookOpen}
+            title="محتوای مطالعه این کتاب به‌زودی تکمیل می‌شود"
+            desc="مثل مباحث مقررات ملی، متن این کتاب با فهرست، فصل‌ها و بندها به کتابخانه اضافه خواهد شد."
+          />
         </div>
       </div>
     </div>

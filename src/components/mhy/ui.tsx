@@ -9,6 +9,7 @@ import {
   PenLine,
   AlertTriangle,
   BookOpen,
+  BookMarked,
   ChevronLeft,
   ChevronRight,
   X,
@@ -756,7 +757,7 @@ export function BottomSheet({
             <X size={18} />
           </button>
         </div>
-        <div className="phone-scroll flex-1 overflow-y-auto px-5 py-3">{children}</div>
+        <div className="phone-scroll min-h-0 flex-1 overflow-y-auto px-5 py-3">{children}</div>
         {footer && (
           <div className="border-t px-5 py-3 pb-[max(0.85rem,env(safe-area-inset-bottom))]" style={{ borderColor: "var(--border)" }}>
             {footer}
@@ -1457,6 +1458,145 @@ export function SnapRail({
           ))}
         </div>
       )}
+    </div>
+  );
+}
+
+/* ═══ BookCover — visual object of کتاب‌های تخصصی (same cover family as MabhasCover) ═══ */
+
+export function BookCover({
+  book,
+  title,
+  meta,
+  variant = "rail",
+  onClick,
+  ariaLabel,
+  className = "",
+}: {
+  book: { id: string; title: string; meta: string | null; cover: string };
+  title?: string;
+  meta?: React.ReactNode;
+  variant?: "rail" | "mini" | "banner";
+  onClick?: () => void;
+  ariaLabel?: string;
+  className?: string;
+}) {
+  const dims: Record<string, React.CSSProperties> = {
+    rail: { width: 168, height: 224 },
+    mini: { width: 78, height: 104 },
+    banner: { width: "100%", height: 92 },
+  };
+  const showText = variant !== "mini";
+  const body = (
+    <>
+      <img src={book.cover} alt="" loading="lazy" decoding="async" className="cover-img" draggable={false} />
+      <span aria-hidden className="cover-veil" />
+      <span aria-hidden className="cover-grid" />
+      <span aria-hidden className="cover-grain" />
+      <span className="absolute right-3.5 top-3 z-10 flex flex-col items-start gap-0.5" style={variant === "mini" ? { right: 8, top: 7 } : undefined}>
+        {showText && (
+          <span className="text-[8.5px] font-bold tracking-[0.14em]" style={{ color: "rgba(255,255,255,0.55)" }}>
+            کتاب تخصصی
+          </span>
+        )}
+        <BookMarked size={variant === "mini" ? 15 : 20} strokeWidth={2.2} style={{ color: "rgba(255,255,255,0.92)", filter: "drop-shadow(0 1px 8px rgba(0,0,0,0.45))" }} />
+      </span>
+      {showText && (
+        <span className="absolute inset-x-0 bottom-0 z-10 flex flex-col gap-1.5 p-3.5">
+          {book.meta && (
+            <span className="num text-[8.5px] font-bold tracking-[0.12em]" style={{ color: "rgba(255,255,255,0.52)" }}>
+              {book.meta}
+            </span>
+          )}
+          {title && (
+            <span className="line-clamp-2 text-[12.5px] font-extrabold leading-5" style={{ color: "#f2f5f4", textShadow: "0 1px 8px rgba(0,0,0,0.5)" }}>
+              {title}
+            </span>
+          )}
+          {meta && (
+            <span className="num text-[9.5px] font-bold" style={{ color: "rgba(255,255,255,0.62)" }}>
+              {meta}
+            </span>
+          )}
+        </span>
+      )}
+    </>
+  );
+  const style: React.CSSProperties = { ...dims[variant], ...(variant === "banner" ? { borderRadius: "1.4rem" } : {}) };
+  if (onClick) {
+    return (
+      <button onClick={onClick} aria-label={ariaLabel ?? title ?? book.title} className={`cover-frame press block text-right ${className}`} style={style}>
+        {body}
+      </button>
+    );
+  }
+  return (
+    <div aria-label={ariaLabel ?? title ?? book.title} className={`cover-frame ${className}`} style={style}>
+      {body}
+    </div>
+  );
+}
+
+/* ═══ ExamCountdown — live ticking «زمان باقی مانده تا آزمون» (user spec) ═══ */
+
+export function ExamCountdown({ target, title }: { target: number; title: string }) {
+  const [now, setNow] = useState<number | null>(null);
+  useEffect(() => {
+    // tick via callbacks (never direct setState in effect body); rAF syncs the
+    // first value right after hydration — prerendered HTML stays stable
+    const tick = () => setNow(Date.now());
+    const raf = requestAnimationFrame(tick);
+    const id = setInterval(tick, 1000);
+    return () => {
+      cancelAnimationFrame(raf);
+      clearInterval(id);
+    };
+  }, []);
+  const diff = Math.max(0, target - (now ?? target));
+  const past = now !== null && target < now;
+  const d = Math.floor(diff / 86400000);
+  const h = Math.floor(diff / 3600000) % 24;
+  const m = Math.floor(diff / 60000) % 60;
+  const s = Math.floor(diff / 1000) % 60;
+  const pad = (n: number) => faNum(String(n).padStart(2, "0"));
+  const units: [string, string][] = [
+    [pad(d), "روز"],
+    [pad(h), "ساعت"],
+    [pad(m), "دقیقه"],
+    [pad(s), "ثانیه"],
+  ];
+  const urgent = d <= 7 && !past;
+  return (
+    <div
+      className="tech-glow tech-glow-copper blueprint-grid relative overflow-hidden rounded-3xl border"
+      style={{ background: "var(--surface)", borderColor: "var(--border)", boxShadow: "var(--shadow-card)" }}
+      role="timer"
+      aria-label={`زمان باقی مانده تا ${title}: ${faNum(d)} روز و ${faNum(h)} ساعت`}
+    >
+      <div className="flex items-center justify-between px-5 pt-4">
+        <Eyebrow tone="copper">هدف آزمون</Eyebrow>
+        <span className="t-meta" style={{ color: past ? "var(--muted-foreground)" : urgent ? "var(--danger)" : "var(--copper)" }}>
+          {past ? "آزمون برگزار شد" : urgent ? "فاز اوج مرور" : "فاز آمادگی"}
+        </span>
+      </div>
+      <div className="flex items-stretch px-4 pb-1 pt-3" aria-hidden>
+        {units.map(([v, l], i) => (
+          <div key={l} className={`flex flex-1 flex-col items-center justify-center gap-1 ${i > 0 ? "border-r" : ""}`} style={{ borderColor: "var(--border)" }}>
+            <span className="t-num-hero num" style={{ fontSize: 30, color: "var(--foreground)", fontVariantNumeric: "tabular-nums" }}>
+              {v}
+            </span>
+            <span className="t-meta" style={{ color: "var(--muted-foreground)" }}>
+              {l}
+            </span>
+          </div>
+        ))}
+      </div>
+      <div className="px-5 pb-4 pt-1.5">
+        <div className="construction mb-2.5" />
+        <p className="text-center text-[11.5px] font-bold" style={{ color: "var(--copper)" }}>
+          زمان باقی مانده تا {title}
+        </p>
+      </div>
     </div>
   );
 }

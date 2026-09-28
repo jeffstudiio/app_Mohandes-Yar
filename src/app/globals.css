@@ -212,8 +212,30 @@
   background: radial-gradient(560px 220px at 50% -8%, rgba(217, 161, 110, 0.1), transparent 70%);
 }
 
-/* phone-internal scrollbar */
+/* phone frame height — 100dvh respects mobile browser chrome so the app
+   (nav bar included) always fits the actually-visible viewport;
+   ≥1024px switches to the desktop framed device */
+.frame-h {
+  height: 100vh;
+}
+@supports (height: 100dvh) {
+  .frame-h {
+    height: 100dvh;
+  }
+}
+@media (min-width: 1024px) {
+  .frame-h {
+    height: min(88vh, 780px);
+  }
+}
+
+/* phone-internal scrollbar — every vertical scroll surface of the app.
+   min-height:0 keeps nested flex chains from blowing out to full content height
+   (the «reader is locked» bug); touch/overscroll rules keep mobile panning smooth. */
 .phone-scroll {
+  min-height: 0;
+  -webkit-overflow-scrolling: touch;
+  overscroll-behavior-y: contain;
   scrollbar-width: thin;
   scrollbar-color: color-mix(in srgb, var(--muted-foreground) 35%, transparent)
     transparent;

@@ -226,6 +226,80 @@ export const mabhasEdition = (m: number | null | undefined): string | null => {
   return e == null ? null : `ویرایش ${faNum(e)}`;
 };
 
+// ─── کتاب‌های تخصصی — real book list provided by the user (study library, shelf 2) ───
+// Reading content for these books arrives in a later phase; titles/meta are exactly
+// what the user supplied, covers are subject-true generated assets (public/special-books).
+export type SpecialBook = {
+  id: string;
+  title: string;
+  meta: string | null;
+  desc: string;
+  cover: string;
+};
+
+export const SPECIAL_BOOKS: SpecialBook[] = [
+  {
+    id: "std2800",
+    title: "آیین‌نامه طراحی ساختمان‌ها در برابر زلزله استاندارد ۲۸۰۰",
+    meta: "مختص رشته عمران · ویرایش پنجم",
+    desc: "مرجع طراحی لرزه‌ای ساختمان‌ها و از منابع کلیدی درس محاسبات آزمون‌های ورود به حرفه رشته عمران.",
+    cover: "/special-books/book-01.webp",
+  },
+  {
+    id: "ethics",
+    title: "اصول اخلاق حرفه‌ای و نظامنامه رفتار حرفه‌ای اخلاقی در مهندسی ساختمان",
+    meta: null,
+    desc: "مبانی و موازین رفتار حرفه‌ای مهندسان؛ منبع مطالعاتی اخلاق حرفه‌ای در آزمون‌های ورود به حرفه.",
+    cover: "/special-books/book-02.webp",
+  },
+  {
+    id: "accessibility",
+    title: "ضوابط و مقررات شهرسازی و معماری برای افراد دارای معلولیت",
+    meta: null,
+    desc: "ضوابط طراحی بدون مانع در شهرسازی و معماری؛ موضوع پرتکرار در آزمون‌های نظارت و طراحی معماری.",
+    cover: "/special-books/book-03.webp",
+  },
+  {
+    id: "masonry-wall",
+    title: "دستورالعمل طراحی و اجرای دیوارهای بنایی محوطه",
+    meta: "ویرایش سوم · پاییز ۱۴۰۴",
+    desc: "دستورالعمل اجرایی طراحی، اجرا و کنترل کیفیت دیوارهای بنایی محوطه در پروژه‌های ساختمانی.",
+    cover: "/special-books/book-04.webp",
+  },
+  {
+    id: "n55-guide",
+    title: "راهنمای جامع و سریع نشریه ۵۵",
+    meta: null,
+    desc: "جمع‌بندی کاربردی ضوابط نشریه ۵۵ برای مرور سریع و منظم پیش از آزمون.",
+    cover: "/special-books/book-05.webp",
+  },
+  {
+    id: "welding",
+    title: "خلاصه راهنمای جوش و اتصالات جوشی در ساختمان‌های فولادی",
+    meta: "ویژه آزمون‌های نظام مهندسی",
+    desc: "موضوعات پرتکرار جوش و اتصالات جوشی ساختمان‌های فولادی، خلاصه‌شده برای آمادگی آزمون.",
+    cover: "/special-books/book-06.webp",
+  },
+  {
+    id: "nezam-law",
+    title: "قانون نظام مهندسی و کنترل ساختمان و آیین‌نامه‌های اجرایی آن",
+    meta: null,
+    desc: "متن قانون، مقررات انتظامی و آیین‌نامه‌های اجرایی نظام مهندسی و کنترل ساختمان.",
+    cover: "/special-books/book-07.webp",
+  },
+];
+
+// ─── Countdown target — آزمون نظام مهندسی ۱۴۰۵ ───
+// Official announcement: exam is held in آبان ۱۴۰۵ (exact day not yet published).
+// This constant is the app-wide default countdown target; the user's own
+// targetExamDate (settings) overrides it. Update `at` the moment the official
+// day is announced — nothing else needs to change.
+export const DEFAULT_EXAM_1405 = {
+  title: "آزمون نظام مهندسی ۱۴۰۵",
+  /** پنجشنبه ۱۵ آبان ۱۴۰۵، ساعت ۰۹:۰۰ تهران (epoch ms) */
+  at: Date.parse("2026-11-06T09:00:00+03:30"),
+};
+
 // ─── Discipline grouping — derived from REAL DB disciplines (§9.1/§32.2/§32.3) ───
 // majorCodes like CIVIL-SUPERVISION group under parent CIVIL; the competency label
 // is the suffix of the real title (عمران-نظارت → نظارت). Nothing is invented.

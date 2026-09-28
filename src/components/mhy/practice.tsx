@@ -333,7 +333,7 @@ function PracticeRunner({
   if (items === null) return <LoadingBlock label="بارگذاری سؤالات…" />;
   if (!items.length) {
     return (
-      <div className="flex flex-1 flex-col">
+      <div className="phone-scroll flex min-h-0 flex-1 flex-col overflow-y-auto">
         <EmptyState
           icon={Search}
           title="هیچ سؤالی با این فیلتر پیدا نشد."
