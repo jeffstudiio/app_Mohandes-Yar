@@ -4,7 +4,7 @@ import { useMemo, useState } from "react";
 import type { Bootstrap } from "@/lib/mhy/server";
 import { useMhy, groupDisciplines, competencyOfCode, mabhasTitle } from "@/lib/mhy/store";
 import { faNum, daysUntil } from "@/lib/mhy/engines";
-import { Card, SectionHeader, Btn, EmptyState, Toggle, BottomSheet, Modal, CheckBadge, DisciplineGlyph, CountdownRing, SearchField } from "./ui";
+import { Card, SectionHeader, Btn, EmptyState, Toggle, BottomSheet, Modal, CheckBadge, DisciplineGlyph, CountdownRing, SearchField, DenseRow, DenseList, Eyebrow } from "./ui";
 import {
   KeyRound,
   RefreshCw,
@@ -82,7 +82,10 @@ export default function Settings({ bootstrap, dark, onToggleDark }: { bootstrap:
 
   return (
     <div className="phone-scroll flex-1 overflow-y-auto px-4 pb-6 screen-in">
-      <h1 className="t-title pt-4">تنظیمات</h1>
+      <header className="pt-4">
+        <Eyebrow>تنظیمات</Eyebrow>
+        <h1 className="t-title mt-1">پیکربندی ابزار</h1>
+      </header>
 
       {/* profile */}
       <SectionHeader title="پروفایل من" />
@@ -113,53 +116,37 @@ export default function Settings({ bootstrap, dark, onToggleDark }: { bootstrap:
         </div>
       </Card>
 
-      {/* competencies management (§33) */}
-      <SectionHeader title="رشته و صلاحیت‌ها" />
-      <Card onClick={openCompsEditor} ariaLabel="ویرایش صلاحیت‌ها">
-        <div className="flex items-center gap-3">
-          <div className="flex h-11 w-11 shrink-0 items-center justify-center rounded-xl" style={{ background: "var(--primary-soft)", color: "var(--primary)" }}>
-            {profile.disciplineGroup ? <DisciplineGlyph code={profile.disciplineGroup} size={24} /> : <Layers size={20} />}
-          </div>
-          <div className="min-w-0 flex-1">
-            <p className="text-[13.5px] font-bold" style={{ color: "var(--foreground)" }}>
-              {profile.disciplineTitle ?? "انتخاب رشته"}
-            </p>
-            <p className="num t-caption mt-0.5" style={{ color: "var(--muted-foreground)" }}>
-              {comps.length ? `${faNum(comps.length)} صلاحیت فعال` : "صلاحیتی انتخاب نشده"}
-            </p>
-          </div>
-          <ChevronLeft size={17} style={{ color: "var(--muted-foreground)" }} />
-        </div>
-        {comps.length > 0 && (
-          <div className="mt-3 flex flex-wrap gap-1.5">
-            {comps.map((c) => (
-              <span key={c} className="rounded-full px-2.5 py-1 text-[10px] font-bold" style={{ background: "var(--primary-soft)", color: "var(--primary)" }}>
-                {competencyOfCode(bootstrap?.disciplines, c)}
+      {/* competencies + target + display — one quiet dense surface (§10) */}
+      <SectionHeader title="حساب و نمایش" />
+      <div className="rounded-2xl border px-4" style={{ background: "var(--card)", borderColor: "var(--border)" }}>
+        <DenseList>
+          <DenseRow
+            icon={profile.disciplineGroup ? undefined : Layers}
+            glyph={profile.disciplineGroup ? <span style={{ color: "var(--primary)", display: "flex" }}><DisciplineGlyph code={profile.disciplineGroup} size={22} /></span> : undefined}
+            title={profile.disciplineTitle ?? "انتخاب رشته"}
+            desc={comps.length ? `${faNum(comps.length)} صلاحیت فعال` : "صلاحیتی انتخاب نشده"}
+            onClick={openCompsEditor}
+          />
+          <DenseRow
+            icon={Target}
+            tone="var(--copper)"
+            title={profile.targetExam ?? "آزمون هدف ثبت نشده"}
+            desc={
+              <span className="num">
+                {profile.targetExamDate ? new Date(profile.targetExamDate).toLocaleDateString("fa-IR") : "بدون تاریخ"}
+                {daysLeft !== null && daysLeft >= 0 ? ` · ${faNum(daysLeft)} روز مانده` : ""}
               </span>
-            ))}
-          </div>
-        )}
-      </Card>
-
-      {/* target exam + date */}
-      <SectionHeader title="آزمون هدف" />
-      <Card onClick={openExamEditor} ariaLabel="ویرایش آزمون هدف">
-        <div className="flex items-center gap-3">
-          <div className="flex h-11 w-11 shrink-0 items-center justify-center rounded-xl" style={{ background: "var(--success-soft)", color: "var(--success)" }}>
-            <Target size={20} />
-          </div>
-          <div className="min-w-0 flex-1">
-            <p className="text-[13.5px] font-bold" style={{ color: "var(--foreground)" }}>
-              {profile.targetExam ?? "ثبت نشده"}
-            </p>
-            <p className="num t-caption mt-0.5" style={{ color: "var(--muted-foreground)" }}>
-              {profile.targetExamDate ? new Date(profile.targetExamDate).toLocaleDateString("fa-IR") : "بدون تاریخ"}
-              {daysLeft !== null && daysLeft >= 0 ? ` · ${faNum(daysLeft)} روز مانده` : ""}
-            </p>
-          </div>
-          <ChevronLeft size={17} style={{ color: "var(--muted-foreground)" }} />
-        </div>
-      </Card>
+            }
+            onClick={openExamEditor}
+          />
+          <DenseRow
+            icon={SunMoon}
+            title="حالت تیره"
+            desc="تم یکپارچه در کل برنامه"
+            right={<Toggle on={dark} onChange={onToggleDark} label="حالت تیره" />}
+          />
+        </DenseList>
+      </div>
 
       {/* license (§40) */}
       <SectionHeader title="لایسنس" />
@@ -220,24 +207,7 @@ export default function Settings({ bootstrap, dark, onToggleDark }: { bootstrap:
         )}
       </Card>
 
-      {/* appearance */}
-      <SectionHeader title="نمایش" />
-      <Card>
-        <div className="flex min-h-[44px] items-center gap-3">
-          <div className="flex h-10 w-10 items-center justify-center rounded-xl" style={{ background: "var(--primary-soft)", color: "var(--primary)" }}>
-            <SunMoon size={18} />
-          </div>
-          <div className="flex-1">
-            <p className="text-[13px] font-bold" style={{ color: "var(--foreground)" }}>
-              حالت تیره
-            </p>
-            <p className="t-caption" style={{ color: "var(--muted-foreground)" }}>
-              تم یکپارچه در کل برنامه
-            </p>
-          </div>
-          <Toggle on={dark} onChange={onToggleDark} label="حالت تیره" />
-        </div>
-      </Card>
+      {/* appearance removed — moved into account/display dense surface */}
 
       {/* data & content (§38 transparency) */}
       <SectionHeader title="داده و محتوا" />
