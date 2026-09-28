@@ -2,6 +2,7 @@
 
 import { useEffect, useState } from "react";
 import type { MhyQuestion } from "@/lib/mhy/server";
+import { api } from "@/lib/mhy/api";
 import { useMhy, mabhasTitle } from "@/lib/mhy/store";
 import { faNum } from "@/lib/mhy/engines";
 import { SourceBadge, DifficultyBadge, ReviewFlagBadge, MabhasChip, Btn } from "./ui";
@@ -233,8 +234,7 @@ function PostAnswerPanels({ question }: { question: MhyQuestion }) {
     if (relatedLoaded) return;
     setRelatedLoaded(true);
     try {
-      const res = await fetch(`/api/mhy/question?id=${question.id}`);
-      const j = await res.json();
+      const j = await api.question(question.id);
       setRelated(j.related ?? []);
     } catch {
       setRelated([]);

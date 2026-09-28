@@ -2,6 +2,7 @@
 
 import { useEffect, useState } from "react";
 import type { Bootstrap, MhyBand, LessonJson } from "@/lib/mhy/server";
+import { api } from "@/lib/mhy/api";
 import { useMhy, mabhasTitle } from "@/lib/mhy/store";
 import { faNum, buildRoadmap, mabhasMastery, type QLite } from "@/lib/mhy/engines";
 import { Card, SectionHeader, ProgressBar, EmptyState, Btn } from "./ui";
@@ -301,8 +302,7 @@ function RegulationReader({ mabhas, onBack, nav }: { mabhas: number; onBack: () 
   const { studiedBands, toggleStudiedBand, setLastStudy } = useMhy();
 
   useEffect(() => {
-    fetch(`/api/mhy/regulations?mabhas=${mabhas}`)
-      .then((r) => (r.ok ? r.json() : Promise.reject(new Error("no text"))))
+    api.regulations(mabhas)
       .then(setData)
       .catch(() => setError("متن مقررات این مبحث در کتابخانه دستگاه موجود نیست."));
     setLastStudy({ mabhas, bandId: null, kind: "regulation", at: Date.now() });
@@ -430,8 +430,7 @@ function LessonReader({ mabhas, onBack, nav }: { mabhas: number; onBack: () => v
   const { setLastStudy } = useMhy();
 
   useEffect(() => {
-    fetch(`/api/mhy/lesson?mabhas=${mabhas}`)
-      .then((r) => r.json())
+    api.lesson(mabhas)
       .then((j) => setLesson(j.lesson))
       .catch(() => setLesson(null));
     setLastStudy({ mabhas, bandId: null, kind: "lesson", at: Date.now() });

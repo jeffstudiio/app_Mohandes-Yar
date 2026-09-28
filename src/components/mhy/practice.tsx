@@ -2,6 +2,7 @@
 
 import { useEffect, useMemo, useState } from "react";
 import type { Bootstrap, MhyQuestion } from "@/lib/mhy/server";
+import { api } from "@/lib/mhy/api";
 import { useMhy, mabhasTitle } from "@/lib/mhy/store";
 import { faNum, type QLite } from "@/lib/mhy/engines";
 import { Card, SectionHeader, EmptyState, Btn, SourceBadge, DifficultyBadge, MabhasChip } from "./ui";
@@ -252,8 +253,7 @@ function PracticeRunner({
     if (filter.sourceType !== "ALL") params.set("sourceType", filter.sourceType);
     if (filter.difficulty.length) params.set("difficulty", filter.difficulty.join(","));
     params.set("limit", "20");
-    fetch(`/api/mhy/questions?${params}`)
-      .then((r) => r.json())
+    api.questions(params)
       .then((j) => {
         let list: MhyQuestion[] = j.items ?? [];
         if (title === "اشتباهات من") {

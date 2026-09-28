@@ -2,6 +2,7 @@
 
 import { useEffect, useMemo, useState } from "react";
 import type { Bootstrap, MhyQuestion } from "@/lib/mhy/server";
+import { api } from "@/lib/mhy/api";
 import { useMhy, mabhasTitle } from "@/lib/mhy/store";
 import { faNum, scoreAttempt, generateComprehensive, remainingSec, type ExamAttempt, type AttemptItem, type QLite } from "@/lib/mhy/engines";
 import { Card, SectionHeader, EmptyState, Btn, StatTile, SourceBadge, ReviewFlagBadge, MabhasChip, ProgressBar } from "./ui";
@@ -49,8 +50,7 @@ export default function Exam({
       if (presetKind === "official") setView({ kind: "official-list" });
       else if (presetKind === "quick") {
         // start a quick 10-question exam immediately
-        fetch(`/api/mhy/questions?${major ? `major=${major}&` : ""}limit=10`)
-          .then((r) => r.json())
+        api.questions(`${major ? `major=${major}&` : ""}limit=10`)
           .then((j) => setView({ kind: "run", qids: (j.items ?? []).map((q: MhyQuestion) => q.id), mode: "QUICK", title: "آزمون سریع", durationMin: 15 }))
           .catch(() => setView({ kind: "root" }));
       } else if (presetKind === "comprehensive") setView({ kind: "custom" });
@@ -138,8 +138,7 @@ function QuickCard({ n, major, onStart }: { n: number; major: string | null; onS
         if (busy) return;
         setBusy(true);
         try {
-          const r = await fetch(`/api/mhy/questions?${major ? `major=${major}&` : ""}limit=${n}`);
-          const j = await r.json();
+          const j = await api.questions(`${major ? `major=${major}&` : ""}limit=${n}`);
           onStart((j.items ?? []).map((q: MhyQuestion) => q.id));
         } finally {
           setBusy(false);
@@ -179,8 +178,7 @@ function OfficialSessions({
     if (major) params.set("major", major);
     params.set("sourceType", "OFFICIAL_EXAM");
     params.set("limit", "120");
-    const r = await fetch(`/api/mhy/questions?${params}`);
-    const j = await r.json();
+    const j = await api.questions(params);
     const qs: MhyQuestion[] = (j.items ?? []).filter((q: MhyQuestion) => q.examSession === s);
     // real order by exam_qnum (§27/§91)
     qs.sort((a, b) => (a.examQnum ?? 99) - (b.examQnum ?? 99));
@@ -295,8 +293,7 @@ function CustomExam({
     if (major) params.set("major", major);
     if (sourceMix !== "ALL") params.set("sourceType", sourceMix);
     params.set("limit", "1500");
-    fetch(`/api/mhy/questions?${params}`)
-      .then((r) => r.json())
+    api.questions(params)
       .then((j) => setPool((j.items ?? []).map((q: MhyQuestion) => ({ id: q.id, mabhas: q.mabhas, difficulty: q.difficulty, sourceType: q.sourceType, topic: q.topic, status: q.status }))))
       .catch(() => setPool([]));
   }, [major, sourceMix]);
@@ -435,8 +432,7 @@ function ExamRunner({
       const t = setTimeout(() => setQuestions([]), 0);
       return () => clearTimeout(t);
     }
-    fetch(`/api/mhy/questions?ids=${qids.join(",")}&limit=${qids.length}`)
-      .then((r) => r.json())
+    api.questions(`ids=${qids.join(",")}&limit=${qids.length}`)
       .then((j) => setQuestions(j.items ?? []))
       .catch(() => setQuestions([]));
   }, [qids]);

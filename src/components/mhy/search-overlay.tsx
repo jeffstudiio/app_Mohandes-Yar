@@ -2,6 +2,7 @@
 
 import { useEffect, useRef, useState } from "react";
 import type { SearchHit } from "@/lib/mhy/server";
+import { api } from "@/lib/mhy/api";
 import { faNum } from "@/lib/mhy/engines";
 import { ShieldCheck, PenLine, BookOpen, GraduationCap, X, Search } from "lucide-react";
 
@@ -40,8 +41,7 @@ export default function SearchOverlay({
     setBusy(true);
     timer.current = setTimeout(async () => {
       try {
-        const r = await fetch(`/api/mhy/search?q=${encodeURIComponent(q.trim())}`);
-        const j = await r.json();
+        const j = await api.search(q.trim());
         setHits(j.hits ?? []);
       } catch {
         setHits([]);

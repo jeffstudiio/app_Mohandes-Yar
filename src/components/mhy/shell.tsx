@@ -2,6 +2,7 @@
 
 import { useEffect, useMemo, useState } from "react";
 import type { Bootstrap } from "@/lib/mhy/server";
+import { api } from "@/lib/mhy/api";
 import { useMhy } from "@/lib/mhy/store";
 import type { QLite } from "@/lib/mhy/engines";
 import Onboarding from "./onboarding";
@@ -48,8 +49,7 @@ export default function MhyShell() {
   const [examPreset, setExamPreset] = useState<"official" | "quick" | "comprehensive" | null>(null);
 
   useEffect(() => {
-    fetch("/api/mhy/bootstrap")
-      .then((r) => r.json())
+    api.bootstrap()
       .then(setBootstrap)
       .catch(() => setBootstrap(null));
   }, []);
@@ -59,8 +59,7 @@ export default function MhyShell() {
     const params = new URLSearchParams();
     if (profile.disciplineCode) params.set("major", profile.disciplineCode);
     params.set("limit", "1500");
-    fetch(`/api/mhy/questions?${params}`)
-      .then((r) => r.json())
+    api.questions(params)
       .then((j) =>
         setPool(
           (j.items ?? []).map((q: { id: number; mabhas: number | null; difficulty: QLite["difficulty"]; sourceType: QLite["sourceType"]; topic: string; status: QLite["status"] }) => ({

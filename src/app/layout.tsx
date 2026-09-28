@@ -2,12 +2,14 @@ import type { Metadata, Viewport } from "next";
 import "./globals.css";
 import { Toaster } from "@/components/ui/toaster";
 
+const BASE = process.env.NEXT_PUBLIC_BASE_PATH ?? "";
+
 export const metadata: Metadata = {
   title: "مهندس‌یار V2 — میزکار آمادگی آزمون نظام مهندسی",
   description:
     "پیاده‌سازی کامل معماری V2 روی محتوای واقعی APK: داشبورد، مطالعه مقررات، تمرین با هویت منبع، آزمون رسمی/جامع، نقشه راه و جستجوی سراسری",
   icons: {
-    icon: "/app-icon.webp",
+    icon: `${BASE}/app-icon.webp`,
   },
 };
 

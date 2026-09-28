@@ -62,3 +62,5 @@ agent-ctx/
 scripts/*.png
 scripts/report_part*.html
 scripts/cover_only_test.html
+.next-static/
+public/data/
