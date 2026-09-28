@@ -1,0 +1,888 @@
+{
+ "source": "bonyadsite.com (placeholder modeling)",
+ "fetchedAt": "2026-09-28",
+ "groups": [
+  {
+   "code": "CIVIL",
+   "title": "عمران",
+   "needs": [
+    {
+     "code": "SUPERVISION",
+     "title": "نظارت",
+     "products": [
+      {
+       "title": "آیین‌نامه طراحی ساختمان‌ها در برابر زلزله استاندارد ۲۸۰۰ (ویرایش پنجم)✅ ارسال محصول از31 تیر",
+       "url": "https://bonyadsite.com/product/آییننامه-طراحی-ساختمانها-در-برابر/",
+       "img": "https://bonyadsite.com/wp-content/uploads/2800-بنیاد-1-300x300.jpg"
+      },
+      {
+       "title": "اصول اخلاق حرفه ای و نظامنامه رفتار حرفه ای اخلاقی در مهندسی ساختمان",
+       "url": "https://bonyadsite.com/product/اصول-اخلاق-حرفه-ای/",
+       "img": "https://bonyadsite.com/wp-content/uploads/2023/12/اصول-اخلاق-حرفه-ای-scaled-1.jpg"
+      },
+      {
+       "title": "کتاب بانک سوالات تالیفی قانون نظام مهندسی و کنترل ساختمان",
+       "url": "https://bonyadsite.com/product/کتاب-بانک-سوالات-تالیفی-قانون-نظام-مهن/",
+       "img": "https://bonyadsite.com/wp-content/uploads/بانک-سوالات-بنیاد-1-300x300.webp"
+      },
+      {
+       "title": "پکیج اقتصادی کاردانی عمران نظارت",
+       "url": "https://bonyadsite.com/product/پکیج-اقتصادی-کاردانی-عمران-نظارت/",
+       "img": "https://bonyadsite.com/wp-content/uploads/1778437026074_copy_640x640-300x300.webp"
+      },
+      {
+       "title": "پکیج کامل کاردانی عمران نظارت",
+       "url": "https://bonyadsite.com/product/پکیج-کامل-کاردانی-عمران-نظارت/",
+       "img": "https://bonyadsite.com/wp-content/uploads/1778437026155_copy_640x640-300x300.webp"
+      },
+      {
+       "title": "کتاب دستورالعمل طراحی و اجرای دیوارهای بنایی محوطه ( ویرایش زمستان 1404 _ ویژه آزمون 1405)",
+       "url": "https://bonyadsite.com/product/راهنمای-طراحی-و-اجرای-دیوارهای-بنایی/",
+       "img": "https://bonyadsite.com/wp-content/uploads/بنا-300x300.jpg"
+      },
+      {
+       "title": "پکیج اقتصادی منابع اصلی آزمون نظام مهندسی عمران – نظارت",
+       "url": "https://bonyadsite.com/product/پکیج-اقتصادی-منابع-اصلی-آزمون-نظام-مهن/",
+       "img": "https://bonyadsite.com/wp-content/uploads/1778437026044_copy_640x640-300x300.webp"
+      },
+      {
+       "title": "پکیج کامل منابع آزمون نظام مهندسی عمران – نظارت",
+       "url": "https://bonyadsite.com/product/پکیج-کامل-و-ملزومات-عمران-نظارت/",
+       "img": "https://bonyadsite.com/wp-content/uploads/1778437026148_copy_640x640-300x300.webp"
+      },
+      {
+       "title": "کتاب مبحث 2 (دوم) مقررات ملی ساختمان",
+       "url": "https://bonyadsite.com/product/کتاب-مبحث-2-دوم-مقررات-ملی-ساختمان/",
+       "img": "https://bonyadsite.com/wp-content/uploads/2024/09/2-1800-1-300x300.webp"
+      },
+      {
+       "title": "کتاب مبحث 5 (پنجم) مقررات ملی ساختمان",
+       "url": "https://bonyadsite.com/product/کتاب-مبحث-پنجم-مقررات-ملی-ساختمان/",
+       "img": "https://bonyadsite.com/wp-content/uploads/2024/09/5_11zon_24_11zon-300x300.webp"
+      }
+     ]
+    },
+    {
+     "code": "EXECUTION",
+     "title": "اجرا",
+     "products": [
+      {
+       "title": "آیین‌نامه طراحی ساختمان‌ها در برابر زلزله استاندارد ۲۸۰۰ (ویرایش پنجم)✅ ارسال محصول از31 تیر",
+       "url": "https://bonyadsite.com/product/آییننامه-طراحی-ساختمانها-در-برابر/",
+       "img": "https://bonyadsite.com/wp-content/uploads/2800-بنیاد-1-300x300.jpg"
+      },
+      {
+       "title": "اصول اخلاق حرفه ای و نظامنامه رفتار حرفه ای اخلاقی در مهندسی ساختمان",
+       "url": "https://bonyadsite.com/product/اصول-اخلاق-حرفه-ای/",
+       "img": "https://bonyadsite.com/wp-content/uploads/2023/12/اصول-اخلاق-حرفه-ای-scaled-1.jpg"
+      },
+      {
+       "title": "کتاب بانک سوالات تالیفی قانون نظام مهندسی و کنترل ساختمان",
+       "url": "https://bonyadsite.com/product/کتاب-بانک-سوالات-تالیفی-قانون-نظام-مهن/",
+       "img": "https://bonyadsite.com/wp-content/uploads/بانک-سوالات-بنیاد-1-300x300.webp"
+      },
+      {
+       "title": "کتاب قانون مدنی ویژه آزمون‌های نظام مهندسی",
+       "url": "https://bonyadsite.com/product/کتاب-قانون-مدنی-ویژه-آزمونهای-نظام-م/",
+       "img": "https://bonyadsite.com/wp-content/uploads/2024/10/قانون-مدنی-بنیاد800-1-300x300.webp"
+      },
+      {
+       "title": "کتاب دستورالعمل طراحی و اجرای دیوارهای بنایی محوطه ( ویرایش زمستان 1404 _ ویژه آزمون 1405)",
+       "url": "https://bonyadsite.com/product/راهنمای-طراحی-و-اجرای-دیوارهای-بنایی/",
+       "img": "https://bonyadsite.com/wp-content/uploads/بنا-300x300.jpg"
+      },
+      {
+       "title": "پکیج اقتصادی منابع اصلی آزمون نظام مهندسی عمران – اجرا",
+       "url": "https://bonyadsite.com/product/آزمون-نظام-مهندسی-عمران-اجرا/",
+       "img": "https://bonyadsite.com/wp-content/uploads/1778437026071_copy_640x640-300x300.webp"
+      },
+      {
+       "title": "پکیج کامل منابع آزمون نظام مهندسی عمران – اجرا",
+       "url": "https://bonyadsite.com/product/پکیج-کامل-و-ملزومات-عمران-اجرا/",
+       "img": "https://bonyadsite.com/wp-content/uploads/1778437026123_copy_640x640-300x300.webp"
+      },
+      {
+       "title": "کتاب مبحث 2 (دوم) مقررات ملی ساختمان",
+       "url": "https://bonyadsite.com/product/کتاب-مبحث-2-دوم-مقررات-ملی-ساختمان/",
+       "img": "https://bonyadsite.com/wp-content/uploads/2024/09/2-1800-1-300x300.webp"
+      },
+      {
+       "title": "کتاب مبحث 3 (سوم) مقررات‌ ملی‌ ساختمان",
+       "url": "https://bonyadsite.com/product/کتاب-مبحث-سوم-مقررات-ملی-ساختمان/",
+       "img": "https://bonyadsite.com/wp-content/uploads/2024/09/3-600x600_11zon_34_11zon-300x300.webp"
+      },
+      {
+       "title": "کتاب مبحث 4 (چهارم) مقررات‌ ملی‌ ساختمان",
+       "url": "https://bonyadsite.com/product/کتاب-مبحث-چهارم-مقررات-ملی-ساختمان/",
+       "img": "https://bonyadsite.com/wp-content/uploads/2024/09/4_11zon_35_11zon-300x300.webp"
+      }
+     ]
+    },
+    {
+     "code": "DESIGN-CALC",
+     "title": "محاسبات",
+     "products": [
+      {
+       "title": "آیین‌نامه طراحی ساختمان‌ها در برابر زلزله استاندارد ۲۸۰۰ (ویرایش پنجم)✅ ارسال محصول از31 تیر",
+       "url": "https://bonyadsite.com/product/آییننامه-طراحی-ساختمانها-در-برابر/",
+       "img": "https://bonyadsite.com/wp-content/uploads/2800-بنیاد-1-300x300.jpg"
+      },
+      {
+       "title": "اصول اخلاق حرفه ای و نظامنامه رفتار حرفه ای اخلاقی در مهندسی ساختمان",
+       "url": "https://bonyadsite.com/product/اصول-اخلاق-حرفه-ای/",
+       "img": "https://bonyadsite.com/wp-content/uploads/2023/12/اصول-اخلاق-حرفه-ای-scaled-1.jpg"
+      },
+      {
+       "title": "کتاب بانک سوالات تالیفی قانون نظام مهندسی و کنترل ساختمان",
+       "url": "https://bonyadsite.com/product/کتاب-بانک-سوالات-تالیفی-قانون-نظام-مهن/",
+       "img": "https://bonyadsite.com/wp-content/uploads/بانک-سوالات-بنیاد-1-300x300.webp"
+      },
+      {
+       "title": "پکیج اقتصادی منابع اصلی آزمون نظام مهندسی عمران – محاسبات",
+       "url": "https://bonyadsite.com/product/آزمون-نظام-مهندسی-عمران-محاسبات/",
+       "img": "https://bonyadsite.com/wp-content/uploads/1778437026082_copy_640x640-300x300.webp"
+      },
+      {
+       "title": "پکیج کامل منابع آزمون نظام مهندسی عمران – محاسبات",
+       "url": "https://bonyadsite.com/product/پکیج-کامل-و-ملزومات-عمران-محاسبات/",
+       "img": "https://bonyadsite.com/wp-content/uploads/1778437026129_copy_640x640-300x300.webp"
+      },
+      {
+       "title": "کتاب مبحث 6 (ششم) مقررات ملی ساختمان",
+       "url": "https://bonyadsite.com/product/کتاب-مبحث-ششم-مقررات-ملی-ساختمان/",
+       "img": "https://bonyadsite.com/wp-content/uploads/2024/09/6_11zon_25_11zon-300x300.webp"
+      },
+      {
+       "title": "کتاب مبحث 7 (هفتم) مقررات ملی ساختمان",
+       "url": "https://bonyadsite.com/product/کتاب-مبحث-هفتم-مقررات-ملی-ساختمان/",
+       "img": "https://bonyadsite.com/wp-content/uploads/2024/09/7_11zon_26_11zon-300x300.webp"
+      },
+      {
+       "title": "کتاب مبحث 8 (هشتم) مقررات ملی ساختمان",
+       "url": "https://bonyadsite.com/product/کتاب-مبحث-هشتم-مقررات-ملی-ساختمان/",
+       "img": "https://bonyadsite.com/wp-content/uploads/2024/09/8-600x600_11zon_27_11zon-300x300.webp"
+      },
+      {
+       "title": "کتاب مبحث 9 (نهم) مقررات ملی ساختمان",
+       "url": "https://bonyadsite.com/product/کتاب-مبحث-نهم-مقررات-ملی-ساختمان/",
+       "img": "https://bonyadsite.com/wp-content/uploads/2024/09/9-600x600_11zon_28_11zon-300x300.webp"
+      },
+      {
+       "title": "کتاب مبحث 10 (دهم) مقررات ملی ساختمان (ویرایش ۱۴۰۱)",
+       "url": "https://bonyadsite.com/product/کتاب-مبحث-دهم-مقررات-ملی-ساختمان/",
+       "img": "https://bonyadsite.com/wp-content/uploads/2024/09/123_11zon_31_11zon-300x300.webp"
+      }
+     ]
+    }
+   ]
+  },
+  {
+   "code": "ARCH",
+   "title": "معماری",
+   "needs": [
+    {
+     "code": "DESIGN",
+     "title": "طراحی",
+     "products": [
+      {
+       "title": "تمرین‌های طبقه‌بندی شده براساس تیپ زمین به همراه پاسخنامه آموزش محور آشنایی با الگوهای جدید در طراحی سوال آشنایی با نکات انحرافی در طراحی پلان‌ها به همراه درسنامه و ارائه چکیده نکات طراحی بر پایه مباحث مقررات ملی ساختمان کتاب بانک سوالات تالیفی و احتمالی آزمون معماری طراحی محتوا کتاب شامل : تمرین‌های طبقه‌بندی شده براساس تیپ زمین به همراه پاسخنامه آموزش محور آشنایی با الگوهای جدید در طراحی سوال آشنایی با نکات انحرافی در طراحی پلان‌ها به همراه درسنامه و ارائه چکیده نکات طراحی بر پایه مباحث مقررات ملی ساختمان فهرست کتاب : فصل اول: راهنما تصویری مبحث چهارم مقررات ملی فصل دوم : تمرین‌های طبقه‌بندی شده و استاندارد کتاب بانک سوالات تالیفی و احتمالی آزمون معماری طراحی فصل چهارم: چکیده نکات ضوابط معماری شهرسازی فصل پنجم: معرفی ضوابط طراحی بر طبق مقررات ملی",
+       "url": "https://bonyadsite.com/product/کتاب-بانک-سوالات-تالیفی-و-احتمالی-آزمو/",
+       "img": "https://bonyadsite.com/wp-content/uploads/معماری-بنیاد-1-300x300.jpg"
+      },
+      {
+       "title": "کتاب بانک سؤالات تألیفی مصوبات شورای‌عالی شهرسازی و معماری ایران",
+       "url": "https://bonyadsite.com/product/کتاب-بانک-سؤالات-تألیفی-مصوبات-شورای/",
+       "img": "https://bonyadsite.com/wp-content/uploads/عالی-1-300x300.webp"
+      },
+      {
+       "title": "کتاب ضوابط و مقررات شهرسازی و معماری برای افراد دارای معلولیت",
+       "url": "https://bonyadsite.com/product/کتاب-ضوابط-و-مقررات-شهرسازی-و-معماری-بر/",
+       "img": "https://bonyadsite.com/wp-content/uploads/م-300x300.webp"
+      },
+      {
+       "title": "اصول اخلاق حرفه ای و نظامنامه رفتار حرفه ای اخلاقی در مهندسی ساختمان",
+       "url": "https://bonyadsite.com/product/اصول-اخلاق-حرفه-ای/",
+       "img": "https://bonyadsite.com/wp-content/uploads/2023/12/اصول-اخلاق-حرفه-ای-scaled-1.jpg"
+      },
+      {
+       "title": "کتاب آموزش جامع تصویری پروژه محور و گام به گام ضوابط، طراحی و ترسیم آزمون معماری طراحی",
+       "url": "https://bonyadsite.com/product/کتاب-آموزش-جامع-تصویری-پروژه-محور-و-گام/",
+       "img": "https://bonyadsite.com/wp-content/uploads/ترسیم-بنیاد-1-300x300.webp"
+      },
+      {
+       "title": "کتاب بانک سوالات تالیفی قانون نظام مهندسی و کنترل ساختمان",
+       "url": "https://bonyadsite.com/product/کتاب-بانک-سوالات-تالیفی-قانون-نظام-مهن/",
+       "img": "https://bonyadsite.com/wp-content/uploads/بانک-سوالات-بنیاد-1-300x300.webp"
+      },
+      {
+       "title": "پکیج اقتصادی منابع اصلی آزمون نظام مهندسی معماری – طراحی",
+       "url": "https://bonyadsite.com/product/پکیج-کامل-منابع-و-ملزومات-معماری-طراحی/",
+       "img": "https://bonyadsite.com/wp-content/uploads/1778437026112_copy_640x640-300x300.webp"
+      },
+      {
+       "title": "پکیج کامل منابع آزمون نظام مهندسی معماری – طراحی",
+       "url": "https://bonyadsite.com/product/پکیج-کامل-و-ملزومات-معماری-طراحی/",
+       "img": "https://bonyadsite.com/wp-content/uploads/IMG_20260510_214534_169_copy_640x640-1-300x300.webp"
+      },
+      {
+       "title": "پکیج سه جلدی مهندس بیات",
+       "url": "https://bonyadsite.com/product/کتاب-مهندس-بیات-آزمون-طراحی-معماری/",
+       "img": "https://bonyadsite.com/wp-content/uploads/2023/12/پکیج-سه-جلدی-scaled-1.jpg"
+      },
+      {
+       "title": "پکیج کامل شابلون طلایی+پازل+گونیا و خط کش دیوار آزمون طراحی معماری نظام مهندسی(ورژن جدید _ بهار 1405)",
+       "url": "https://bonyadsite.com/product/پکیج-کامل-منابع-و-ملزومات-آزمون-نظام/",
+       "img": "https://bonyadsite.com/wp-content/uploads/پکیج-کامل-شابلون-طلاییپازلگونیا-و-خط-کش-دیوار-آزمون-طراحی-معماری-نظام-مهندسی-600x600-1-300x300.png"
+      }
+     ]
+    },
+    {
+     "code": "EXECUTION",
+     "title": "اجرا",
+     "products": [
+      {
+       "title": "بانک آزمون اجرا معماری",
+       "url": "https://bonyadsite.com/product/بانک-آزمون-اجرا-معماری/",
+       "img": "https://bonyadsite.com/wp-content/uploads/اجرا-بنیاد-300x300.jpg"
+      },
+      {
+       "title": "اصول اخلاق حرفه ای و نظامنامه رفتار حرفه ای اخلاقی در مهندسی ساختمان",
+       "url": "https://bonyadsite.com/product/اصول-اخلاق-حرفه-ای/",
+       "img": "https://bonyadsite.com/wp-content/uploads/2023/12/اصول-اخلاق-حرفه-ای-scaled-1.jpg"
+      },
+      {
+       "title": "کتاب بانک سوالات تالیفی قانون نظام مهندسی و کنترل ساختمان",
+       "url": "https://bonyadsite.com/product/کتاب-بانک-سوالات-تالیفی-قانون-نظام-مهن/",
+       "img": "https://bonyadsite.com/wp-content/uploads/بانک-سوالات-بنیاد-1-300x300.webp"
+      },
+      {
+       "title": "کتاب قانون مدنی ویژه آزمون‌های نظام مهندسی",
+       "url": "https://bonyadsite.com/product/کتاب-قانون-مدنی-ویژه-آزمونهای-نظام-م/",
+       "img": "https://bonyadsite.com/wp-content/uploads/2024/10/قانون-مدنی-بنیاد800-1-300x300.webp"
+      },
+      {
+       "title": "کتاب دستورالعمل طراحی و اجرای دیوارهای بنایی محوطه ( ویرایش زمستان 1404 _ ویژه آزمون 1405)",
+       "url": "https://bonyadsite.com/product/راهنمای-طراحی-و-اجرای-دیوارهای-بنایی/",
+       "img": "https://bonyadsite.com/wp-content/uploads/بنا-300x300.jpg"
+      },
+      {
+       "title": "پکیج اقتصادی منابع اصلی آزمون نظام مهندسی معماری – اجرا",
+       "url": "https://bonyadsite.com/product/پکیج-کامل-منابع-اصلی-معماری-اجرا/",
+       "img": "https://bonyadsite.com/wp-content/uploads/1778437026092_copy_640x640-300x300.webp"
+      },
+      {
+       "title": "پکیج کامل منابع آزمون نظام مهندسی معماری – اجرا",
+       "url": "https://bonyadsite.com/product/پکیج-کامل-و-ملزومات-معماری-اجرا/",
+       "img": "https://bonyadsite.com/wp-content/uploads/1778437026151_copy_640x640-300x300.webp"
+      },
+      {
+       "title": "پکیج سه جلدی",
+       "url": "https://bonyadsite.com/product/پکیج-3-جلدی-دستیار-مهندسان-مجری-و-ناظر/",
+       "img": "https://bonyadsite.com/wp-content/uploads/2023/12/پکیج-سه-جلدی-دستیار-مهندسان-مجری-و-ناظر-min-scaled-1.jpg"
+      },
+      {
+       "title": "کتاب مبحث 2 (دوم) مقررات ملی ساختمان",
+       "url": "https://bonyadsite.com/product/کتاب-مبحث-2-دوم-مقررات-ملی-ساختمان/",
+       "img": "https://bonyadsite.com/wp-content/uploads/2024/09/2-1800-1-300x300.webp"
+      },
+      {
+       "title": "کتاب مبحث 3 (سوم) مقررات‌ ملی‌ ساختمان",
+       "url": "https://bonyadsite.com/product/کتاب-مبحث-سوم-مقررات-ملی-ساختمان/",
+       "img": "https://bonyadsite.com/wp-content/uploads/2024/09/3-600x600_11zon_34_11zon-300x300.webp"
+      }
+     ]
+    },
+    {
+     "code": "SUPERVISION",
+     "title": "نظارت",
+     "products": [
+      {
+       "title": "بانک آزمون نظارت معماری",
+       "url": "https://bonyadsite.com/product/بانک-آزمون-نظارت-معماری/",
+       "img": "https://bonyadsite.com/wp-content/uploads/نظارت-300x300.jpg"
+      },
+      {
+       "title": "اصول اخلاق حرفه ای و نظامنامه رفتار حرفه ای اخلاقی در مهندسی ساختمان",
+       "url": "https://bonyadsite.com/product/اصول-اخلاق-حرفه-ای/",
+       "img": "https://bonyadsite.com/wp-content/uploads/2023/12/اصول-اخلاق-حرفه-ای-scaled-1.jpg"
+      },
+      {
+       "title": "کتاب بانک سوالات تالیفی قانون نظام مهندسی و کنترل ساختمان",
+       "url": "https://bonyadsite.com/product/کتاب-بانک-سوالات-تالیفی-قانون-نظام-مهن/",
+       "img": "https://bonyadsite.com/wp-content/uploads/بانک-سوالات-بنیاد-1-300x300.webp"
+      },
+      {
+       "title": "کتاب دستورالعمل طراحی و اجرای دیوارهای بنایی محوطه ( ویرایش زمستان 1404 _ ویژه آزمون 1405)",
+       "url": "https://bonyadsite.com/product/راهنمای-طراحی-و-اجرای-دیوارهای-بنایی/",
+       "img": "https://bonyadsite.com/wp-content/uploads/بنا-300x300.jpg"
+      },
+      {
+       "title": "پکیج اقتصادی منابع اصلی آزمون نظام مهندسی معماری – نظارت",
+       "url": "https://bonyadsite.com/product/پکیج-منابع-اصلی-معماری-نظارت/",
+       "img": "https://bonyadsite.com/wp-content/uploads/1778437026116_copy_640x640-300x300.webp"
+      },
+      {
+       "title": "پکیج کامل منابع آزمون نظام مهندسی معماری – نظارت",
+       "url": "https://bonyadsite.com/product/پکیج-کامل-و-ملزومات-معماری-نظارت/",
+       "img": "https://bonyadsite.com/wp-content/uploads/1778437026167_copy_640x640-300x300.webp"
+      },
+      {
+       "title": "کتاب مبحث 2 (دوم) مقررات ملی ساختمان",
+       "url": "https://bonyadsite.com/product/کتاب-مبحث-2-دوم-مقررات-ملی-ساختمان/",
+       "img": "https://bonyadsite.com/wp-content/uploads/2024/09/2-1800-1-300x300.webp"
+      },
+      {
+       "title": "کتاب مبحث 3 (سوم) مقررات‌ ملی‌ ساختمان",
+       "url": "https://bonyadsite.com/product/کتاب-مبحث-سوم-مقررات-ملی-ساختمان/",
+       "img": "https://bonyadsite.com/wp-content/uploads/2024/09/3-600x600_11zon_34_11zon-300x300.webp"
+      },
+      {
+       "title": "کتاب مبحث 4 (چهارم) مقررات‌ ملی‌ ساختمان",
+       "url": "https://bonyadsite.com/product/کتاب-مبحث-چهارم-مقررات-ملی-ساختمان/",
+       "img": "https://bonyadsite.com/wp-content/uploads/2024/09/4_11zon_35_11zon-300x300.webp"
+      },
+      {
+       "title": "کتاب مبحث 5 (پنجم) مقررات ملی ساختمان",
+       "url": "https://bonyadsite.com/product/کتاب-مبحث-پنجم-مقررات-ملی-ساختمان/",
+       "img": "https://bonyadsite.com/wp-content/uploads/2024/09/5_11zon_24_11zon-300x300.webp"
+      }
+     ]
+    }
+   ]
+  },
+  {
+   "code": "ELEC",
+   "title": "برق",
+   "needs": [
+    {
+     "code": "DESIGN",
+     "title": "طراحی",
+     "products": [
+      {
+       "title": "اصول اخلاق حرفه ای و نظامنامه رفتار حرفه ای اخلاقی در مهندسی ساختمان",
+       "url": "https://bonyadsite.com/product/اصول-اخلاق-حرفه-ای/",
+       "img": "https://bonyadsite.com/wp-content/uploads/2023/12/اصول-اخلاق-حرفه-ای-scaled-1.jpg"
+      },
+      {
+       "title": "کتاب بانک سوالات تالیفی قانون نظام مهندسی و کنترل ساختمان",
+       "url": "https://bonyadsite.com/product/کتاب-بانک-سوالات-تالیفی-قانون-نظام-مهن/",
+       "img": "https://bonyadsite.com/wp-content/uploads/بانک-سوالات-بنیاد-1-300x300.webp"
+      },
+      {
+       "title": "کتاب راهنمای طرح و اجرای تاسیسات برقی ساختمان‌ها",
+       "url": "https://bonyadsite.com/product/کتاب-راهنمای-طرح-و-اجرای-تاسیسات-برقی-س/",
+       "img": "https://bonyadsite.com/wp-content/uploads/2023/12/1-4-300x300.jpg"
+      },
+      {
+       "title": "راهنمای جامع محاسبه، طراحی و تهیه مدارک مهندسی مهندسین مشاور و نظام مهندسی",
+       "url": "https://bonyadsite.com/product/راهنمای-جامع-محاسبه،-طراحی-و-تهیه-مدار/",
+       "img": "https://bonyadsite.com/wp-content/uploads/2024/08/راهنمای-جامع800-1-300x300.webp"
+      },
+      {
+       "title": "کتاب راهنمای تصویری نشریه ۱۱۰",
+       "url": "https://bonyadsite.com/product/کتاب-راهنمای-تصویری-نشریه-۱۱۰/",
+       "img": "https://bonyadsite.com/wp-content/uploads/2023/12/کتاب-راهنمای-تصویری-نشریه-۱۱۰-scaled-1.jpg"
+      },
+      {
+       "title": "کلید واژه نشریه ۱۱۰",
+       "url": "https://bonyadsite.com/product/کلیدواژه-نشریه-۱۱۰/",
+       "img": "https://bonyadsite.com/wp-content/uploads/2023/12/کلید-واژه-نشریه-۱۱۰-scaled-1.jpg"
+      },
+      {
+       "title": "پکیج اقتصادی منابع اصلی آزمون نظام مهندسی برق – طراحی",
+       "url": "https://bonyadsite.com/product/پکیج-کامل-منابع-و-ملزومات-برق-طراحی/",
+       "img": "https://bonyadsite.com/wp-content/uploads/1778437026109_copy_640x640-300x300.webp"
+      },
+      {
+       "title": "پکیج کامل منابع آزمون نظام مهندسی برق – طراحی",
+       "url": "https://bonyadsite.com/product/پکیج-کامل-و-ملزومات-برق-طراحی/",
+       "img": "https://bonyadsite.com/wp-content/uploads/1778437026126_copy_640x640-300x300.webp"
+      },
+      {
+       "title": "کتاب مبحث 2 (دوم) مقررات ملی ساختمان",
+       "url": "https://bonyadsite.com/product/کتاب-مبحث-2-دوم-مقررات-ملی-ساختمان/",
+       "img": "https://bonyadsite.com/wp-content/uploads/2024/09/2-1800-1-300x300.webp"
+      },
+      {
+       "title": "کتاب مبحث 3 (سوم) مقررات‌ ملی‌ ساختمان",
+       "url": "https://bonyadsite.com/product/کتاب-مبحث-سوم-مقررات-ملی-ساختمان/",
+       "img": "https://bonyadsite.com/wp-content/uploads/2024/09/3-600x600_11zon_34_11zon-300x300.webp"
+      }
+     ]
+    },
+    {
+     "code": "EXECUTION",
+     "title": "اجرا",
+     "products": [
+      {
+       "title": "اصول اخلاق حرفه ای و نظامنامه رفتار حرفه ای اخلاقی در مهندسی ساختمان",
+       "url": "https://bonyadsite.com/product/اصول-اخلاق-حرفه-ای/",
+       "img": "https://bonyadsite.com/wp-content/uploads/2023/12/اصول-اخلاق-حرفه-ای-scaled-1.jpg"
+      },
+      {
+       "title": "کتاب بانک سوالات تالیفی قانون نظام مهندسی و کنترل ساختمان",
+       "url": "https://bonyadsite.com/product/کتاب-بانک-سوالات-تالیفی-قانون-نظام-مهن/",
+       "img": "https://bonyadsite.com/wp-content/uploads/بانک-سوالات-بنیاد-1-300x300.webp"
+      },
+      {
+       "title": "کتاب قانون مدنی ویژه آزمون‌های نظام مهندسی",
+       "url": "https://bonyadsite.com/product/کتاب-قانون-مدنی-ویژه-آزمونهای-نظام-م/",
+       "img": "https://bonyadsite.com/wp-content/uploads/2024/10/قانون-مدنی-بنیاد800-1-300x300.webp"
+      },
+      {
+       "title": "راهنمای جامع محاسبه، طراحی و تهیه مدارک مهندسی مهندسین مشاور و نظام مهندسی",
+       "url": "https://bonyadsite.com/product/راهنمای-جامع-محاسبه،-طراحی-و-تهیه-مدار/",
+       "img": "https://bonyadsite.com/wp-content/uploads/2024/08/راهنمای-جامع800-1-300x300.webp"
+      },
+      {
+       "title": "کتاب راهنمای تصویری نشریه ۱۱۰",
+       "url": "https://bonyadsite.com/product/کتاب-راهنمای-تصویری-نشریه-۱۱۰/",
+       "img": "https://bonyadsite.com/wp-content/uploads/2023/12/کتاب-راهنمای-تصویری-نشریه-۱۱۰-scaled-1.jpg"
+      },
+      {
+       "title": "کلید واژه نشریه ۱۱۰",
+       "url": "https://bonyadsite.com/product/کلیدواژه-نشریه-۱۱۰/",
+       "img": "https://bonyadsite.com/wp-content/uploads/2023/12/کلید-واژه-نشریه-۱۱۰-scaled-1.jpg"
+      },
+      {
+       "title": "پکیج اقتصادی منابع اصلی آزمون نظام مهندسی برق – اجرا",
+       "url": "https://bonyadsite.com/product/پکیج-کامل-منابع-و-ملزومات-برق-اجرا/",
+       "img": "https://bonyadsite.com/wp-content/uploads/1778437026096_copy_640x640-300x300.webp"
+      },
+      {
+       "title": "پکیج کامل منابع آزمون نظام مهندسی برق – اجرا",
+       "url": "https://bonyadsite.com/product/پکیج-کامل-ملزومات-برق-اجرا/",
+       "img": "https://bonyadsite.com/wp-content/uploads/1778437026180_copy_640x640-300x300.webp"
+      },
+      {
+       "title": "کتاب مبحث 2 (دوم) مقررات ملی ساختمان",
+       "url": "https://bonyadsite.com/product/کتاب-مبحث-2-دوم-مقررات-ملی-ساختمان/",
+       "img": "https://bonyadsite.com/wp-content/uploads/2024/09/2-1800-1-300x300.webp"
+      },
+      {
+       "title": "کتاب مبحث 3 (سوم) مقررات‌ ملی‌ ساختمان",
+       "url": "https://bonyadsite.com/product/کتاب-مبحث-سوم-مقررات-ملی-ساختمان/",
+       "img": "https://bonyadsite.com/wp-content/uploads/2024/09/3-600x600_11zon_34_11zon-300x300.webp"
+      }
+     ]
+    },
+    {
+     "code": "SUPERVISION",
+     "title": "نظارت",
+     "products": [
+      {
+       "title": "اصول اخلاق حرفه ای و نظامنامه رفتار حرفه ای اخلاقی در مهندسی ساختمان",
+       "url": "https://bonyadsite.com/product/اصول-اخلاق-حرفه-ای/",
+       "img": "https://bonyadsite.com/wp-content/uploads/2023/12/اصول-اخلاق-حرفه-ای-scaled-1.jpg"
+      },
+      {
+       "title": "کتاب بانک سوالات تالیفی قانون نظام مهندسی و کنترل ساختمان",
+       "url": "https://bonyadsite.com/product/کتاب-بانک-سوالات-تالیفی-قانون-نظام-مهن/",
+       "img": "https://bonyadsite.com/wp-content/uploads/بانک-سوالات-بنیاد-1-300x300.webp"
+      },
+      {
+       "title": "کتاب راهنمای طرح و اجرای تاسیسات برقی ساختمان‌ها",
+       "url": "https://bonyadsite.com/product/کتاب-راهنمای-طرح-و-اجرای-تاسیسات-برقی-س/",
+       "img": "https://bonyadsite.com/wp-content/uploads/2023/12/1-4-300x300.jpg"
+      },
+      {
+       "title": "راهنمای جامع محاسبه، طراحی و تهیه مدارک مهندسی مهندسین مشاور و نظام مهندسی",
+       "url": "https://bonyadsite.com/product/راهنمای-جامع-محاسبه،-طراحی-و-تهیه-مدار/",
+       "img": "https://bonyadsite.com/wp-content/uploads/2024/08/راهنمای-جامع800-1-300x300.webp"
+      },
+      {
+       "title": "کتاب راهنمای تصویری نشریه ۱۱۰",
+       "url": "https://bonyadsite.com/product/کتاب-راهنمای-تصویری-نشریه-۱۱۰/",
+       "img": "https://bonyadsite.com/wp-content/uploads/2023/12/کتاب-راهنمای-تصویری-نشریه-۱۱۰-scaled-1.jpg"
+      },
+      {
+       "title": "کلید واژه نشریه ۱۱۰",
+       "url": "https://bonyadsite.com/product/کلیدواژه-نشریه-۱۱۰/",
+       "img": "https://bonyadsite.com/wp-content/uploads/2023/12/کلید-واژه-نشریه-۱۱۰-scaled-1.jpg"
+      },
+      {
+       "title": "پکیج اقتصادی منابع اصلی آزمون نظام مهندسی برق – نظارت",
+       "url": "https://bonyadsite.com/product/پکیج-اقتصادی-برق-نظارت/",
+       "img": "https://bonyadsite.com/wp-content/uploads/1778437026049_copy_640x640-300x300.webp"
+      },
+      {
+       "title": "پکیج کامل منابع آزمون نظام مهندسی برق – نظارت",
+       "url": "https://bonyadsite.com/product/پکیج-کامل-و-ملزومات-برق-نظارت/",
+       "img": "https://bonyadsite.com/wp-content/uploads/1778437026099_copy_640x640-300x300.webp"
+      },
+      {
+       "title": "کتاب مبحث 2 (دوم) مقررات ملی ساختمان",
+       "url": "https://bonyadsite.com/product/کتاب-مبحث-2-دوم-مقررات-ملی-ساختمان/",
+       "img": "https://bonyadsite.com/wp-content/uploads/2024/09/2-1800-1-300x300.webp"
+      },
+      {
+       "title": "کتاب مبحث 3 (سوم) مقررات‌ ملی‌ ساختمان",
+       "url": "https://bonyadsite.com/product/کتاب-مبحث-سوم-مقررات-ملی-ساختمان/",
+       "img": "https://bonyadsite.com/wp-content/uploads/2024/09/3-600x600_11zon_34_11zon-300x300.webp"
+      }
+     ]
+    }
+   ]
+  },
+  {
+   "code": "MECH",
+   "title": "مکانیک",
+   "needs": [
+    {
+     "code": "DESIGN",
+     "title": "طراحی",
+     "products": [
+      {
+       "title": "اصول اخلاق حرفه ای و نظامنامه رفتار حرفه ای اخلاقی در مهندسی ساختمان",
+       "url": "https://bonyadsite.com/product/اصول-اخلاق-حرفه-ای/",
+       "img": "https://bonyadsite.com/wp-content/uploads/2023/12/اصول-اخلاق-حرفه-ای-scaled-1.jpg"
+      },
+      {
+       "title": "کتاب بانک سوالات تالیفی قانون نظام مهندسی و کنترل ساختمان",
+       "url": "https://bonyadsite.com/product/کتاب-بانک-سوالات-تالیفی-قانون-نظام-مهن/",
+       "img": "https://bonyadsite.com/wp-content/uploads/بانک-سوالات-بنیاد-1-300x300.webp"
+      },
+      {
+       "title": "کتاب راهنمای نشریه‌های ۱۲۸ و ۱۷۲",
+       "url": "https://bonyadsite.com/product/کتاب-راهنمای-نشریه-های-۱۲۸-و-۱۷۲/",
+       "img": "https://bonyadsite.com/wp-content/uploads/2023/12/9786001686085.jpg"
+      },
+      {
+       "title": "پکیج اقتصادی منابع اصلی آزمون نظام مهندسی مکانیک – طراحی",
+       "url": "https://bonyadsite.com/product/پکیج-کامل-منابع-و-ملزومات-مکانیک-طراحی/",
+       "img": "https://bonyadsite.com/wp-content/uploads/1778437026133_copy_640x640-300x300.webp"
+      },
+      {
+       "title": "پکیج کامل منابع آزمون نظام مهندسی مکانیک – طراحی",
+       "url": "https://bonyadsite.com/product/پکیج-کامل-منابع-و-ملزومات-مکانیک-طراحی-2/",
+       "img": "https://bonyadsite.com/wp-content/uploads/1778437026177_copy_640x640-300x300.webp"
+      },
+      {
+       "title": "کتاب مبحث 2 (دوم) مقررات ملی ساختمان",
+       "url": "https://bonyadsite.com/product/کتاب-مبحث-2-دوم-مقررات-ملی-ساختمان/",
+       "img": "https://bonyadsite.com/wp-content/uploads/2024/09/2-1800-1-300x300.webp"
+      },
+      {
+       "title": "کتاب مبحث 3 (سوم) مقررات‌ ملی‌ ساختمان",
+       "url": "https://bonyadsite.com/product/کتاب-مبحث-سوم-مقررات-ملی-ساختمان/",
+       "img": "https://bonyadsite.com/wp-content/uploads/2024/09/3-600x600_11zon_34_11zon-300x300.webp"
+      },
+      {
+       "title": "کتاب مبحث 12 (دوازدهم) مقررات ملی ساختمان (ویرایش 1403)",
+       "url": "https://bonyadsite.com/product/کتاب-مبحث-12-دوازدهم-مقررات-ملی-ساختمان/",
+       "img": "https://bonyadsite.com/wp-content/uploads/12-300x300.jpg"
+      },
+      {
+       "title": "کتاب مبحث 14 (چهاردهم) مقررات ملی ساختمان",
+       "url": "https://bonyadsite.com/product/کتاب-مبحث-چهاردهم-مقررات-ملی-ساختمان/",
+       "img": "https://bonyadsite.com/wp-content/uploads/2024/09/14-600x600_11zon_18_11zon-300x300.webp"
+      },
+      {
+       "title": "کتاب مبحث 15 (پانزدهم) مقررات ملی ساختمان",
+       "url": "https://bonyadsite.com/product/کتاب-مبحث-پانزدهم-مقررات-ملی-ساختمان/",
+       "img": "https://bonyadsite.com/wp-content/uploads/2024/09/15-600x600_11zon_19_11zon-300x300.webp"
+      }
+     ]
+    },
+    {
+     "code": "EXECUTION",
+     "title": "اجرا",
+     "products": [
+      {
+       "title": "اصول اخلاق حرفه ای و نظامنامه رفتار حرفه ای اخلاقی در مهندسی ساختمان",
+       "url": "https://bonyadsite.com/product/اصول-اخلاق-حرفه-ای/",
+       "img": "https://bonyadsite.com/wp-content/uploads/2023/12/اصول-اخلاق-حرفه-ای-scaled-1.jpg"
+      },
+      {
+       "title": "کتاب بانک سوالات تالیفی قانون نظام مهندسی و کنترل ساختمان",
+       "url": "https://bonyadsite.com/product/کتاب-بانک-سوالات-تالیفی-قانون-نظام-مهن/",
+       "img": "https://bonyadsite.com/wp-content/uploads/بانک-سوالات-بنیاد-1-300x300.webp"
+      },
+      {
+       "title": "کتاب قانون مدنی ویژه آزمون‌های نظام مهندسی",
+       "url": "https://bonyadsite.com/product/کتاب-قانون-مدنی-ویژه-آزمونهای-نظام-م/",
+       "img": "https://bonyadsite.com/wp-content/uploads/2024/10/قانون-مدنی-بنیاد800-1-300x300.webp"
+      },
+      {
+       "title": "کتاب راهنمای نشریه‌های ۱۲۸ و ۱۷۲",
+       "url": "https://bonyadsite.com/product/کتاب-راهنمای-نشریه-های-۱۲۸-و-۱۷۲/",
+       "img": "https://bonyadsite.com/wp-content/uploads/2023/12/9786001686085.jpg"
+      },
+      {
+       "title": "پکیج اقتصادی منابع اصلی آزمون نظام مهندسی مکانیک – اجرا",
+       "url": "https://bonyadsite.com/product/پکیج-کامل-منابع-و-ملزومات-مکانیک-اجرا/",
+       "img": "https://bonyadsite.com/wp-content/uploads/1778437026079_copy_640x640-300x300.webp"
+      },
+      {
+       "title": "پکیج کامل منابع آزمون نظام مهندسی مکانیک – اجرا",
+       "url": "https://bonyadsite.com/product/پکیج-کامل-و-ملزومات-مکانیک-اجرا/",
+       "img": "https://bonyadsite.com/wp-content/uploads/1778437026163_copy_640x640-300x300.webp"
+      },
+      {
+       "title": "کتاب مبحث 2 (دوم) مقررات ملی ساختمان",
+       "url": "https://bonyadsite.com/product/کتاب-مبحث-2-دوم-مقررات-ملی-ساختمان/",
+       "img": "https://bonyadsite.com/wp-content/uploads/2024/09/2-1800-1-300x300.webp"
+      },
+      {
+       "title": "کتاب مبحث 3 (سوم) مقررات‌ ملی‌ ساختمان",
+       "url": "https://bonyadsite.com/product/کتاب-مبحث-سوم-مقررات-ملی-ساختمان/",
+       "img": "https://bonyadsite.com/wp-content/uploads/2024/09/3-600x600_11zon_34_11zon-300x300.webp"
+      },
+      {
+       "title": "کتاب مبحث 12 (دوازدهم) مقررات ملی ساختمان (ویرایش 1403)",
+       "url": "https://bonyadsite.com/product/کتاب-مبحث-12-دوازدهم-مقررات-ملی-ساختمان/",
+       "img": "https://bonyadsite.com/wp-content/uploads/12-300x300.jpg"
+      },
+      {
+       "title": "کتاب مبحث 14 (چهاردهم) مقررات ملی ساختمان",
+       "url": "https://bonyadsite.com/product/کتاب-مبحث-چهاردهم-مقررات-ملی-ساختمان/",
+       "img": "https://bonyadsite.com/wp-content/uploads/2024/09/14-600x600_11zon_18_11zon-300x300.webp"
+      }
+     ]
+    },
+    {
+     "code": "SUPERVISION",
+     "title": "نظارت",
+     "products": [
+      {
+       "title": "اصول اخلاق حرفه ای و نظامنامه رفتار حرفه ای اخلاقی در مهندسی ساختمان",
+       "url": "https://bonyadsite.com/product/اصول-اخلاق-حرفه-ای/",
+       "img": "https://bonyadsite.com/wp-content/uploads/2023/12/اصول-اخلاق-حرفه-ای-scaled-1.jpg"
+      },
+      {
+       "title": "کتاب بانک سوالات تالیفی قانون نظام مهندسی و کنترل ساختمان",
+       "url": "https://bonyadsite.com/product/کتاب-بانک-سوالات-تالیفی-قانون-نظام-مهن/",
+       "img": "https://bonyadsite.com/wp-content/uploads/بانک-سوالات-بنیاد-1-300x300.webp"
+      },
+      {
+       "title": "کتاب راهنمای نشریه‌های ۱۲۸ و ۱۷۲",
+       "url": "https://bonyadsite.com/product/کتاب-راهنمای-نشریه-های-۱۲۸-و-۱۷۲/",
+       "img": "https://bonyadsite.com/wp-content/uploads/2023/12/9786001686085.jpg"
+      },
+      {
+       "title": "پکیج اقتصادی آزمون و مباحث نظام مهندسی مکانیک – نظارت",
+       "url": "https://bonyadsite.com/product/پکیج-کامل-منابع-و-ملزومات-مکانیک-نظارت/",
+       "img": "https://bonyadsite.com/wp-content/uploads/1778437026067_copy_640x640-300x300.webp"
+      },
+      {
+       "title": "پکیج کامل منابع آزمون نظام مهندسی مکانیک – نظارت",
+       "url": "https://bonyadsite.com/product/پکیج-کامل-و-ملزومات-مکانیک-نظارت/",
+       "img": "https://bonyadsite.com/wp-content/uploads/1778437026173_copy_640x640-300x300.webp"
+      },
+      {
+       "title": "کتاب مبحث 2 (دوم) مقررات ملی ساختمان",
+       "url": "https://bonyadsite.com/product/کتاب-مبحث-2-دوم-مقررات-ملی-ساختمان/",
+       "img": "https://bonyadsite.com/wp-content/uploads/2024/09/2-1800-1-300x300.webp"
+      },
+      {
+       "title": "کتاب مبحث 3 (سوم) مقررات‌ ملی‌ ساختمان",
+       "url": "https://bonyadsite.com/product/کتاب-مبحث-سوم-مقررات-ملی-ساختمان/",
+       "img": "https://bonyadsite.com/wp-content/uploads/2024/09/3-600x600_11zon_34_11zon-300x300.webp"
+      },
+      {
+       "title": "کتاب مبحث 12 (دوازدهم) مقررات ملی ساختمان (ویرایش 1403)",
+       "url": "https://bonyadsite.com/product/کتاب-مبحث-12-دوازدهم-مقررات-ملی-ساختمان/",
+       "img": "https://bonyadsite.com/wp-content/uploads/12-300x300.jpg"
+      },
+      {
+       "title": "کتاب مبحث 14 (چهاردهم) مقررات ملی ساختمان",
+       "url": "https://bonyadsite.com/product/کتاب-مبحث-چهاردهم-مقررات-ملی-ساختمان/",
+       "img": "https://bonyadsite.com/wp-content/uploads/2024/09/14-600x600_11zon_18_11zon-300x300.webp"
+      },
+      {
+       "title": "کتاب مبحث 15 (پانزدهم) مقررات ملی ساختمان",
+       "url": "https://bonyadsite.com/product/کتاب-مبحث-پانزدهم-مقررات-ملی-ساختمان/",
+       "img": "https://bonyadsite.com/wp-content/uploads/2024/09/15-600x600_11zon_19_11zon-300x300.webp"
+      }
+     ]
+    }
+   ]
+  },
+  {
+   "code": "URBAN",
+   "title": "شهرسازی",
+   "needs": [
+    {
+     "code": "PACKAGE",
+     "title": "پکیج‌ها",
+     "products": [
+      {
+       "title": "اصول اخلاق حرفه ای و نظامنامه رفتار حرفه ای اخلاقی در مهندسی ساختمان",
+       "url": "https://bonyadsite.com/product/اصول-اخلاق-حرفه-ای/",
+       "img": "https://bonyadsite.com/wp-content/uploads/2023/12/اصول-اخلاق-حرفه-ای-scaled-1.jpg"
+      },
+      {
+       "title": "پکیج اقتصادی منابع اصلی آزمون نظام مهندسی شهرسازی",
+       "url": "https://bonyadsite.com/product/پکیج-کامل-منابع-و-ملزومات-شهرسازی/",
+       "img": "https://bonyadsite.com/wp-content/uploads/1778437026062_copy_640x640-300x300.webp"
+      },
+      {
+       "title": "پکیج کامل منابع آزمون نظام مهندسی شهرسازی",
+       "url": "https://bonyadsite.com/product/پکیج-کامل-ملزومات-شهرسازی/",
+       "img": "https://bonyadsite.com/wp-content/uploads/1778437026159_copy_640x640-300x300.webp"
+      },
+      {
+       "title": "کتاب مبحث 2 (دوم) مقررات ملی ساختمان",
+       "url": "https://bonyadsite.com/product/کتاب-مبحث-2-دوم-مقررات-ملی-ساختمان/",
+       "img": "https://bonyadsite.com/wp-content/uploads/2024/09/2-1800-1-300x300.webp"
+      },
+      {
+       "title": "کتاب مبحث 4 (چهارم) مقررات‌ ملی‌ ساختمان",
+       "url": "https://bonyadsite.com/product/کتاب-مبحث-چهارم-مقررات-ملی-ساختمان/",
+       "img": "https://bonyadsite.com/wp-content/uploads/2024/09/4_11zon_35_11zon-300x300.webp"
+      },
+      {
+       "title": "کتاب مبحث 12 (دوازدهم) مقررات ملی ساختمان (ویرایش 1403)",
+       "url": "https://bonyadsite.com/product/کتاب-مبحث-12-دوازدهم-مقررات-ملی-ساختمان/",
+       "img": "https://bonyadsite.com/wp-content/uploads/12-300x300.jpg"
+      },
+      {
+       "title": "کتاب مبحث 20 (بیستم) مقررات ملی ساختمان",
+       "url": "https://bonyadsite.com/product/کتاب-مبحث-بیستم-مقررات-ملی-ساختمان/",
+       "img": "https://bonyadsite.com/wp-content/uploads/2024/09/20-600x600_11zon_23_11zon-300x300.webp"
+      },
+      {
+       "title": "کتاب مبحث 21 (بیست و یکم) مقررات ملی ساختمان",
+       "url": "https://bonyadsite.com/product/کتاب-مبحث-بیست-و-یکم-مقررات-ملی-ساختمان/",
+       "img": "https://bonyadsite.com/wp-content/uploads/2024/09/21-600x600_11zon_11_11zon-300x300.webp"
+      },
+      {
+       "title": "کتاب بازآفرینی شهری پایدار در محدوده‌ها و محله‌های ناکار آمد شهری",
+       "url": "https://bonyadsite.com/product/بازآفرینی-شهری-پایدار-در-محدوده-ها-و-مح/",
+       "img": "https://bonyadsite.com/wp-content/uploads/2024/09/کتاب-بازآفرینی-شهری-پایدار-در-محدوده_ها-و-محله_های-ناکار-آمد-شهری-scaled-1_5-300x300.webp"
+      },
+      {
+       "title": "کلیدواژه آزمون نظام مهندسی شهرسازی ( جدیدترین ویرایش، ویژه آزمون 1405)",
+       "url": "https://bonyadsite.com/product/کلیدواژه-آزمون-نظام-مهندسی-شهرسازی/",
+       "img": "https://bonyadsite.com/wp-content/uploads/2023/12/شهرسازی-scaled-1.jpg"
+      }
+     ]
+    }
+   ]
+  },
+  {
+   "code": "TRAFFIC",
+   "title": "ترافیک",
+   "needs": [
+    {
+     "code": "PACKAGE",
+     "title": "پکیج‌ها",
+     "products": [
+      {
+       "title": "اصول اخلاق حرفه ای و نظامنامه رفتار حرفه ای اخلاقی در مهندسی ساختمان",
+       "url": "https://bonyadsite.com/product/اصول-اخلاق-حرفه-ای/",
+       "img": "https://bonyadsite.com/wp-content/uploads/2023/12/اصول-اخلاق-حرفه-ای-scaled-1.jpg"
+      },
+      {
+       "title": "پکیج اقتصادی منابع اصلی آزمون نظام مهندسی ترافیک",
+       "url": "https://bonyadsite.com/product/پکیج-کامل-منابع-و-ملزومات-ترافیک/",
+       "img": "https://bonyadsite.com/wp-content/uploads/1778437026055_copy_640x640-300x300.webp"
+      },
+      {
+       "title": "پکیج کامل منابع آزمون نظام مهندسی ترافیک",
+       "url": "https://bonyadsite.com/product/پکیج-کامل-و-ملزومات-ترافیک/",
+       "img": "https://bonyadsite.com/wp-content/uploads/1778437026145_copy_640x640-300x300.webp"
+      },
+      {
+       "title": "کتاب مبحث 2 (دوم) مقررات ملی ساختمان",
+       "url": "https://bonyadsite.com/product/کتاب-مبحث-2-دوم-مقررات-ملی-ساختمان/",
+       "img": "https://bonyadsite.com/wp-content/uploads/2024/09/2-1800-1-300x300.webp"
+      },
+      {
+       "title": "کتاب مبحث 4 (چهارم) مقررات‌ ملی‌ ساختمان",
+       "url": "https://bonyadsite.com/product/کتاب-مبحث-چهارم-مقررات-ملی-ساختمان/",
+       "img": "https://bonyadsite.com/wp-content/uploads/2024/09/4_11zon_35_11zon-300x300.webp"
+      },
+      {
+       "title": "کتاب مبحث 20 (بیستم) مقررات ملی ساختمان",
+       "url": "https://bonyadsite.com/product/کتاب-مبحث-بیستم-مقررات-ملی-ساختمان/",
+       "img": "https://bonyadsite.com/wp-content/uploads/2024/09/20-600x600_11zon_23_11zon-300x300.webp"
+      },
+      {
+       "title": "کتاب مبحث 21 (بیست و یکم) مقررات ملی ساختمان",
+       "url": "https://bonyadsite.com/product/کتاب-مبحث-بیست-و-یکم-مقررات-ملی-ساختمان/",
+       "img": "https://bonyadsite.com/wp-content/uploads/2024/09/21-600x600_11zon_11_11zon-300x300.webp"
+      },
+      {
+       "title": "کتاب کلیدواژه طلایی نوآور ترافیک (جدیدترین ویرایش، ویژه آزمون 1405)",
+       "url": "https://bonyadsite.com/product/کتاب-کلیدواژه-طلایی-نوآور-ترافیک/",
+       "img": "https://bonyadsite.com/wp-content/uploads/2023/12/ترافیک-scaled-1.jpg"
+      },
+      {
+       "title": "کتاب تشریح سوالات طبقه‌بندی شده آزمون‌‌‌های نظام مهندسی ترافیک",
+       "url": "https://bonyadsite.com/product/کتاب-تشریح-سوالات-طبقه-بندی-شده-ترافیک/",
+       "img": "https://bonyadsite.com/wp-content/uploads/2023/12/9786001683121-Copy.jpg"
+      },
+      {
+       "title": "کتاب قانون شهرداری ها (و اصلاحات بعدی)",
+       "url": "https://bonyadsite.com/product/کتاب-قانون-شهرداری-ها-و-اصلاحات-بعدی/",
+       "img": "https://bonyadsite.com/wp-content/uploads/2023/12/9786001684777.jpg"
+      }
+     ]
+    }
+   ]
+  },
+  {
+   "code": "SURV",
+   "title": "نقشه‌برداری",
+   "needs": [
+    {
+     "code": "PACKAGE",
+     "title": "پکیج‌ها",
+     "products": [
+      {
+       "title": "کتاب راهنمای نشریه ۱۱۹ (مهندس میرزاعلی)",
+       "url": "https://bonyadsite.com/product/کتاب-راهنمای-نشریه-۱۱۹-مهندس-میرزاعلی/",
+       "img": "https://bonyadsite.com/wp-content/uploads/119-بنیاد-2-300x300.jpg"
+      },
+      {
+       "title": "اصول اخلاق حرفه ای و نظامنامه رفتار حرفه ای اخلاقی در مهندسی ساختمان",
+       "url": "https://bonyadsite.com/product/اصول-اخلاق-حرفه-ای/",
+       "img": "https://bonyadsite.com/wp-content/uploads/2023/12/اصول-اخلاق-حرفه-ای-scaled-1.jpg"
+      },
+      {
+       "title": "کتاب کلیدواژه طلایی نوآور نقشه‌برداری (جدیدترین ویرایش، ویژه آزمون 1405)",
+       "url": "https://bonyadsite.com/product/کتاب-کلیدواژه-طلایی-نوآور-نقشهبردار/",
+       "img": "https://bonyadsite.com/wp-content/uploads/موکاپ-کلید-نقشه-برداری-جلد-بنیادسایت-1-300x300.jpg"
+      },
+      {
+       "title": "کتاب راهنمای نشریه ۱۱۹",
+       "url": "https://bonyadsite.com/product/کتاب-راهنمای-نشریه-۱۱۹/",
+       "img": "https://bonyadsite.com/wp-content/uploads/2024/01/نشریه-119-min-1-300x300.jpg"
+      },
+      {
+       "title": "پکیج اقتصادی کاردانی نقشه برداری",
+       "url": "https://bonyadsite.com/product/پکیج-اقتصادی-کاردانی-نقشه-برداری/",
+       "img": "https://bonyadsite.com/wp-content/uploads/1778437026106_copy_640x640-300x300.webp"
+      },
+      {
+       "title": "پکیج کامل کاردانی نقشه برداری",
+       "url": "https://bonyadsite.com/product/پکیج-کامل-کاردانی-نقشه-برداری/",
+       "img": "https://bonyadsite.com/wp-content/uploads/1778437026086_copy_640x640-300x300.webp"
+      },
+      {
+       "title": "پکیج اقتصادی منابع اصلی آزمون نظام مهندسی نقشه برداری",
+       "url": "https://bonyadsite.com/product/پکیج-کامل-منابع-و-ملزومات-نقشه-برداری/",
+       "img": "https://bonyadsite.com/wp-content/uploads/1778437026077_copy_640x640-300x300.webp"
+      },
+      {
+       "title": "پکیج کامل منابع آزمون نظام مهندسی نقشه برداری",
+       "url": "https://bonyadsite.com/product/پکیج-کامل-ملزومات-نقشه-برداری/",
+       "img": "https://bonyadsite.com/wp-content/uploads/1778437026119_copy_640x640-300x300.webp"
+      },
+      {
+       "title": "کتاب مبحث 2 (دوم) مقررات ملی ساختمان",
+       "url": "https://bonyadsite.com/product/کتاب-مبحث-2-دوم-مقررات-ملی-ساختمان/",
+       "img": "https://bonyadsite.com/wp-content/uploads/2024/09/2-1800-1-300x300.webp"
+      },
+      {
+       "title": "کتاب مبحث 12 (دوازدهم) مقررات ملی ساختمان (ویرایش 1403)",
+       "url": "https://bonyadsite.com/product/کتاب-مبحث-12-دوازدهم-مقررات-ملی-ساختمان/",
+       "img": "https://bonyadsite.com/wp-content/uploads/12-300x300.jpg"
+      }
+     ]
+    }
+   ]
+  }
+ ]
+}

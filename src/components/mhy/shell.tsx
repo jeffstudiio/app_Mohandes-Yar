@@ -11,6 +11,7 @@ import Dashboard, { type Nav } from "./dashboard";
 import Study from "./study";
 import Practice from "./practice";
 import Exam from "./exam";
+import Shop from "./shop";
 import Settings from "./settings";
 import SearchOverlay from "./search-overlay";
 import { MhyGlyph } from "./ui";
@@ -19,18 +20,20 @@ import {
   BookOpen,
   PenLine,
   ClipboardList,
+  ShoppingBag,
   Settings as SettingsIcon,
 } from "lucide-react";
 
 const BASE = process.env.NEXT_PUBLIC_BASE_PATH ?? "";
 
-type Tab = "dashboard" | "study" | "practice" | "exam" | "settings";
+type Tab = "dashboard" | "study" | "practice" | "exam" | "shop" | "settings";
 
 const TABS: { id: Tab; label: string; icon: React.ElementType }[] = [
   { id: "dashboard", label: "داشبورد", icon: LayoutDashboard },
   { id: "study", label: "مطالعه", icon: BookOpen },
   { id: "practice", label: "تمرین", icon: PenLine },
   { id: "exam", label: "آزمون", icon: ClipboardList },
+  { id: "shop", label: "فروشگاه", icon: ShoppingBag },
   { id: "settings", label: "تنظیمات", icon: SettingsIcon },
 ];
 
@@ -161,6 +164,8 @@ export default function MhyShell() {
             onPresetConsumed={() => setExamPreset(null)}
           />
         );
+      case "shop":
+        return <Shop />;
       case "settings":
         return <Settings bootstrap={bootstrap} dark={dark} onToggleDark={(v) => setTheme(v ? "dark" : "light")} />;
     }
@@ -225,7 +230,7 @@ export default function MhyShell() {
       {/* phone — full-bleed on real mobile, framed on desktop */}
       <div className={`${dark ? "dark " : ""}w-full max-w-full lg:w-auto`}>
         <div
-          className="relative h-screen w-full overflow-hidden max-lg:rounded-none max-lg:border-0 lg:h-[min(88vh,780px)] lg:w-[400px] lg:max-w-full lg:rounded-[2.4rem] lg:border-[10px]"
+          className="frame-h relative w-full overflow-hidden max-lg:rounded-none max-lg:border-0 lg:w-[400px] lg:max-w-full lg:rounded-[2.4rem] lg:border-[10px]"
           style={{ borderColor: "#0a0d12", background: "var(--background)", boxShadow: "var(--shadow-float)" }}
           role="region"
           aria-label="اپ مهندس‌یار"
