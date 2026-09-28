@@ -214,3 +214,26 @@ Stage Summary:
 - جهت‌گیری: «دفتر فنی مهندس» — ink surfaces + تک‌اکسنت سبز آکادمیک + کرم callout + مس فقط برای کانت‌داون آزمون
 - ref4 = مرجع runner/study، ref3 = مرجع chart/analytics، ref7 = مرجع dashboard ساختار، ref5 فقط بانک ایده (اجرای خنثی)
 - آماده برای فاز پیاده‌سازی پس از تأیید کاربر
+
+---
+Task ID: 10
+Agent: main
+Task: FINAL UI/UX Implementation Directive — 10-phase visual identity build («دفتر فنی مهندس»)
+
+Work Log:
+- PHASE 1 (c96b3b06): tokens بازنویسی — dark #0B0E13/#12161D/#1A2029 + hairline، اکسنت سبز آکادمیک #0e7a52/#7ce3a4، کرم/مس/کهربایی؛ تایپ scale دستور؛ blueprint-grid/construction/tech-glow؛ primitives جدید: Eyebrow/TechFrame/DenseRow/DenseList/WeekStrip/SegmentedProgress/TrendChart(callout)/CompareCard؛ CountdownRing مس با orbit node؛ بج‌ها (تألیفی خنثی، review کهربایی)؛ shell chrome
+- PHASE 2 (4a411536): dashboard ترکیب پیوسته — header با گرید+تاریخ شمسی، کانت‌داون مس با فاز آمادگی، readiness inline بدون کارت، week strip واقعی از timestamps (برچسب تک‌حرفی)، hero ادامه مطالعه grad-hero + progress، امروز dense rows، TrendChart با callout + جمله insight، صلاحیت‌ها با construction divider
+- PHASE 3 (f2a73cdd): runner — سؤال تایپوگرافیک بدون باکس + construction، گزینه‌های dense با index-chip مربع، SegmentedProgress checkpoint، reveal آرام (verdict line + توضیح + پنل منبع hairline)
+- PHASE 4 (bec07ff2): result — TechFrame+blueprint+glow hero، ring draw با reveal delay (count-up مجانی از pct animation)، KPI hairline ۴ستونه، CompareCard مورب vs آزمون قبلی، تحلیل مبحثی بدون کارت، نیاز به مرور dense؛ تاریخچه dense
+- PHASE 5 (6106ae97): reader فوکوس با حذف — بندها بدون باکس (typographic sections + construction)، chip بند سبز→success، فهرست sheet dense؛ regulations/lessons در DenseList با شماره فصل؛ roadmap checkpoint + SegmentedProgress
+- PHASE 6-7 (aa60a248): practice entries dense + فیلتر → BottomSheet واقعی با CTA «N سؤال آماده تمرین»؛ **باگ واقعی: quick practice همیشه ۲۰ سؤال** (limit ثابت) + **api.ts: limit per-major در merge چند صلاحیت** → برش merged؛ هر دو فیکس؛ آرشیو جلسات رسمی dense با state انجام‌شده از officialSessionsSeen + copper برای جلسه هدف؛ pre-exam brief با KPI hairline
+- PHASE 8 (165e8973): onboarding — Welcome TechFrame+blueprint+glow hero، SegmentedProgress steps + شمارنده، eyebrow های title-block؛ منطق ۶مرحله‌ای دست‌نخورده
+- PHASE 9-10 (8d53353e): settings — حساب/نمایش در یک سطح dense (رشته/آزمون هدف copper/toggle تم)
+- QA با agent-browser: داشبورد+week strip، runner reveal (درست/نادرست)، تمرین کامل→root، آزمون ۵سؤالی→کارنامه (۵ سؤال واقعی پس از فیکس)، reader بندهای واقعی، آرشیو جلسات، settings؛ reduced-motion در CSS
+- Verify: tsc پاک (src)، eslint پاک، static export EXIT 0 (mv api stash مثل CI)
+- یادداشت: dev server یک‌بار CSS کهنه سرو کرد؛ با append یک خط به globals.css watcher تحریک شد (#0e7a52 live شد)
+
+Stage Summary:
+- ۸ کامیت طبق نام‌های پیشنهادی دستور؛ همه قابلیت‌ها حفظ (routing/engines/store/migration)؛ هیچ داده ساختگی
+- هویت بصری مستقل: ink surfaces + تک‌اکسنت سبز + کرم callout + مس فقط آزمون هدف + geometry (blueprint/orbit/construction/eyebrow)
+- آماده push → Pages
