@@ -162,3 +162,22 @@ Work Log:
 Stage Summary:
 - V1 原始包永久归档于仓库 + Release 双通道，含文档与哈希指纹
 - 本地 download/v1-source-download 为临时副本（不推送）
+
+---
+Task ID: 7
+Agent: main
+Task: Premium Mobile UI Overhaul (V2 → Premium Exam & Study Product)
+
+Work Log:
+- Phase 1 audit: همه ۱۰ کامپوننت + ۵ فایل lib + ساختار داده خوانده شد
+- یافته‌ها: competency اسکالر؛ رشته‌ها به صورت ترکیبی (عمران-نظارت) در onboarding؛ counts هاردکد (خط 121 onboarding)؛ باگ اشتباهات/نشانک‌ها (fetch فیلتری + فیلتر کلاینت خالی برمی‌گشت)
+- Phase 2-3: globals.css توکن‌های premium (light/dark first-class، تایپوگرافی ۷ سطحی، motion keyframes، reduced-motion) + ui.tsx: ۲۵+ پریمیتیو (Btn/IconButton/Card/Chip/SegmentedControl/ProgressRing/CountdownRing/Sparkline/MeterRows/BottomSheet/Modal/Skeleton/EmptyState/SearchField/Toggle/SubHeader/ListItem/MhyGlyph/DisciplineGlyph/OrbitSpinner...)
+- Phase 4: content-core getBootstrap → disciplineStats واقعی (total/official/authored از خود سؤالات)؛ store.ts: Profile جدید (disciplineGroup + competencies[] + activeCompetency) + migrate v0→v1 + groupDisciplines از داده واقعی؛ api.ts questionsForMajors (merge موازی)
+- Phase 5-12: onboarding کامل (رشته والد + multi-select + جلسه واقعی + تاریخ + پیش‌نمایش زنده روزها)؛ shell (nav pill indicator + tab transitions + pool چند-major + موبایل full-bleed)؛ dashboard (countdown ring، continue hero، today، readiness، پیشرفت صلاحیت‌ها، روند ۷ روزه واقعی از timestamps پاسخ‌ها)؛ study (reading UI + فهرست بندها sheet + jump)؛ practice (فیلتر BottomSheet با شمارش زنده merged؛ باگ ids حل شد)؛ exam (جلسات با جستجو، runner لمسی، Result: ring + delta نسبت به آزمون قبلی + تحلیل مبحثی + نیاز به مرور)؛ settings (ادیتور صلاحیت‌ها/آزمون هدف)؛ search grouped
+- Phase 13-15: lint پاک (بعد از ignore .next-static + import Check + حذف disable بی‌استفاده)؛ tsc پاک (بعد از fix QLite flags/examSession + MhyBand import + questionsForMajors typing)؛ npm run build EXIT:0 (با NEXT_DIST_DIR override + اسکریپت cp distDir-aware)؛ static export EXIT:0
+- Browser QA (agent-browser): onboarding کامل (عمران ۱۰۷۲=مجموع واقعی؛ نظارت ۶۱۴؛ اجرا ۲۲۸)؛ multi-select ۲→۳ صلاحیت؛ فیلتر ۲۵۶=جمع واقعی رسمی دو صلاحیت؛ پاسخ+reveal؛ آزمون رسمی مهر ۹۶ (۲۰ سؤال/۲۴ دقیقه) + کارنامه واقعی (۱/۲/۱۷)؛ ادیتور تنظیمات؛ dark mode؛ بدون خطای کنسول
+- CI failure اول: distDir spread باگ (undefined روی .next-static می‌نشیند) → fix merge order → deploy موفق a9369756 → live verified (index/content 200، refsbasePath-aware)
+
+Stage Summary:
+- تمام معیارهای §42 محقق؛ هیچ داده ساختگی اضافه نشده؛ منطق/engines حفظ شده
+- جدی‌ترین limitation: تایپ‌چک examples/skills خارج از scope خطا دارد (پیش‌موجود، بی‌ربط)؛ URBAN-PLAN در داده اصلی عنوان نقشه‌برداری-کاردانی دارد و زیر URBAN گروه می‌شود (داده‌وفادار)
