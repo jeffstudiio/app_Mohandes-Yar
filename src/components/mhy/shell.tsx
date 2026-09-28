@@ -20,6 +20,8 @@ import {
   Settings as SettingsIcon,
 } from "lucide-react";
 
+const BASE = process.env.NEXT_PUBLIC_BASE_PATH ?? "";
+
 type Tab = "dashboard" | "study" | "practice" | "exam" | "settings";
 
 const TABS: { id: Tab; label: string; icon: React.ElementType }[] = [
@@ -125,7 +127,7 @@ export default function MhyShell() {
       <aside className="hidden max-w-[400px] flex-col lg:flex" aria-label="درباره مهندس‌یار V2">
         <div className="flex items-center gap-3">
           { }
-          <img src="/app-icon.webp" alt="آیکون مهندس‌یار" className="h-14 w-14 rounded-[1rem] shadow-lg" style={{ background: "var(--primary)" }} />
+          <img src={`${BASE}/app-icon.webp`} alt="آیکون مهندس‌یار" className="h-14 w-14 rounded-[1rem] shadow-lg" style={{ background: "var(--primary)" }} />
           <div>
             <h1 className="text-[22px] font-extrabold" style={{ color: dark ? "#e5edf6" : "#10202f" }}>
               مهندس‌یار
