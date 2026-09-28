@@ -288,3 +288,23 @@ Work Log:
 Stage Summary:
 - imagery-driven identity is LIVE: هر مبحث هویت تصویری خودش را دارد؛ covers across study/library/dashboard/runner/result/practice/search/readers
 - no deploy trigger for worklog-only commits (path filter respected)
+
+---
+Task ID: 12
+Agent: main
+Task: بخش‌به‌بخش (۱/کتابخانه مطالعه) — عنوان‌های رسمی مباحث + ویرایش‌ها + کاورهای مبحث‌محور اصلاحی
+
+Work Log:
+- کاربر لیست رسمی ۲۴ مبحث مقررات ملی ساختمان را با سال ویرایش ارائه داد؛ مقایسه با MABHAS_TITLES در store.ts نشان داد ۵+ عنوان اشتباه بود (۸=بتن‌آرمه❌/بناایی✓، ۱۱=چوبی❌/صنعتی✓، ۱۲=انرژی❌/ایمنی✓، ۱۸، ۲۳)
+- store.ts: عنوان‌ها با لیست رسمی جایگزین شد + MABHAS_EDITIONS (۲۳ ویرایش) + helper mabhasEdition (فارسی با faNum)؛ import faNum از engines
+- ui.tsx MabhasCover: خط میکرو «ویرایش ۱۳۹X» بالای عنوان برای واریانت‌های rail/hero/banner (thumb بدون متن)
+- study.tsx: ردیف‌های کاتالوگ کتابخانه ویرایش را با tint سبز قبل از شمارش سؤال نشان می‌دهند
+- gen-covers.mjs: سوژه‌های ۱ (کتاب مرجع فنی باز+ترسیم)، ۷ (لایه‌های خاک/ژئوتکنیک)، ۱۷ (لوله مسی گاز+شعله آبی)، ۲۱ (بلوک‌های بتنی پدافندی)، ۲۳ (پارکینگ طبقاتی+خط‌کشی ترافیکی) بازنویسی شد؛ ۵ کاور بازتولید و تک‌تک کنترل بصری شد
+- مبحث ۲۴ (انطباق شهری ۱۴۰۴) ساخته نشد — داده واقعی تا ۲۳ مبحث دارد (اصل data-as-truth)
+- QA: tsc پاک، eslint پاک، static export EXIT 0 (api stash/restore مثل CI)، مرورگر محلی (روشن+تیره) و لایو
+- commit db1a8d62 → Actions run 36435822360 success → لایو تأیید شد (کاورهای جدید 200 با سایز جدید، عنوان/ویرایش روی سایت)
+
+Stage Summary:
+- هر ۲۳ مبحث حالا عنوان رسمی + ویرایش + کاور هم‌معنا با موضوع خودش دارد
+- سبک خانواده کاور (ink + rim light + grade + grain) دست‌نخورده ماند — فقط سوژه‌ها دقیق شدند
+- آماده بازخورد کاربر برای راند بعدی بخش کتابخانه
