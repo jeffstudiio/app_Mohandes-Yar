@@ -5,7 +5,7 @@ import type { MhyQuestion } from "@/lib/mhy/server";
 import { api } from "@/lib/mhy/api";
 import { useMhy, mabhasTitle } from "@/lib/mhy/store";
 import { faNum } from "@/lib/mhy/engines";
-import { SourceBadge, DifficultyBadge, ReviewFlagBadge, MabhasChip, Btn, IconButton, SegmentedProgress, Eyebrow } from "./ui";
+import { SourceBadge, DifficultyBadge, ReviewFlagBadge, MabhasChip, Btn, IconButton, SegmentedProgress, Eyebrow, MabhasCover } from "./ui";
 import {
   Bookmark,
   BookmarkCheck,
@@ -257,21 +257,26 @@ function PostAnswerPanels({ question }: { question: MhyQuestion }) {
       </button>
       {sourceOpen && (
         <div className="fade-in mb-3.5 rounded-2xl border p-3.5" style={{ background: "var(--surface)", borderColor: "var(--border)" }}>
-          <Eyebrow>مسیر منبع</Eyebrow>
-          <p className="num mt-1.5 text-[12px] leading-6" style={{ color: "var(--foreground)" }}>
-            {question.citation.mabhas ?? (question.mabhas != null ? mabhasTitle(question.mabhas) : "—")}
-            {question.citation.band && ` › بند ${question.citation.band}`}
-            {question.citation.page && ` › صفحه ${faNum(question.citation.page)}`}
-          </p>
+          <div className="flex gap-3">
+            <MabhasCover mabhas={question.mabhas} variant="thumb" className="shrink-0" />
+            <div className="min-w-0 flex-1">
+              <Eyebrow>مسیر منبع</Eyebrow>
+              <p className="num mt-1.5 text-[12px] leading-6" style={{ color: "var(--foreground)" }}>
+                {question.citation.mabhas ?? (question.mabhas != null ? mabhasTitle(question.mabhas) : "—")}
+                {question.citation.band && ` › بند ${question.citation.band}`}
+                {question.citation.page && ` › صفحه ${faNum(question.citation.page)}`}
+              </p>
+              {question.mabhas != null && (
+                <p className="t-caption mt-2.5" style={{ color: "var(--primary)" }}>
+                  ← متن کامل بند در تب مطالعه، مباحث مقررات، مبحث {faNum(question.mabhas)}
+                </p>
+              )}
+            </div>
+          </div>
           {question.citation.quote && (
             <blockquote className="mt-2 border-r-2 pr-3 text-[12px] leading-6" style={{ borderColor: "var(--primary)", color: "var(--foreground)" }}>
               «{question.citation.quote}»
             </blockquote>
-          )}
-          {question.mabhas != null && (
-            <p className="t-caption mt-2.5" style={{ color: "var(--primary)" }}>
-              ← متن کامل بند در تب مطالعه، مباحث مقررات، مبحث {faNum(question.mabhas)}
-            </p>
           )}
         </div>
       )}

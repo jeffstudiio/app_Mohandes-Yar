@@ -5,7 +5,7 @@ import type { Bootstrap, MhyQuestion } from "@/lib/mhy/server";
 import { api } from "@/lib/mhy/api";
 import { useMhy, mabhasTitle } from "@/lib/mhy/store";
 import { faNum, scoreAttempt, generateComprehensive, remainingSec, type ExamAttempt, type AttemptItem, type QLite } from "@/lib/mhy/engines";
-import { Card, SectionHeader, EmptyState, Btn, SourceBadge, ReviewFlagBadge, MabhasChip, SearchField, LoadingBlock, MeterRows, ProgressRing, SegmentedControl, TechFrame, Eyebrow, CompareCard, DenseRow, DenseList } from "./ui";
+import { Card, SectionHeader, EmptyState, Btn, SourceBadge, ReviewFlagBadge, MabhasChip, SearchField, LoadingBlock, MeterRows, ProgressRing, SegmentedControl, TechFrame, Eyebrow, CompareCard, DenseRow, DenseList, MabhasCover } from "./ui";
 import { QuestionRunner } from "./question-runner";
 import {
   ShieldCheck,
@@ -741,9 +741,7 @@ function ExamResult({ attempt, onHome, onReview }: { attempt: ExamAttempt; onHom
           <div className="mt-2 divide-y" style={{ borderColor: "var(--border)" }}>
             {weakAreas.map((r) => (
               <div key={r.m} className="flex items-center gap-2.5 py-2.5">
-                <span className="num flex h-9 w-9 shrink-0 items-center justify-center rounded-xl text-[10.5px] font-extrabold" style={{ background: "var(--warning-soft)", color: "var(--warning)" }}>
-                  ٪{faNum(r.pct)}
-                </span>
+                <MabhasCover mabhas={r.m} variant="thumb" className="shrink-0" />
                 <div className="min-w-0 flex-1">
                   <p className="truncate text-[12.5px] font-bold" style={{ color: "var(--foreground)" }}>
                     {mabhasTitle(r.m)}
@@ -752,6 +750,9 @@ function ExamResult({ attempt, onHome, onReview }: { attempt: ExamAttempt; onHom
                     {faNum(r.correct)} درست از {faNum(r.correct + r.wrong)} پاسخ
                   </p>
                 </div>
+                <span className="num flex h-9 w-11 shrink-0 items-center justify-center rounded-xl text-[10.5px] font-extrabold" style={{ background: "var(--warning-soft)", color: "var(--warning)" }}>
+                  ٪{faNum(r.pct)}
+                </span>
               </div>
             ))}
           </div>
